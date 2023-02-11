@@ -121,9 +121,13 @@ Vue.component("category-tab", {
                         color: lcid_colors[categories_list.indexOf(category_sn)+1],
                     },
                     marker: {
-                        size: 12,
-                        linewidth: 0,
-                        symbol: 'square' 
+                        size: 14,
+                        color: addAlphaToHex(lcid_colors[categories_list.indexOf(category_sn)+1],0.5),
+                        line: {
+                            width: 2,
+                            color: lcid_colors[categories_list.indexOf(category_sn)+1],
+                        }
+                        // symbol: 'square' 
                     },
                     connectgaps: true,
                     showlegend: false,
@@ -151,7 +155,7 @@ Vue.component("category-tab", {
                 xaxis: {
                     showgrid: true,
                     gridwidth: 1,
-                    gridcolor: lcid_colors[4],
+                    gridcolor: '#EDDDD4',
                     zeroline: false,
                     range: [-0.5, range_max],
                     showline: false,

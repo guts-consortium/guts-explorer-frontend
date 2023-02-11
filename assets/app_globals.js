@@ -97,7 +97,7 @@ var display_details_names = {
     description: 'Description',
     references: 'References',
 }
-var lcid_colors = ["#242A33","#505F73","#283D3B","#197278","#EDDDD4","#D6BCB4","#AB5B24","#DE752F","#C44536","#772E25"]
+var lcid_colors = ["#242A33","#505F73","#283D3B","#197278","#D6BCB4","#AB5B24","#DE752F","#C44536","#772E25","#EDDDD4"]
 
 
 /*************/
@@ -133,4 +133,9 @@ function makeReadable(input) {
   output = output.replace(/_/g,' ');
   output = output.replace(/-/g,' ');
   return output
+}
+
+function addAlphaToHex(hexcode, opacity) {
+  var _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);
+  return hexcode + _opacity.toString(16).toUpperCase();
 }
