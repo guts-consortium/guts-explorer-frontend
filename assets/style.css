@@ -1,0 +1,177 @@
+:root, :host {
+  --fa-font-regular: normal 400 1em/1 "Font Awesome 6 Free";
+  --fa-font-solid: normal 900 1em/1 "Font Awesome 6 Free";
+  --fa-font-brands: normal 400 1em/1 "Font Awesome 6 Brands";
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("fa-regular-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("fa-solid-900.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("fa-brands-400.woff2") format("woff2");
+}
+.far,
+.fa-regular {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.fas,
+.fa-solid {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+}
+.fab,
+.fa-brands {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Gudea';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("gudea-v15-latin-regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'Gudea';
+  font-style: italic;
+  font-weight: 400;
+  font-display: block;
+  src: url("gudea-v15-latin-italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'Gudea';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url("gudea-v15-latin-700.woff2") format("woff2");
+}
+
+body {
+  font-family: 'Gudea', sans-serif !important;
+}
+
+table {
+  border: 1px solid rgb(190, 190, 190);
+  border-radius: 1em;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table tr:nth-child(odd){
+  background-color: rgb(220, 219, 219);
+}
+
+table td + td { border-left:1px solid rgb(190, 190, 190);}
+
+table td {
+  padding-top:0.4em;
+  padding-bottom:0.4em;
+  padding-right:0.4em;   
+}
+
+table td:first-child {
+  padding-left:0.4em;
+  padding-right:0;
+}
+
+
+.header {
+  background-color: #083655;
+  color: white;
+  text-align: center;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  margin-bottom: 2em;
+}
+
+.maincards {
+  align-items: flex-start;
+  border: 0 !important; /* null both border-tops and -bottoms */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  line-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-left: 10%;
+  max-width: 80%;
+}
+
+.maincards .item {
+  position: relative;
+  margin: 0.5em;
+  padding: 1em;
+  background-color: #fafafa;
+  border-radius: 8px;
+  text-align: center;
+  height: 360px;
+  width: 300px;
+}
+
+.maincards .item-logo {
+  margin: auto;
+  width: 220px;
+  height: 150px;
+  display: flex;
+  padding: 0.2em;
+  border: 1px solid #e6e6e6;
+  background-color: #fff;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+.maincards .item-logo img {
+  margin: auto;
+  max-height: 140px;
+  max-width: 210px;
+}
+.maincards .item-info {
+  color: #3a4046;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 0.5em 0;
+  margin: auto;
+  text-align: center;
+  max-width: 210px;
+}
+.maincards .item-info h3 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0.5em auto;
+  text-align: center;
+}
+.maincards p.blurb {
+  hyphens: auto;
+  margin: 0;
+}
+
+.maincards .item:hover .item-info h3, .maincards .item:active .item-info h3 {
+  text-decoration: underline;
+}
+
+.maincards .item:hover, .maincards .item:active {
+  cursor: pointer;
+}
+
+.maincards .item:hover, .maincards .item:active {
+  background-color: #d0eafc;
+}

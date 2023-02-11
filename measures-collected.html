@@ -1,0 +1,144 @@
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <title>Explore</title>
+
+    <!-- Required Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="assets/style.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/fontawesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/brands.min.css"/>
+    <link type="text/css" rel="stylesheet" href="assets/bootstrap.5.1.3.min.css"/>
+    <link type="text/css" rel="stylesheet" href="assets/bootstrap-vue.2.21.2.min.css"/>
+
+    <!-- Required scripts -->
+    <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+    <!-- <script src="assets/vue.2.6.14.min.js"></script> -->
+    <script src="assets/bootstrap-vue.2.21.2.min.js"></script>
+    <script src="assets/vue-router.3.5.3.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+</head>
+
+
+<!-- Template for tab -->
+<script type="text/x-template" id="tab-template">
+    <b-tab @click="clickEventHandler">
+        <template v-slot:title>
+            <i :class="category.icon"></i> {{category.display_name}}
+        </template>
+        
+        <b-row>
+            <b-col cols="10">
+                <h2>{{category.name}}</h2>
+                <b-card-text style="color:lightslategray" >{{category.description}}</b-card-text>
+            </b-col>
+            <b-col style="text-align:center;">
+                <h5>Cohort</h5>
+                <!-- <b-form-select v-model="cohort" :options="cohort_options" v-on:change=" $emit('update-cohort', cohort)"></b-form-select> -->
+                <b-form-select v-model="parent_cohort" :options="cohort_options" v-on:change="changeCohort()"></b-form-select>
+            </b-col>
+        </b-row>
+        <hr>
+        <b-row>
+            <b-col cols="7">
+                <h4 style="text-align:center">Collected measures</h4>
+                <div :id="category.short_name"></div>
+            </b-col>
+            <b-col>
+                <h4>Selected measure: {{display_details['measure_shortname']}}</h4>
+                <br>
+
+                <table>
+                    <tr v-for="disp_key in display_keys_basic">
+                        <td style="width:30%">{{display_details_names[disp_key]}}:</td>
+                        <td>{{display_details[disp_key]}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Description:</td>
+                        <td>{{display_details['description']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Measure sources:</td>
+                        <td><span v-if="display_details['references']">{{display_details['references']}}<br></span>
+                            <span v-for="doi in display_details.doi">
+                                <a :href="'https://doi.org/'+doi"><small>{{doi}}</small></a>
+                                <b-button variant="outline-dark" size="sm" @click="getCitationText('https://doi.org/'+doi)"><i class="fas fa-quote-right"></i></b-button><br>
+                            </span>
+                            <b-modal ref="cite-modal" size="lg" 
+                                header-bg-variant="light"
+                                footer-bg-variant="light"
+                                body-bg-variant="light"
+                                body-text-variant="dark"
+                                ok-only>
+                                    <template #modal-header="{ close }">
+                                    <div class="d-block text-center">
+                                        <h3>Article citation</h3>
+                                    </div>
+                                    </template>
+                                    <b-spinner v-if="citation_busy" variant="warning" type="grow" style="text-align:center;">Fetching citation information...</b-spinner>
+                                    <div v-if="citation_text" class="shadow-sm p-3 mb-3 bg-white rounded">
+                                    <b-row>
+                                        <b-col cols="11">
+                                            <code id="citation">
+                                                {{citation_text}}
+                                            </code>
+                                        </b-col>
+                                        <b-col cols="1">
+                                            <i id="copyBtnCite" class="far fa-clone" @click="copyCitationText"></i>
+                                            <b-tooltip target="copyBtnCite" :show.sync="showCopyCiteTooltip" @shown="hideCiteTooltipLater" triggers left title="Copied!">
+                                            </b-tooltip>
+                                        </b-col>
+                                    </b-row>
+                                    </div>
+                                    <span v-show="invalid_doi"><em>Invalid DOI</em></span>
+                                </b-modal>
+                        </td>
+                    </tr>
+                    
+
+                </table>
+            </b-col>
+        </b-row>
+    </b-tab>
+</script>
+
+
+
+<body id="mainbody">
+    <noscript>
+        <p><strong>The majority of graphs on this page are interactive and require
+                JavaScript to be enabled.</strong></p>
+    </noscript>
+
+    <div class="header">
+        <h1>Measures Collected</h1>
+    </div>
+
+    
+    <b-container id="explorer-collected" v-if="measures_loaded && measures_pwpc_loaded">
+        <!-- <h1 style="text-align: center;">LCID metadata browser</h1> -->
+        <b-card no-body>
+            <!-- Consider effect of lazy loading??? -->
+            <b-tabs pills vertical card v-model="tabIndex">
+                <b-tab disabled title="Categories:"></b-tab>
+                <b-tab disabled></b-tab>
+                <!-- <category-tab v-for="cat in categories" :category="cat" :measure_data="measure_data" :measure_pwpc_data="measure_pwpc_data" v-on:update-cohort="cohort = $event; console.log(cohort)" :parent_cohort="cohort"> </category-tab> -->
+                <!-- Using sync for two-way binding of parent_cohort between parent and child component -->
+                <category-tab v-for="(cat, idx) in categories"
+                    :category_index="idx"
+                    :category="cat"
+                    :measure_data="measure_data"
+                    :measure_pwpc_data="measure_pwpc_data"
+                    :parent_cohort.sync="cohort">
+                </category-tab>
+            </b-tabs> 
+        </b-card>
+    </b-container>
+    <script src="assets/app_globals.js"></script>
+    <script src="assets/app_collected.js"></script>
+</body>
+</html>

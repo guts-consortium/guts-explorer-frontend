@@ -1,0 +1,195 @@
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <title>Explore</title>
+
+    <!-- Required Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="assets/style.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/fontawesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/brands.min.css"/>
+    <link type="text/css" rel="stylesheet" href="assets/bootstrap.5.1.3.min.css"/>
+    <link type="text/css" rel="stylesheet" href="assets/bootstrap-vue.2.21.2.min.css"/>
+
+    <!-- Required scripts -->
+    <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+    <!-- <script src="assets/vue.2.6.14.min.js"></script> -->
+    <script src="assets/bootstrap-vue.2.21.2.min.js"></script>
+    <script src="assets/vue-router.3.5.3.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+</head>
+
+<body id="mainbody">
+    <noscript>
+        <p><strong>The majority of graphs on this page are interactive and require
+                JavaScript to be enabled.</strong></p>
+    </noscript>
+
+
+    <div class="header">
+        <h1>Measures Table</h1>
+    </div>
+
+    <b-container id="explorer-table" v-if="measures_loaded && measures_pwpc_loaded">
+        <b-card >
+            <b-row>
+                <b-col cols="3">
+                    <b-row>
+                        <b-form-group label="Filter by short/long name:" v-slot="{ ariaDescribedby }"
+                        label-size="lg"
+                        label-class="font-weight-bold pt-0">
+                            <b-form-input size="sm"
+                            id="inline-form-input-name"
+                            class="mb-2 mr-sm-2 mb-sm-0"
+                            placeholder="Enter search text"
+                            v-model="search_text"
+                            ></b-form-input>
+                        </b-form-group>
+                    </b-row>
+                    <br>
+                    <b-row>
+                        <b-col cols="6">
+                            <b-form-group label="Respondents:" v-slot="{ ariaDescribedbyResp }"
+                            label-size="lg"
+                            label-class="font-weight-bold pt-0">
+                                <b-form-checkbox-group
+                                    id="checkbox-group--0"
+                                    v-model="filter_arrays['respondent']"
+                                    :options="all_arrays['respondent']"
+                                    :aria-describedby="ariaDescribedbyResp"
+                                    name="flavour--0"
+                                ></b-form-checkbox-group>
+                            </b-form-group>
+                        </b-col>
+                        <b-col cols="6">
+                            <b-form-group label="Cohorts:" v-slot="{ ariaDescribedbyCohort }"
+                            label-size="lg"
+                            label-class="font-weight-bold pt-0">
+                                <b-form-checkbox-group
+                                    id="checkbox-group-0"
+                                    v-model="filter_arrays['cohort']"
+                                    :options="all_arrays['cohort']"
+                                    :aria-describedby="ariaDescribedbyCohort"
+                                    name="flavour-0"
+                                ></b-form-checkbox-group>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                </b-col>
+                <b-col cols="2">
+                    <b-form-group label="Sessions:" v-slot="{ ariaDescribedbySes }" label-size="lg"
+                    label-class="font-weight-bold pt-0">
+                    <span><b-button variant="outline-dark" size="sm" style="padding: 1px;" @click="toggleChecks('session')"><i :class="session_check_icon"></i></b-button> <em>All</em></span>
+                        <b-form-checkbox-group
+                            id="checkbox-group-3"
+                            v-model="filter_arrays['session']"
+                            :options="all_arrays['session']"
+                            :aria-describedby="ariaDescribedbySes"
+                            name="flavour-2"
+                        ></b-form-checkbox-group>
+                    </b-form-group>
+                </b-col>
+                <b-col cols="4">
+                    <b-form-group label="Filter by category:" v-slot="{ ariaDescribedbyCat }"
+                    label-size="lg"
+                    label-class="font-weight-bold pt-0">
+                    <span><b-button variant="outline-dark" size="sm" style="padding: 1px;" @click="toggleChecks('category')"><i :class="category_check_icon"></i></b-button> <em>All</em></span>
+                        <b-form-checkbox-group
+                            id="checkbox-group-1"
+                            v-model="filter_arrays['category']"
+                            :options="all_arrays['category']"
+                            :aria-describedby="ariaDescribedbyCat"
+                            name="flavour-1"
+                        ></b-form-checkbox-group>
+                    </b-form-group>
+                </b-col>
+                <!-- <b-col cols="1"></b-col> -->
+                <b-col>
+                    <b-form-group label="Filter by type:" v-slot="{ ariaDescribedbyType }" label-size="lg"
+                    label-class="font-weight-bold pt-0">
+                    <span><b-button variant="outline-dark" size="sm" style="padding: 1px;" @click="toggleChecks('type')"><i :class="type_check_icon"></i></b-button> <em>All</em></span>
+                        <b-form-checkbox-group
+                            id="checkbox-group-2"
+                            v-model="filter_arrays['type']"
+                            :options="all_arrays['type']"
+                            :aria-describedby="ariaDescribedbyType"
+                            name="flavour-2"
+                        ></b-form-checkbox-group>
+                    </b-form-group>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <b-button variant="outline-dark" size="sm" @click="exportTable()"><i class="fas fa-share"></i> Export Table</b-button>
+                </b-col>
+                <b-col cols="1"></b-col>
+                <b-col></b-col>
+                <b-col></b-col>
+                
+            </b-row>
+        </b-card>
+        <br>
+        <b-card no-body>
+            <b-table ref="itemtable" responsive striped bordered small v-bind:items="filtered_measures_type" v-bind:fields="fields_to_display"
+              style="margin-bottom: 5px;">
+              <!-- Respondents column -->
+              <template #cell(respondents)="data">
+                <span v-for="resp in data.value">{{getRespondentText(resp)}}<br></span>
+              </template>
+              <!-- Cohorts column -->
+              <template #cell(cohorts)="data">
+                <span v-if="containsNumbers(data.item.ecc)">ECC</span>
+                <span v-if="containsNumbers(data.item.ecc)"><br></span>
+                <span v-if="containsNumbers(data.item.mcc)">MCC</span>
+              </template>
+              <!-- Sessions column -->
+              <template #cell(sessions)="data">
+                <span v-for="i in [1,2,3,4,5,6,7]">
+                    <span v-if="containsDigit(i, data.item.ecc) || containsDigit(i, data.item.mcc)" style="font-size:1.25em">{{all_sessions_short[i]}} </span>
+                    <span v-else style="font-size:1.25em">⬜ </span>
+                </span>
+              </template>
+              <!-- Info column -->
+              <template #cell(info)="data">
+                <div style="text-align: center">
+                  <b-button variant="outline-dark" size="sm" @click="showInfoModal(data.index)"><i class="fas fa-info"></i></b-button>
+                </div>
+              </template>
+            </b-table>
+
+            <b-modal ref="info-modal" hide-header-close size="lg">
+                <template #modal-title>
+                    <h2>{{modal_details['measure_shortname']}}</h2>
+                </template>
+                <table>
+                    <tr v-for="disp_key in modal_keys_basic">
+                        <td style="width:30%">{{modal_details_names[disp_key]}}:</td>
+                        <td>{{modal_details[disp_key]}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Description:</td>
+                        <td>{{modal_details['description']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">References:</td>
+                        <td>{{modal_details['references']}}
+                            <span v-for="doi in modal_details.doi">
+                                <br>
+                                <a :href="'https://doi.org/'+doi"><small>{{doi}}</small></a>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </b-modal>
+        </b-card>
+    </b-container>
+
+    <!-- Run the Vue app scripts - DO NOT CHANGE ORDER -->
+    <script src="assets/app_globals.js"></script>
+    <script src="assets/app_table.js"></script>
+</body>
+</html>
