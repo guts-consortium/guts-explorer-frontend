@@ -2,134 +2,6 @@
 // Vue app //
 /***********/
 
-Vue.component("category-tab", {
-    template: "#tab-template",
-    data: function () {
-        return {
-            display_details: {
-                cohort: '-',
-                session: '-',
-                measure_category: '-',
-                measure_name: '-',
-                measure_shortname: '-',
-                respondents: '-',
-                description: '-',
-                references: '-',
-            },
-            display_details_names: {
-                cohort: 'Cohort',
-                session: 'Session',
-                measure_category: 'Measure Category',
-                measure_name: 'Measure Name',
-                measure_shortname: 'Measure Shortname',
-                respondents: 'Respondents',
-                description: 'Description',
-                references: 'References',
-            },
-            display_keys_basic: ['cohort', 'session', 'measure_category', 'measure_name', 'respondents'],
-            cohort_options: [
-                { value: 'ecc', text: 'ECC' },
-                { value: 'mcc', text: 'MCC' },
-            ],
-            citation_text: null,
-            invalid_doi: false,
-            citation_busy: false,
-            showCopyCiteTooltip: false,
-            // cohort: "mcc",
-        };
-    },
-    props: [
-        'category_index',
-        'category',
-        'parent_cohort',
-        'measure_data',
-        'measure_pwpc_data',
-    ],
-    methods: {
-        updateDetails(newDeets) {
-            console.log('insideupdate')
-            console.log(newDeets)
-            Object.keys(newDeets).forEach(k => {
-                console.log(k)
-                this.display_details[k] = newDeets[k]
-            })
-            console.log(this.display_details)
-        },
-        clearDetails() {
-            newDeets = {}
-            newDeets.cohort = cohorts[this.parent_cohort]
-            newDeets.measure_category = this.category.name
-            newDeets.session = '-'
-            newDeets.measure_shortname = '-'
-            newDeets.description = '-'
-            newDeets.measure_name = '-'
-            newDeets.respondents = '-'
-            newDeets.references = '-'
-            newDeets.doi = null
-            this.updateDetails(newDeets)
-        },
-        clickEventHandler() {
-            this.createFig(this.category.short_name)
-            this.clearDetails()
-        },
-        changeCohort() {
-            this.$emit('update:parent_cohort', this.parent_cohort)
-            this.createFig(this.category.short_name)
-            this.clearDetails()
-        },
-        
-        getCitationText(doi = "") {
-
-            this.citation_text = null
-            this.$refs['cite-modal'].show()
-            if (doi && doi.includes("https://doi.org/")) {
-                this.invalid_doi = false;
-                this.citation_busy = true;
-                const headers = {
-                    Accept: "text/x-bibliography; style=apa",
-                };
-                fetch(doi, { headers })
-                    .then((response) => response.text())
-                    .then((data) => {
-                    this.citation_text = data;
-                    console.log(data);
-                    this.citation_busy = false;
-                    });
-            } else {
-                this.invalid_doi = true;
-            }
-        },
-        copyCitationText(index) {
-            // https://stackoverflow.com/questions/60581285/execcommand-is-now-obsolete-whats-the-alternative
-            // https://www.sitepoint.com/clipboard-api/
-            selectText = document.getElementById("citation").textContent;
-            navigator.clipboard
-              .writeText(selectText)
-              .then(() => {})
-              .catch((error) => {
-                alert(`Copy failed! ${error}`);
-              });
-            this.showCopyCiteTooltip = true;
-          },
-          hideCiteTooltipLater() {
-            setTimeout(() => {
-              this.showCopyCiteTooltip = false;
-            }, 1000);
-          },
-    },
-    mounted() {
-        if (this.category_index == 0) {
-            this.createFig(this.category.short_name)
-            this.clearDetails()
-        }
-    }
-})
-
-
-/***********/
-// Vue app //
-/***********/
-
 // Start Vue instance
 var explorer = new Vue({
     el: "#explorer-collected-alt",
@@ -144,6 +16,14 @@ var explorer = new Vue({
             { value: 'ecc', text: 'Early Childhood Cohort (ECC)' },
             { value: 'mcc', text: 'Middle Childhood Cohort (MCC)' },
         ],
+        cohort_dict: {
+            ecc: 'ECC',
+            mcc: 'MCC',
+        },
+        cohort_dict_long: {
+            'ecc': 'Early Childhood Cohort (ECC)',
+            'mcc': 'Middle Childhood Cohort (MCC)',
+        },
         respondent: "all",
         respondent_options: [
             {value: "all", text: "All respondents"},
@@ -152,8 +32,17 @@ var explorer = new Vue({
             {value: "pp", text: "Primary parent"},
             {value: "ra", text: "Research assistant"},
         ],
+        respondent_dict: {
+            "all": "All respondents",
+            "c": "Child",
+            "op": "Other parent",
+            "pp": "Primary parent",
+            "ra": "Research assistant",
+        },
+        type_dict: {},
         type_options:[],
         type: "all",
+        category_dict: {},
         category_options:[],
         category: "all",
         fields_to_display: [
@@ -165,11 +54,42 @@ var explorer = new Vue({
             "ecc",
             "mcc",
         ],
+        display_details: {},
         all_categories: categories_list,
         categories_list: [],
         filter_categories: [],
         filter_types: [],
         search_text: "",
+        display_details: {
+            cohort: '-',
+            session: '-',
+            cohort_ses: '-',
+            measure_category: '-',
+            measure_name: '-',
+            measure_type: '-',
+            measure_shortname: '-',
+            respondents: '-',
+            description: '-',
+            references: '-',
+        },
+        display_details_names: {
+            cohort: 'Cohort',
+            session: 'Session',
+            cohort_ses: 'Cohort/session',
+            measure_category: 'Measure Category',
+            measure_name: 'Measure Name',
+            measure_type: 'Measure Type',
+            measure_shortname: 'Measure Shortname',
+            respondents: 'Respondents',
+            description: 'Description',
+            references: 'References',
+        },
+        display_keys_basic: ['cohort', 'session', 'measure_category', 'measure_name', 'respondents'],
+        citation_text: null,
+        invalid_doi: false,
+        citation_busy: false,
+        showCopyCiteTooltip: false,
+
     },
     computed: {
         filtered_measures_cohort() {
@@ -222,6 +142,7 @@ var explorer = new Vue({
             console.log(this.filtered_measures_per_category)
         },
         drawGraph() {
+            this.clearDetails()
             var comp = this;
             var cohort_waves = this.cohort + '_waves';
             var N_measures = this.filtered_measures.length;
@@ -341,16 +262,18 @@ var explorer = new Vue({
                     console.log(data)
                     x = data.points[0].x // 0,1,2,3,4,5,(6)
                     y = data.points[0].y // 1,2,3,...,n
+                    console.log(cat_measure_short_names[y-1])
                     newDeets = {}
-                    newDeets.cohort = cohorts[comp.parent_cohort]
-                    const catDisplay = cats.filter(cat => cat.short_name === category_sn)
-                    newDeets.measure_category = catDisplay[0].name
-                    newDeets.session = wave_text[x]
-                    newDeets.measure_shortname = measure_short_names[y-1]
+                    newDeets.cohort = comp.cohort_dict_long[comp.cohort]
                     var measure = comp.measure_data.filter(function(element) {
-                        return element.short_name == newDeets.measure_shortname
+                        return element.short_name == cat_measure_short_names[y-1]
                     });
                     measure = measure[0]
+                    console.log(measure)
+                    newDeets.measure_category = comp.category_dict[measure.measure_category]
+                    newDeets.session = wave_text[x]
+                    newDeets.measure_shortname = measure.short_name
+                    newDeets.measure_type = comp.type_dict[measure.measure_type]
                     newDeets.description = measure.description ? measure.description : '-'
                     newDeets.measure_name = measure.long_name
                     newDeets.respondents = measure.respondent
@@ -359,10 +282,8 @@ var explorer = new Vue({
                     newDeets.respondents = newDeets.respondents.replace('c', 'Child')
                     newDeets.respondents = newDeets.respondents.replace('-', ', ')
                     newDeets.references = measure.reference ? measure.reference : ''
+                    newDeets.cohort_ses = comp.cohort_dict[comp.cohort] + ', Wave ' + wave_text[x]
                     newDeets.doi = measure.doi
-
-                    console.log('insideclick')
-                    console.log(newDeets)
                     comp.updateDetails(newDeets)
                 }
             )
@@ -374,6 +295,66 @@ var explorer = new Vue({
             myPlot.on('plotly_unhover', function(data){
                 dragLayer.style.cursor = ''
             });
+        },
+        updateDetails(newDeets) {
+            // console.log('insideupdate')
+            // console.log(newDeets)
+            Object.keys(newDeets).forEach(k => {
+                this.display_details[k] = newDeets[k]
+            })
+            // console.log(this.display_details)
+        },
+        clearDetails() {
+            newDeets = {}
+            newDeets.cohort_ses = '-'
+            newDeets.measure_category = '-'
+            newDeets.measure_type = '-'
+            newDeets.session = '-'
+            newDeets.measure_shortname = '-'
+            newDeets.description = '-'
+            newDeets.measure_name = '-'
+            newDeets.respondents = '-'
+            newDeets.references = '-'
+            newDeets.doi = null
+            this.updateDetails(newDeets)
+        },        
+        getCitationText(doi = "") {
+
+            this.citation_text = null
+            this.$refs['cite-modal'].show()
+            if (doi && doi.includes("https://doi.org/")) {
+                this.invalid_doi = false;
+                this.citation_busy = true;
+                const headers = {
+                    Accept: "text/x-bibliography; style=apa",
+                };
+                fetch(doi, { headers })
+                    .then((response) => response.text())
+                    .then((data) => {
+                    this.citation_text = data;
+                    console.log(data);
+                    this.citation_busy = false;
+                    });
+            } else {
+                this.invalid_doi = true;
+            }
+        },
+        copyCitationText(index) {
+            // https://stackoverflow.com/questions/60581285/execcommand-is-now-obsolete-whats-the-alternative
+            // https://www.sitepoint.com/clipboard-api/
+            selectText = document.getElementById("citation").textContent;
+            navigator.clipboard
+              .writeText(selectText)
+              .then(() => {})
+              .catch((error) => {
+                alert(`Copy failed! ${error}`);
+              });
+            this.showCopyCiteTooltip = true;
+        },
+        hideCiteTooltipLater() {
+            setTimeout(() => {
+                this.showCopyCiteTooltip = false;
+            }, 1000);
         },
     },
     beforeMount() {
@@ -391,48 +372,67 @@ var explorer = new Vue({
         })
         .then((responseJson) => {
             this.measure_data = responseJson;
-            types_list = this.measure_data.map(function(measure) {
-                return measure["measure_type"];
-            });
+            // categories
             all_cats = this.measure_data.map(function(measure) {
                 return measure["measure_category"];
             });
             this.categories_list = [...new Set(categories_list)].sort()
-            console.log(this.categories_list)
-            this.type_options = [...new Set(types_list)].sort().map((item, idx) => (
-                {'value': item, 'text': makeReadable(item)}
-            ))
-            this.type_options.unshift({value: 'all', text: 'All types'})
             this.category_options = this.categories_list.map((item, idx) => (
                 {'value': item, 'text': makeReadable(item)}
             ))
             this.category_options.unshift({value: 'all', text: 'All categories'})
+            this.category_dict = this.categories_list.reduce((output, curr) => {
+                output[curr] = makeReadable(curr)
+                return output;
+              }, {});
+            this.category_dict['all'] = 'All categories'
+            // types
+            all_types = this.measure_data.map(function(measure) {
+                return measure["measure_type"];
+            });
+            this.types_list = [...new Set(all_types)].sort()
+            this.type_options = this.types_list.map((item, idx) => (
+                {'value': item, 'text': makeReadable(item)}
+            ))
+            this.type_options.unshift({value: 'all', text: 'All types'})
+            this.type_dict = this.types_list.reduce((output, curr) => {
+                output[curr] = makeReadable(curr)
+                return output;
+              }, {});
+            
+            this.type_dict['all'] = 'All types'
             this.measures_loaded = true;
+        })
+        .then(() => {
+            this.drawGraph()
         })
         .catch((error) => {
             console.log(error);
         });
 
-        // Load measure per wave/cohort data
-        measure_pwpc_data_file = 'inputs/processed_data/measure_per_wave_per_cohort.json'
-        fetch(measure_pwpc_data_file)
-        .then((response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                console.log(
-                    "WARNING: measure_per_wave_per_cohort.json file could not be loaded"
-                );
-            }
-        })
-        .then((responseJson) => {
-            this.measure_pwpc_data = responseJson;
-            this.measures_pwpc_loaded = true;
-            console.log(this.measure_pwpc_data)
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        // // Load measure per wave/cohort data
+        // measure_pwpc_data_file = 'inputs/processed_data/measure_per_wave_per_cohort.json'
+        // fetch(measure_pwpc_data_file)
+        // .then((response) => {
+        //     if (response.ok) {
+        //         return response.json();
+        //     } else {
+        //         console.log(
+        //             "WARNING: measure_per_wave_per_cohort.json file could not be loaded"
+        //         );
+        //     }
+        // })
+        // .then((responseJson) => {
+        //     this.measure_pwpc_data = responseJson;
+        //     this.measures_pwpc_loaded = true;
+        //     console.log(this.measure_pwpc_data)
+        // })
+        // .then(() => {
+        //     this.drawGraph()
+        // })
+        // .catch((error) => {
+        //     console.log(error);
+        // });
         
     },
 });

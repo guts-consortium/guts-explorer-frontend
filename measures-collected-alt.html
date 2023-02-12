@@ -24,31 +24,6 @@
 </head>
 
 
-<!-- Template for tab -->
-<script type="text/x-template" id="tab-template">
-    <b-tab @click="clickEventHandler">
-        <template v-slot:title>
-            <i :class="category.icon"></i> {{category.display_name}}
-        </template>
-        
-        <b-row>
-            <b-col cols="10">
-                <h2>{{category.name}}</h2>
-                <b-card-text style="color:lightslategray" >{{category.description}}</b-card-text>
-            </b-col>
-            <b-col style="text-align:center;">
-                <h5>Cohort</h5>
-                <!-- <b-form-select v-model="cohort" :options="cohort_options" v-on:change=" $emit('update-cohort', cohort)"></b-form-select> -->
-                <b-form-select v-model="parent_cohort" :options="cohort_options" v-on:change="changeCohort()"></b-form-select>
-            </b-col>
-        </b-row>
-        <hr>
-        
-    </b-tab>
-</script>
-
-
-
 <body id="mainbody">
     <noscript>
         <p><strong>The majority of graphs on this page are interactive and require
@@ -60,7 +35,7 @@
     </div>
 
     
-    <b-container id="explorer-collected-alt" v-if="measures_loaded && measures_pwpc_loaded">
+    <b-container id="explorer-collected-alt" v-if="measures_loaded">
         <b-form inline style="font-size: x-large; line-height: 2em;">
             <label for="cohort_select" class="font-weight-bold pt-0"><i class="fas fa-table-columns"></i>&nbsp;&nbsp;Which cohort would you like to view? </label>
             <b-form-select id="cohort_select" v-model="cohort" :options="cohort_options" v-on:change="drawGraph()"></b-form-select>
@@ -75,70 +50,99 @@
             <b-form-select id="type_select" v-model="type" :options="type_options" v-on:change="drawGraph()"></b-form-select>
         </b-form>
 
-        <br><br>
+        <br>
 
-        <b-card>
+        <b-card  bg-variant="light" header="Light" class="text-center">
+
+            <template v-slot:header>
+                <h4>|
+                    <i class="fas fa-table-columns"></i> {{cohort_dict[cohort]}} | 
+                    <i class="fas fa-users"></i> {{respondent_dict[respondent]}} | 
+                    <i class="fas fa-pie-chart"></i> {{category_dict[category]}} | 
+                    <i class="fas fa-ruler"></i> {{type_dict[type]}} |
+                </h4>
+            </template>
+
             <b-row>
                 <b-col cols="7">
                     <h4 style="text-align:center"><em>Select a measure to find out more</em></h4>
                     <div id="measure_graph"></div>
                 </b-col>
                 <b-col>
-                    <h4>Selected measure:</h4>
-                    <!-- <h4>Selected measure: {{display_details['measure_shortname']}}</h4> -->
-                    <br>
-    
-                    <!-- <table>
-                        <tr v-for="disp_key in display_keys_basic">
-                            <td style="width:30%">{{display_details_names[disp_key]}}:</td>
-                            <td>{{display_details[disp_key]}}</td>
-                        </tr>
-                        <tr>
-                            <td style="width:30%">Description:</td>
-                            <td>{{display_details['description']}}</td>
-                        </tr>
-                        <tr>
-                            <td style="width:30%">Measure sources:</td>
-                            <td><span v-if="display_details['references']">{{display_details['references']}}<br></span>
-                                <span v-for="doi in display_details.doi">
-                                    <a :href="'https://doi.org/'+doi"><small>{{doi}}</small></a>
-                                    <b-button variant="outline-dark" size="sm" @click="getCitationText('https://doi.org/'+doi)"><i class="fas fa-quote-right"></i></b-button><br>
-                                </span>
-                                <b-modal ref="cite-modal" size="lg" 
-                                    header-bg-variant="light"
-                                    footer-bg-variant="light"
-                                    body-bg-variant="light"
-                                    body-text-variant="dark"
-                                    ok-only>
-                                        <template #modal-header="{ close }">
-                                        <div class="d-block text-center">
-                                            <h3>Article citation</h3>
-                                        </div>
-                                        </template>
-                                        <b-spinner v-if="citation_busy" variant="warning" type="grow" style="text-align:center;">Fetching citation information...</b-spinner>
-                                        <div v-if="citation_text" class="shadow-sm p-3 mb-3 bg-white rounded">
-                                        <b-row>
-                                            <b-col cols="11">
-                                                <code id="citation">
-                                                    {{citation_text}}
-                                                </code>
-                                            </b-col>
-                                            <b-col cols="1">
-                                                <i id="copyBtnCite" class="far fa-clone" @click="copyCitationText"></i>
-                                                <b-tooltip target="copyBtnCite" :show.sync="showCopyCiteTooltip" @shown="hideCiteTooltipLater" triggers left title="Copied!">
-                                                </b-tooltip>
-                                            </b-col>
-                                        </b-row>
-                                        </div>
-                                        <span v-show="invalid_doi"><em>Invalid DOI</em></span>
-                                    </b-modal>
-                            </td>
-                        </tr>
-                    </table> -->
+                    <div class="stickydiv">
+                        <h4>Selected measure: {{display_details['measure_shortname']}}</h4>
+                        <br>
+        
+                        <table>
+
+                            <tr>
+                                <td style="width:30%">{{display_details_names['measure_name']}}:</td>
+                                <td>{{display_details['measure_name']}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:30%">{{display_details_names['description']}}:</td>
+                                <td>{{display_details['description']}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:30%">{{display_details_names['measure_category']}}:</td>
+                                <td>{{display_details['measure_category']}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:30%">{{display_details_names['measure_type']}}:</td>
+                                <td>{{display_details['measure_type']}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:30%">{{display_details_names['respondents']}}:</td>
+                                <td>{{display_details['respondents']}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:30%">{{display_details_names['cohort_ses']}}:</td>
+                                <td>{{display_details['cohort_ses']}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:30%">Measure sources:</td>
+                                <td><span v-if="display_details['references']">{{display_details['references']}}<br></span>
+                                    <span v-for="doi in display_details.doi">
+                                        <a :href="'https://doi.org/'+doi"><small>{{doi}}</small></a>
+                                        <b-button variant="outline-dark" size="sm" @click="getCitationText('https://doi.org/'+doi)"><i class="fas fa-quote-right"></i></b-button><br>
+                                    </span>
+                                    <b-modal ref="cite-modal" size="lg" 
+                                        header-bg-variant="light"
+                                        footer-bg-variant="light"
+                                        body-bg-variant="light"
+                                        body-text-variant="dark"
+                                        ok-only>
+                                            <template #modal-header="{ close }">
+                                            <div class="d-block text-center">
+                                                <h3>Article citation</h3>
+                                            </div>
+                                            </template>
+                                            <b-spinner v-if="citation_busy" variant="warning" type="grow" style="text-align:center;">Fetching citation information...</b-spinner>
+                                            <div v-if="citation_text" class="shadow-sm p-3 mb-3 bg-white rounded">
+                                            <b-row>
+                                                <b-col cols="11">
+                                                    <code id="citation">
+                                                        {{citation_text}}
+                                                    </code>
+                                                </b-col>
+                                                <b-col cols="1">
+                                                    <i id="copyBtnCite" class="far fa-clone" @click="copyCitationText"></i>
+                                                    <b-tooltip target="copyBtnCite" :show.sync="showCopyCiteTooltip" @shown="hideCiteTooltipLater" triggers left title="Copied!">
+                                                    </b-tooltip>
+                                                </b-col>
+                                            </b-row>
+                                            </div>
+                                            <span v-show="invalid_doi"><em>Invalid DOI</em></span>
+                                        </b-modal>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </b-col>
             </b-row>
         </b-card>
 
+        <br>
 
     </b-container>
     <script src="assets/app_globals.js"></script>
