@@ -39,6 +39,7 @@
             <b-row>
                 <b-col cols="3">
                     <b-row>
+                        <!-- SEARCH TEXT -->
                         <b-form-group label="Filter by short/long name:" v-slot="{ ariaDescribedby }"
                         label-size="lg"
                         label-class="font-weight-bold pt-0">
@@ -53,6 +54,7 @@
                     <br>
                     <b-row>
                         <b-col cols="6">
+                            <!-- RESPONDENTS -->
                             <b-form-group label="Respondents:" v-slot="{ ariaDescribedbyResp }"
                             label-size="lg"
                             label-class="font-weight-bold pt-0">
@@ -66,6 +68,7 @@
                             </b-form-group>
                         </b-col>
                         <b-col cols="6">
+                            <!-- COHORTS -->
                             <b-form-group label="Cohorts:" v-slot="{ ariaDescribedbyCohort }"
                             label-size="lg"
                             label-class="font-weight-bold pt-0">
@@ -81,6 +84,7 @@
                     </b-row>
                 </b-col>
                 <b-col cols="2">
+                    <!-- SESSIONS -->
                     <b-form-group label="Sessions:" v-slot="{ ariaDescribedbySes }" label-size="lg"
                     label-class="font-weight-bold pt-0">
                     <span><b-button variant="outline-dark" size="sm" style="padding: 1px;" @click="toggleChecks('session')"><i :class="session_check_icon"></i></b-button> <em>All</em></span>
@@ -94,6 +98,7 @@
                     </b-form-group>
                 </b-col>
                 <b-col cols="4">
+                    <!-- CATEGORY -->
                     <b-form-group label="Filter by category:" v-slot="{ ariaDescribedbyCat }"
                     label-size="lg"
                     label-class="font-weight-bold pt-0">
@@ -109,6 +114,7 @@
                 </b-col>
                 <!-- <b-col cols="1"></b-col> -->
                 <b-col>
+                    <!-- TYPE -->
                     <b-form-group label="Filter by type:" v-slot="{ ariaDescribedbyType }" label-size="lg"
                     label-class="font-weight-bold pt-0">
                     <span><b-button variant="outline-dark" size="sm" style="padding: 1px;" @click="toggleChecks('type')"><i :class="type_check_icon"></i></b-button> <em>All</em></span>
