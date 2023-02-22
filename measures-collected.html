@@ -53,14 +53,40 @@
                 <br>
 
                 <table>
-                    <tr v-for="disp_key in display_keys_basic">
+
+                    <tr>
+                        <td style="width:30%">{{display_details_names['measure_name']}}:</td>
+                        <td>{{display_details['measure_name']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">{{display_details_names['description']}}:</td>
+                        <td>{{display_details['description']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">{{display_details_names['measure_category']}}:</td>
+                        <td>{{display_details['measure_category']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">{{display_details_names['respondents']}}:</td>
+                        <td>{{display_details['respondents']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">{{display_details_names['cohort']}}:</td>
+                        <td>{{display_details['cohort']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">{{display_details_names['session']}}:</td>
+                        <td>{{display_details['session']}}</td>
+                    </tr>
+                    
+                    <!-- <tr v-for="disp_key in display_keys_basic">
                         <td style="width:30%">{{display_details_names[disp_key]}}:</td>
                         <td>{{display_details[disp_key]}}</td>
                     </tr>
                     <tr>
                         <td style="width:30%">Description:</td>
                         <td>{{display_details['description']}}</td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <td style="width:30%">Measure sources:</td>
                         <td><span v-if="display_details['references']">{{display_details['references']}}<br></span>
