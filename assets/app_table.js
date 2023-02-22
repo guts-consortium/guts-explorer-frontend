@@ -6,6 +6,11 @@ var all_respondents = [
     "other parent",
     "primary parent",
 ]
+var all_respondents_short = {
+    "child": "c",
+    "other parent": "op",
+    "primary parent": "pp",
+}
 
 var respondent_text = {
     "c": "Child",
@@ -29,6 +34,15 @@ var all_sessions = [
     "Wave 6️⃣",
     "Wave 🦠",
 ]
+var all_sessions_nr = {
+    "Wave 1️⃣": "1",
+    "Wave 2️⃣": "2",
+    "Wave 3️⃣": "3",
+    "Wave 4️⃣": "4",
+    "Wave 5️⃣": "5",
+    "Wave 6️⃣": "6",
+    "Wave 🦠": "7",
+}
 var all_sessions_short = [
     "0",
     "1️⃣",
@@ -163,6 +177,28 @@ var explorer = new Vue({
             return filter_measures.filter((c) => {
                 if (this.filter_arrays["type"].length == this.all_arrays["type"].length) return true;
                 return this.filter_arrays["type"].indexOf(c.measure_type ) >= 0
+            });
+        },
+        filtered_measures_cohort() {
+            filter_measures = this.filtered_measures_type;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["cohort"].length == this.all_arrays["cohort"].length) return true;
+                return this.filter_arrays["cohort"].some(r=>c["cohorts"].includes(r.toLowerCase()))
+            });
+        },
+        filtered_measures_respondent() {
+            filter_measures = this.filtered_measures_cohort;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["respondent"].length == this.all_arrays["respondent"].length) return true;
+                return this.filter_arrays["respondent"].some(r=>c["respondents"].includes(all_respondents_short[r]))
+            });
+        },
+        filtered_measures_session() {
+            filter_measures = this.filtered_measures_respondent;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["session"].length == this.all_arrays["session"].length) return true;
+                return (this.filter_arrays["session"].some(r=>c["ecc"].includes(all_sessions_nr[r])) ||
+                this.filter_arrays["session"].some(r=>c["mcc"].includes(all_sessions_nr[r])))
             });
         },
         category_check_icon() {
