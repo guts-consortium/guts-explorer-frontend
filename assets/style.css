@@ -181,3 +181,7 @@ table td:first-child {
   position: sticky;
   top: 0;
 }
+
+.tab-pane {
+  height: 100%
+}

@@ -3,7 +3,7 @@
 /***********/
 
 var explorer = new Vue({
-    el: "#explorer-table",
+    el: "#explorer-mri",
     data: {
         categories: cats,
         tabIndex: 0,
