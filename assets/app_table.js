@@ -120,6 +120,7 @@ var explorer = new Vue({
             cohort: '-',
             session: '-',
             measure_category: '-',
+            measure_type: '-',
             measure_name: '-',
             measure_shortname: '-',
             respondents: '-',
@@ -130,11 +131,13 @@ var explorer = new Vue({
             cohort: 'Cohorts',
             session: 'Sessions',
             measure_category: 'Measure Category',
+            measure_category: 'Measure Category',
+            measure_type: 'Measure Type',
             measure_name: 'Measure Name',
             measure_shortname: 'Measure Shortname',
             respondents: 'Respondents',
             description: 'Description',
-            references: 'References',
+            references: 'Measure sources',
         },
         modal_keys_basic: ['cohort', 'session', 'measure_category', 'measure_name', 'respondents'],
         cohort_options: [
@@ -247,6 +250,21 @@ var explorer = new Vue({
             newDeets.measure_name = measure.long_name
             newDeets.measure_category = measure.measure_category
             newDeets.description = measure.description ? measure.description : '-'
+            newDeets.measure_type = measure.measure_type
+            newDeets.session = ''
+            for (var i=1; i<8; i++) {
+                if (this.containsDigit(i, measure.ecc) || this.containsDigit(i, measure.mcc)) {
+                    newDeets.session+= this.all_sessions_short[i] + ' '
+                } else {
+                    newDeets.session+=  '⏹ '
+                }
+
+            }
+            newDeets.cohort = ''
+            for (var i=0; i< measure.cohorts.length; i++) {
+                newDeets.cohort += measure.cohorts[i].toUpperCase() + ', '
+            }
+            newDeets.cohort = newDeets.cohort.substring(0, newDeets.cohort.length - 2);
             newDeets.measure_name = measure.long_name
             newDeets.respondents = measure.respondent
             newDeets.respondents = newDeets.respondents.replace('pp', 'Primary parent')

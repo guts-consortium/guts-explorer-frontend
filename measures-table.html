@@ -171,21 +171,41 @@
               </template>
             </b-table>
 
-            <b-modal ref="info-modal" hide-header-close size="lg">
+            <b-modal ref="info-modal" hide-header-close size="lg" ok-only>
                 <template #modal-title>
                     <h2>{{modal_details['measure_shortname']}}</h2>
                 </template>
                 <table>
-                    <tr v-for="disp_key in modal_keys_basic">
-                        <td style="width:30%">{{modal_details_names[disp_key]}}:</td>
-                        <td>{{modal_details[disp_key]}}</td>
+                    <tr>
+                        <td style="width:30%">{{modal_details_names['measure_name']}}:</td>
+                        <td>{{modal_details['measure_name']}}</td>
                     </tr>
                     <tr>
-                        <td style="width:30%">Description:</td>
+                        <td style="width:30%">{{modal_details_names['description']}}:</td>
                         <td>{{modal_details['description']}}</td>
                     </tr>
                     <tr>
-                        <td style="width:30%">References:</td>
+                        <td style="width:30%">{{modal_details_names['measure_category']}}:</td>
+                        <td>{{modal_details['measure_category']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">{{modal_details_names['measure_type']}}:</td>
+                        <td>{{modal_details['measure_type']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">{{modal_details_names['respondents']}}:</td>
+                        <td>{{modal_details['respondents']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">{{modal_details_names['cohort']}}:</td>
+                        <td>{{modal_details['cohort']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">{{modal_details_names['session']}}:</td>
+                        <td style="font-size:1.25em">{{modal_details['session']}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Measure sources:</td>
                         <td>{{modal_details['references']}}
                             <span v-for="doi in modal_details.doi">
                                 <br>
