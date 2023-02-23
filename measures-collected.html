@@ -26,7 +26,7 @@
 
 <!-- Template for tab -->
 <script type="text/x-template" id="tab-template">
-    <b-tab @click="clickEventHandler">
+    <b-tab @click="clickEventHandler" :title-link-class="linkClass(category_index)">
         <template v-slot:title>
             <i :class="category.icon"></i> {{category.display_name}}
         </template>
@@ -52,7 +52,7 @@
                 <h4>Selected measure: {{display_details['measure_shortname']}}</h4>
                 <br>
 
-                <table>
+                <table class="lcid-info-table">
 
                     <tr>
                         <td style="width:30%">{{display_details_names['measure_name']}}:</td>
@@ -141,13 +141,17 @@
     </noscript>
 
     <div class="header">
-        <h1>Measures Collected</h1>
+        <a href="./"><img src="img/Leiden-CID-logo_200.png" alt="" height="90"></a>
+        &nbsp;&nbsp;
+        <h1><strong>LCID Metadata Explorer</strong></h1>
+        <h1 class="push">Measures Collected A</h1>
+        
     </div>
 
     
     <b-container id="explorer-collected" v-if="measures_loaded && measures_pwpc_loaded">
         <!-- <h1 style="text-align: center;">LCID metadata browser</h1> -->
-        <b-card no-body>
+        <b-card no-body style="background-color: var(--lcid_dark_blue); color: white">
             <!-- Consider effect of lazy loading??? -->
             <b-tabs pills vertical card v-model="tabIndex">
                 <b-tab disabled title="Categories:"></b-tab>

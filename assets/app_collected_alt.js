@@ -240,7 +240,9 @@ var explorer = new Vue({
                     showticklabels: true,
                     tickvals:wave_vals,
                     ticktext:wave_text,
-                    tickfont:{size:20}
+                    tickfont:{size:20},
+                    color: '#FFFFFF',
+
                     // tickangle: -45,
                 },
                 yaxis: {
@@ -249,8 +251,11 @@ var explorer = new Vue({
                     showline: false,
                     tickvals: Array.from({length: N_measures}, (_, j) => j + 1),
                     ticktext: cat_measure_short_names.reverse(),
-                    range: [0, N_measures+1]
+                    range: [0, N_measures+1],
+                    color: '#FFFFFF',
                 },
+                plot_bgcolor: '#083655',
+                paper_bgcolor: '#083655',
             };
             const config = {
                 displayModeBar: false, // hide toolbar

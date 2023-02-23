@@ -31,11 +31,14 @@
 
 
     <div class="header">
-        <h1>Measures Table</h1>
+        <a href="./"><img src="img/Leiden-CID-logo_200.png" alt="" height="90"></a>
+        &nbsp;&nbsp;
+        <h1><strong>LCID Metadata Explorer</strong></h1>
+        <h1 class="push">Measures Table</h1>
     </div>
 
     <b-container id="explorer-table" v-if="measures_loaded && measures_pwpc_loaded">
-        <b-card >
+        <b-card style="background-color: var(--lcid_dark_blue); color: white">
             <b-row>
                 <b-col cols="3">
                     <b-row>
@@ -87,7 +90,7 @@
                     <!-- SESSIONS -->
                     <b-form-group label="Sessions:" v-slot="{ ariaDescribedbySes }" label-size="lg"
                     label-class="font-weight-bold pt-0">
-                    <span><b-button variant="outline-dark" size="sm" style="padding: 1px;" @click="toggleChecks('session')"><i :class="session_check_icon"></i></b-button> <em>All</em></span>
+                    <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('session')"><i :class="session_check_icon"></i></b-button> <em>All</em></span>
                         <b-form-checkbox-group
                             id="checkbox-group-3"
                             v-model="filter_arrays['session']"
@@ -102,7 +105,7 @@
                     <b-form-group label="Filter by category:" v-slot="{ ariaDescribedbyCat }"
                     label-size="lg"
                     label-class="font-weight-bold pt-0">
-                    <span><b-button variant="outline-dark" size="sm" style="padding: 1px;" @click="toggleChecks('category')"><i :class="category_check_icon"></i></b-button> <em>All</em></span>
+                    <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('category')"><i :class="category_check_icon"></i></b-button> <em>All</em></span>
                         <b-form-checkbox-group
                             id="checkbox-group-1"
                             v-model="filter_arrays['category']"
@@ -117,7 +120,7 @@
                     <!-- TYPE -->
                     <b-form-group label="Filter by type:" v-slot="{ ariaDescribedbyType }" label-size="lg"
                     label-class="font-weight-bold pt-0">
-                    <span><b-button variant="outline-dark" size="sm" style="padding: 1px;" @click="toggleChecks('type')"><i :class="type_check_icon"></i></b-button> <em>All</em></span>
+                    <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('type')"><i :class="type_check_icon"></i></b-button> <em>All</em></span>
                         <b-form-checkbox-group
                             id="checkbox-group-2"
                             v-model="filter_arrays['type']"
@@ -130,7 +133,7 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <b-button variant="outline-dark" size="sm" @click="exportTable()"><i class="fas fa-share"></i> Export Table</b-button>
+                    <b-button variant="outline-light" size="sm" @click="exportTable()"><i class="fas fa-share"></i> Export Table</b-button>
                 </b-col>
                 <b-col cols="1"></b-col>
                 <b-col></b-col>
@@ -140,8 +143,9 @@
         </b-card>
         <br>
         <b-card no-body>
-            <b-table ref="itemtable" responsive striped bordered small v-bind:items="filtered_measures_session" v-bind:fields="fields_to_display"
-              style="margin-bottom: 5px;">
+            <b-table ref="itemtable" responsive small v-bind:items="filtered_measures_session" v-bind:fields="fields_to_display"
+              style="margin-bottom: 5px;"
+              class="lcid-info-table">
               <!-- Respondents column -->
               <template #cell(respondents)="data">
                 <span v-for="resp in data.value">{{getRespondentText(resp)}}<br></span>
@@ -156,7 +160,7 @@
               <template #cell(sessions)="data">
                 <span v-for="i in [1,2,3,4,5,6,7]">
                     <span v-if="containsDigit(i, data.item.ecc) || containsDigit(i, data.item.mcc)" style="font-size:1.25em">{{all_sessions_short[i]}} </span>
-                    <span v-else style="font-size:1.25em">⬜ </span>
+                    <span v-else style="font-size:1.25em;">⏹ </span>
                 </span>
               </template>
               <!-- Info column -->

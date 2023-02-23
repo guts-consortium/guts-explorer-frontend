@@ -73,6 +73,13 @@ var explorer = new Vue({
     methods: {
         exportTable() {
             downloadObjectAsJson(this.filtered_measures_search, "lcid_metadata.json")
+        },
+        linkClass(idx) {
+            if (this.tabIndex === idx) {
+              return 'tabSelected'
+            } else {
+              return 'tabNotSelected'
+            }
         }
     },
 

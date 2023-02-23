@@ -31,7 +31,10 @@
     </noscript>
 
     <div class="header">
-        <h1>Measures Collected (alternative)</h1>
+        <a href="./"><img src="img/Leiden-CID-logo_200.png" alt="" height="90"></a>
+        &nbsp;&nbsp;
+        <h1><strong>LCID Metadata Explorer</strong></h1>
+        <h1 class="push">Measures Collected B</h1>
     </div>
 
     
@@ -52,9 +55,10 @@
 
         <br>
 
-        <b-card  bg-variant="light" header="Light" class="text-center">
+        <!-- <b-card  bg-variant="collected_background" header-variant="collected_header" text-variant="collected_text" class="text-center"></b-card> -->
+        <b-card style="background-color: var(--lcid_dark_blue); color: white"  class="text-center">
 
-            <template v-slot:header>
+            <template v-slot:header >
                 <h4>|
                     <i class="fas fa-table-columns"></i> {{cohort_dict[cohort]}} | 
                     <i class="fas fa-users"></i> {{respondent_dict[respondent]}} | 
@@ -73,7 +77,7 @@
                         <h4>Selected measure: {{display_details['measure_shortname']}}</h4>
                         <br>
         
-                        <table>
+                        <table class="lcid-info-table">
 
                             <tr>
                                 <td style="width:30%">{{display_details_names['measure_name']}}:</td>

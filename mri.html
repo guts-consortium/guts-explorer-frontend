@@ -30,7 +30,10 @@
     </noscript>
 
     <div class="header">
-        <h1>MRI Measures</h1>
+        <a href="./"><img src="img/Leiden-CID-logo_200.png" alt="" height="90"></a>
+        &nbsp;&nbsp;
+        <h1><strong>LCID Metadata Explorer</strong></h1>
+        <h1 class="push">MRI Measures</h1>
     </div>
 
     <!-- <div class="text-center" style="width: 80%;">
@@ -42,13 +45,13 @@
     </div> -->
 
     <b-container id="explorer-mri">
-        <b-card no-body>
-          <b-tabs card class="d-flex flex-column" content-class="flex-grow-1">
+        <b-card no-body style="background-color: var(--lcid_dark_blue); color: white">
+          <b-tabs card pills class="d-flex flex-column" content-class="flex-grow-1" v-model="tabIndex">
 
             
-            <b-tab title="fMRI group stats 1">
+            <b-tab title="fMRI group stats 1" :title-link-class="linkClass(0)">
                 <div style="display: flex; flex-direction: column; margin:auto">
-                    <h5><a href="https://doi.org/10.1073/pnas.1915124117">Longitudinal changes in DLPFC activation during childhood are related to decreased aggression following social rejection</a></h5>
+                    <h5><a href="https://doi.org/10.1073/pnas.1915124117" style="color: var(--lcid_bluegreen);">Longitudinal changes in DLPFC activation during childhood are related to decreased aggression following social rejection</a></h5>
                     <h6><em>Michelle Achterberg, Anna C. K. van Duijvenvoorde, Marinus H. van IJzendoorn, and Eveline A. Crone</em></h6>
                     <p style="text-align: justify;"><small>
                         Regulating aggression after social feedback is an important prerequisite for
@@ -73,9 +76,9 @@
                 </div>
             </b-tab>
             
-            <b-tab title="fMRI group stats 2">
+            <b-tab title="fMRI group stats 2" :title-link-class="linkClass(1)">
                 <div style="display: flex; flex-direction: column; margin:auto">
-                    <h5><a href="https://doi.org/10.1093/scan/nsac039">Development of social feedback processing and responses in childhood: an fMRI test-replication design in two age cohorts</a></h5>
+                    <h5><a href="https://doi.org/10.1093/scan/nsac039"  style="color: var(--lcid_bluegreen);">Development of social feedback processing and responses in childhood: an fMRI test-replication design in two age cohorts</a></h5>
                     <h6><em>Simone Dobbelaar, Michelle Achterberg, Lina van Drunen, Anna c.k van Duijvenvoorde, Marinus H van IJzendoorn, Eveline A Crone</em></h6>
                     <p style="text-align: justify;"><small>
                         This study investigated behavioral and neural correlates underlying social
@@ -103,11 +106,10 @@
                     <iframe style="flex-grow: 1; min-height: 500px;" src="https://neurovault.org/media/images/GMFZUABO/pycortex_all/index.html"></iframe>
                 </div>
             </b-tab>
-
-            <b-tab title="ECC participant dropout">
+            <b-tab title="ECC participant dropout" :title-link-class="linkClass(2)">
 
             </b-tab>
-            <b-tab title="MCC participant dropout">
+            <b-tab title="MCC participant dropout" :title-link-class="linkClass(3)">
 
             </b-tab>
 

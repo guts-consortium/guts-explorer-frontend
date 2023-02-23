@@ -70,7 +70,7 @@ var cats = [
         display_name: "Behavioral",
         short_name: "behavioral-control",
         description: "Regulating one's behavior in response to stimuli.",
-        icon: "fas fa-scale-unbalanced-flip"
+        icon: "fas fa-people-arrows"
     },
     {
         name: "Additional markers",
@@ -97,7 +97,7 @@ var display_details_names = {
     description: 'Description',
     references: 'References',
 }
-var lcid_colors = ["#242A33","#505F73","#283D3B","#197278","#D6BCB4","#AB5B24","#DE752F","#C44536","#772E25","#EDDDD4"]
+var lcid_colors = ["#242A33","#505F73","#74a29f","#197278","#D6BCB4","#AB5B24","#DE752F","#C44536","#9b544b","#EDDDD4"]
 
 
 /*************/

@@ -4,6 +4,29 @@
   --fa-font-brands: normal 400 1em/1 "Font Awesome 6 Brands";
 }
 
+:root {
+  --lcid_dark_blue: #083655;
+  --lcid_blue: #518db6;
+  --lcid_bluegreen: #93c6bd;
+  --lcid_light_bluegreen: #d5e9e5;
+  --lcid_beige: #FFF0DF;
+  --lcid_orange: #FFA87C;
+  --lcid_light_orange: #FFDBBE;
+  --plotly_x: #242A33;
+  --plotly_x: #505F73;
+  --plotly_x: #74a29f;
+  --plotly_x: #197278;
+  --plotly_x: #D6BCB4;
+  --plotly_x: #AB5B24;
+  --plotly_x: #DE752F;
+  --plotly_x: #C44536;
+  --plotly_x: #9b544b;
+  --plotly_x: #EDDDD4;
+
+}
+
+
+
 @font-face {
   font-family: 'Font Awesome 6 Free';
   font-style: normal;
@@ -65,6 +88,7 @@
 
 body {
   font-family: 'Gudea', sans-serif !important;
+  background-color: var(--lcid_beige) !important;
 }
 
 table {
@@ -93,12 +117,23 @@ table td:first-child {
 
 
 .header {
-  background-color: #083655;
-  color: white;
-  text-align: center;
+  background-color: var(--lcid_beige);
+  color: var(--lcid_dark_blue);
+  /* text-align: center; */
   padding-top: 2em;
   padding-bottom: 2em;
   margin-bottom: 2em;
+  margin-left: 15%;
+  margin-right: 15%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px dashed var(--lcid_dark_blue);
+  /* justify-content: center; */
+}
+
+.push {
+  margin-left: auto;
 }
 
 .maincards {
@@ -119,7 +154,7 @@ table td:first-child {
   position: relative;
   margin: 0.5em;
   padding: 1em;
-  background-color: #fafafa;
+  background-color: var(--lcid_dark_blue);
   border-radius: 8px;
   text-align: center;
   height: 360px;
@@ -133,7 +168,7 @@ table td:first-child {
   display: flex;
   padding: 0.2em;
   border: 1px solid #e6e6e6;
-  background-color: #fff;
+  background-color: white;
   box-sizing: border-box;
   border-radius: 8px;
 }
@@ -144,7 +179,7 @@ table td:first-child {
   max-width: 210px;
 }
 .maincards .item-info {
-  color: #3a4046;
+  color: white;
   font-size: 16px;
   line-height: 24px;
   padding: 0.5em 0;
@@ -173,7 +208,7 @@ table td:first-child {
 }
 
 .maincards .item:hover, .maincards .item:active {
-  background-color: #d0eafc;
+  background-color: var(--lcid_blue);
 }
 
 .stickydiv {
@@ -185,3 +220,29 @@ table td:first-child {
 .tab-pane {
   height: 100%
 }
+
+.tabNotSelected {
+  background-color: var(--lcid_dark_blue) !important;
+  color: var(--lcid_beige) !important;
+}
+
+.tabSelected {
+  background-color: var(--lcid_light_bluegreen) !important;
+  color: var(--lcid_dark_blue) !important;
+}
+
+.lcid-info-table tr:nth-child(odd) {
+  background-color: var(--lcid_orange); 
+}
+.lcid-info-table tr:nth-child(even) {
+  background-color: var(--lcid_light_orange); 
+}
+.lcid-info-table {
+  border: 1px solid white;
+}
+.lcid-info-table td {
+  border: 1px solid white;
+}
+
+
+
