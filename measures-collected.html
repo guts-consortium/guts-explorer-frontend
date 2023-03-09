@@ -47,7 +47,7 @@
     </div>
 
     
-    <b-container id="explorer-collected-alt" v-if="measures_loaded">
+    <b-container id="explorer-collected" v-if="measures_loaded">
         <b-form inline style=" text-align: center; font-size: x-large; line-height: 2em;">
             <label for="cohort_select" class="font-weight-bold pt-0"><i class="fas fa-table-columns"></i>&nbsp;&nbsp;Which cohort would you like to view? </label>
             <b-form-select id="cohort_select" v-model="cohort" :options="cohort_options" v-on:change="drawGraph()"></b-form-select>

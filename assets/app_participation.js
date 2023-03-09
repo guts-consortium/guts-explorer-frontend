@@ -11,6 +11,10 @@ var explorer = new Vue({
         participation_data: {},
         measures_loaded: false,
         selected_cohort: 'ecc',
+        cohort_options: [
+            { value: 'ecc', text: 'Early Childhood Cohort (ECC)' },
+            { value: 'mcc', text: 'Middle Childhood Cohort (MCC)' },
+        ],
     },
     computed: {
     },

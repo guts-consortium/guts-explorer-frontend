@@ -4,7 +4,7 @@
 
 // Start Vue instance
 var explorer = new Vue({
-    el: "#explorer-collected-alt",
+    el: "#explorer-collected",
     data: {
         categories: cats,
         measure_data: {},
