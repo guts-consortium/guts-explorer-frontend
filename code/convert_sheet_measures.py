@@ -35,7 +35,13 @@ def parse_cohort_waves(measure_entry, cohort, n_resps):
 
 # Read all sheets from the measures excel file into Pandas dataframes
 measures_fn = Path(sys.argv[1])
-sheet_list = ['overview_measures', 'cd2', 'data_info', 'n_resp-will be added to 1st tab', 'n_quests', 'n_visits']
+sheet_list = ['overview_measures',
+              'data-availability',
+              'publications',
+              'cd2',
+              'data_info',
+              'n_quests',
+              'n_visits']
 df_settings = pd.read_excel(measures_fn, sheet_list)
 # Access the important dataframe
 overview_measures = df_settings['overview_measures']

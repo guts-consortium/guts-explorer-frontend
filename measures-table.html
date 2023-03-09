@@ -34,7 +34,16 @@
         <a href="./"><img src="img/Leiden-CID-logo_200.png" alt="" height="90"></a>
         &nbsp;&nbsp;
         <h1><strong>LCID Metadata Explorer</strong></h1>
-        <h1 class="push">Measures Table</h1>
+        <div class="dropdown push">
+            <button class="dropbtn"><i class="fas fa-bars"></i></button>
+            <div class="dropdown-content">
+              <a href="./">Overview</a>
+              <a onclick="window.location='participation.html'">Participation</a>
+              <a onclick="window.location='measures-collected.html'">Measures collected</a>
+              <a onclick="window.location='measures-table.html'">Measures table</a>
+              <a onclick="window.location='mri.html'">MRI measures</a>
+            </div>
+        </div>
     </div>
 
     <b-container id="explorer-table" v-if="measures_loaded && measures_pwpc_loaded">

@@ -33,16 +33,17 @@
         <a href="./"><img src="img/Leiden-CID-logo_200.png" alt="" height="90"></a>
         &nbsp;&nbsp;
         <h1><strong>LCID Metadata Explorer</strong></h1>
-        <h1 class="push">MRI Measures</h1>
+        <div class="dropdown push">
+            <button class="dropbtn"><i class="fas fa-bars"></i></button>
+            <div class="dropdown-content">
+              <a href="./">Overview</a>
+              <a onclick="window.location='participation.html'">Participation</a>
+              <a onclick="window.location='measures-collected.html'">Measures collected</a>
+              <a onclick="window.location='measures-table.html'">Measures table</a>
+              <a onclick="window.location='mri.html'">MRI measures</a>
+            </div>
+        </div>
     </div>
-
-    <!-- <div class="text-center" style="width: 80%;">
-        <h4>ECC participant dropout and recovery (N_total=238)</h4>
-        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script src="assets/sankey_source.js"></script>
-        <div id="a3b16243-f2fc-4f17-acc0-38208b380396" class="plotly-graph-div" style="height:40%; width:40%;"></div>
-        <script src="assets/sankey_graph.js"></script>
-    </div> -->
 
     <b-container id="explorer-mri">
         <b-card no-body style="background-color: var(--lcid_dark_blue); color: white">
@@ -105,12 +106,6 @@
                     
                     <iframe style="flex-grow: 1; min-height: 500px;" src="https://neurovault.org/media/images/GMFZUABO/pycortex_all/index.html"></iframe>
                 </div>
-            </b-tab>
-            <b-tab title="ECC participant dropout" :title-link-class="linkClass(2)">
-
-            </b-tab>
-            <b-tab title="MCC participant dropout" :title-link-class="linkClass(3)">
-
             </b-tab>
 
             

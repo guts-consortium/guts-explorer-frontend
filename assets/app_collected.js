@@ -2,151 +2,212 @@
 // Vue app //
 /***********/
 
-Vue.component("category-tab", {
-    template: "#tab-template",
-    data: function () {
-        return {
-            display_details: {
-                cohort: '-',
-                session: '-',
-                measure_category: '-',
-                measure_name: '-',
-                measure_shortname: '-',
-                respondents: '-',
-                description: '-',
-                references: '-',
-            },
-            display_details_names: {
-                cohort: 'Cohort',
-                session: 'Session',
-                measure_category: 'Measure Category',
-                measure_name: 'Measure Name',
-                measure_shortname: 'Measure Shortname',
-                respondents: 'Respondents',
-                description: 'Description',
-                references: 'References',
-            },
-            display_keys_basic: ['cohort', 'session', 'measure_category', 'measure_name', 'respondents'],
-            cohort_options: [
-                { value: 'ecc', text: 'ECC' },
-                { value: 'mcc', text: 'MCC' },
-            ],
-            citation_text: null,
-            invalid_doi: false,
-            citation_busy: false,
-            showCopyCiteTooltip: false,
-            // cohort: "mcc",
-        };
+// Start Vue instance
+var explorer = new Vue({
+    el: "#explorer-collected-alt",
+    data: {
+        categories: cats,
+        measure_data: {},
+        measure_pwpc_data: {},
+        measures_loaded: false,
+        measures_pwpc_loaded: false,
+        cohort: "mcc",
+        cohort_options: [
+            { value: 'ecc', text: 'Early Childhood Cohort (ECC)' },
+            { value: 'mcc', text: 'Middle Childhood Cohort (MCC)' },
+        ],
+        cohort_dict: {
+            ecc: 'ECC',
+            mcc: 'MCC',
+        },
+        cohort_dict_long: {
+            'ecc': 'Early Childhood Cohort (ECC)',
+            'mcc': 'Middle Childhood Cohort (MCC)',
+        },
+        respondent: "all",
+        respondent_options: [
+            {value: "all", text: "All respondents"},
+            {value: "c", text: "Child"},
+            {value: "op", text: "Other parent"},
+            {value: "pp", text: "Primary parent"},
+            {value: "ra", text: "Research assistant"},
+        ],
+        respondent_dict: {
+            "all": "All respondents",
+            "c": "Child",
+            "op": "Other parent",
+            "pp": "Primary parent",
+            "ra": "Research assistant",
+        },
+        type_dict: {},
+        type_options:[],
+        type: "all",
+        category_dict: {},
+        category_options:[],
+        category: "all",
+        fields_to_display: [
+            "short_name",
+            "long_name",
+            "measure_category",
+            "measure_type",
+            "respondents",
+            "ecc",
+            "mcc",
+        ],
+        display_details: {},
+        all_categories: categories_list,
+        categories_list: [],
+        filter_categories: [],
+        filter_types: [],
+        search_text: "",
+        display_details: {
+            cohort: '-',
+            session: '-',
+            cohort_ses: '-',
+            measure_category: '-',
+            measure_name: '-',
+            measure_type: '-',
+            measure_shortname: '-',
+            respondents: '-',
+            description: '-',
+            references: '-',
+        },
+        display_details_names: {
+            cohort: 'Cohort',
+            session: 'Session',
+            cohort_ses: 'Cohort/session',
+            measure_category: 'Measure Category',
+            measure_name: 'Measure Name',
+            measure_type: 'Measure Type',
+            measure_shortname: 'Measure Shortname',
+            respondents: 'Respondents',
+            description: 'Description',
+            references: 'References',
+        },
+        display_keys_basic: ['cohort', 'session', 'measure_category', 'measure_name', 'respondents'],
+        citation_text: null,
+        invalid_doi: false,
+        citation_busy: false,
+        showCopyCiteTooltip: false,
+
     },
-    props: [
-        'category_index',
-        'category',
-        'parent_cohort',
-        'measure_data',
-        'measure_pwpc_data',
-    ],
+    computed: {
+        filtered_measures_cohort() {
+            return this.measure_data.filter((item) => {
+                return item.cohorts.indexOf(this.cohort) >= 0
+            });
+        },
+        filtered_measures_respondent() {
+            filter_measures = this.filtered_measures_cohort;
+            return filter_measures.filter((item) => {
+                if (this.respondent == "all") return true;
+                return item.respondents.indexOf(this.respondent) >= 0
+            });
+        },
+        filtered_measures_category() {
+            filter_measures = this.filtered_measures_respondent;
+            return filter_measures.filter((item) => {
+                if (this.category == "all") return true;
+                return item.measure_category == this.category
+            });
+        },
+        filtered_measures_type() {
+            filter_measures = this.filtered_measures_category;
+            return filter_measures.filter((item) => {
+                if (this.type == "all") return true;
+                return item.measure_type == this.type
+            });
+        },
+        filtered_measures() {
+            return this.filtered_measures_type
+        },
+        filtered_measures_per_category() {
+            filter_measures = this.filtered_measures;
+            var output = {}
+            for (var i=0; i<this.all_categories.length; i++) {
+                cat = this.all_categories[i];
+                output[cat] = filter_measures.filter((item) => {
+                    return item.measure_category == cat
+                })
+                if (output[cat].length==0) {
+                    delete output[cat];
+                }
+            }
+            return output
+        }
+
+    },
     methods: {
-        updateDetails(newDeets) {
-            console.log('insideupdate')
-            console.log(newDeets)
-            Object.keys(newDeets).forEach(k => {
-                console.log(k)
-                this.display_details[k] = newDeets[k]
-            })
-            console.log(this.display_details)
+        drawGraph2() {
+            console.log(this.filtered_measures_per_category)
         },
-        clearDetails() {
-            newDeets = {}
-            newDeets.cohort = cohorts[this.parent_cohort]
-            newDeets.measure_category = this.category.name
-            newDeets.session = '-'
-            newDeets.measure_shortname = '-'
-            newDeets.description = '-'
-            newDeets.measure_name = '-'
-            newDeets.respondents = '-'
-            newDeets.references = '-'
-            newDeets.doi = null
-            this.updateDetails(newDeets)
-        },
-        clickEventHandler() {
-            this.createFig(this.category.short_name)
+        drawGraph() {
             this.clearDetails()
-        },
-        changeCohort() {
-            this.$emit('update:parent_cohort', this.parent_cohort)
-            this.createFig(this.category.short_name)
-            this.clearDetails()
-        },
-        linkClass(idx) {
-            if (this.$root.tabIndex === idx+2) {
-              return 'tabSelected'
-            } else {
-              return 'tabNotSelected'
-            }
-        },
-        createFig(category_sn) {
             var comp = this;
-
-            // var cohort_category_measures = this.measure_pwpc_data[this.cohort][category_sn]
-
-            console.log(this.measure_pwpc_data)
-            console.log(this.parent_cohort)
-            console.log(this.measure_pwpc_data[this.parent_cohort])
-
-            var cohort_category_measures = this.measure_pwpc_data[this.parent_cohort][category_sn]
-            var measure_short_names = Object.keys(cohort_category_measures)
-            var N_measures = measure_short_names.length;
-            
+            var cohort_waves = this.cohort + '_waves';
+            var N_measures = this.filtered_measures.length;
+            var cat_measure_short_names = []
+            var measure_short_names = this.filtered_measures.map(
+                function(element) { return element.short_name }
+            )
             var data = [];
-
-            console.log(category_sn)
-            console.log(cohort_category_measures)
-            console.log(N_measures)
-            console.log(measure_short_names)
-
-            for (var i=0; i<N_measures; i++) {
-                // Get row
-                row = cohort_category_measures[measure_short_names[i]].map(
-                    function(element) { return (N_measures-i)*element }
-                )
-                // Set zero to null
-                row = row.map(function(val, i) {
-                    val = parseInt(val, 10); 
-                    return val === 0 ? null : val;
-                });
-                // Remove wave 7 if specified
-                if (!include_wave_7) {
-                    row.pop()
-                }
-                // Add trace to data
-                trace = {
-                    y: row,
-                    mode: 'lines+markers',
-                    type: 'scatter',
-                    line: {
-                        width: 3,
-                        color: lcid_colors[categories_list.indexOf(category_sn)+1],
-                    },
-                    marker: {
-                        size: 14,
-                        color: addAlphaToHex(lcid_colors[categories_list.indexOf(category_sn)+1],0.5),
+            var available_cats = Object.keys(this.filtered_measures_per_category)
+            var i = 0;
+            for (var c=0; c<available_cats.length; c++) {
+                cat = available_cats[c];
+                console.log('---')
+                console.log('cat: ' + cat)
+                console.log('---')
+                for (var cm=0; cm<this.filtered_measures_per_category[cat].length; cm++) {
+                    cat_measure = this.filtered_measures_per_category[cat][cm];
+                    console.log(cat_measure)
+                    cat_measure_short_names.push(cat_measure['short_name'])
+                    // now we get the actual data
+                    cat_measure_cohort_waves = cat_measure[cohort_waves][this.respondent]
+                    row = [0,0,0,0,0,0,0].map(function(element, idx) {
+                        el = cat_measure_cohort_waves.indexOf((idx+1).toString()) >= 0 ? 1 : 0
+                        return (N_measures-i)*el
+                    })
+                    // Set zero to null
+                    row = row.map(function(val, i) {
+                        val = parseInt(val, 10); 
+                        return val === 0 ? null : val;
+                    });
+                    // Remove wave 7 if specified
+                    if (!include_wave_7) {
+                        row.pop()
+                    }
+                    // Add trace to data
+                    trace = {
+                        y: row,
+                        mode: 'lines+markers',
+                        type: 'scatter',
                         line: {
-                            width: 2,
-                            color: lcid_colors[categories_list.indexOf(category_sn)+1],
-                        }
-                        // symbol: 'square' 
-                    },
-                    connectgaps: true,
-                    showlegend: false,
-                    hovertemplate: '<b>%{x}<br>%{y}</b>' +
-                                    '<extra></extra>'
+                            width: 3,
+                            color: lcid_colors[this.categories_list.indexOf(cat)+1],
+                        },
+                        marker: {
+                            size: 14,
+                            color: addAlphaToHex(lcid_colors[this.categories_list.indexOf(cat)+1],0.5),
+                            line: {
+                                width: 2,
+                                color: lcid_colors[this.categories_list.indexOf(cat)+1],
+                            }
+                            // symbol: 'square'
+                        },
+                        connectgaps: true,
+                        showlegend: false,
+                        hovertemplate: '<b>%{x}<br>%{y}</b>' +
+                                        '<extra></extra>'
+                    }
+                    data.push(trace);
+                    i++;
                 }
-                data.push(trace);
             }
+            console.log(data)
 
             // Variables influenced by inclusion/exclusion of covid wave (7)
-            wave_text = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "🦠",]
-            // wave_text = ['Wave 1', 'Wave 2', 'Wave 3', 'Wave 4', 'Wave 5', 'Wave 6', 'Wave C']
+            wave_text = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "🦠"]
             wave_vals = [0,1,2,3,4,5,6]
             if (!include_wave_7) {
                 wave_text.pop()
@@ -154,11 +215,15 @@ Vue.component("category-tab", {
             }
             range_max = wave_text.length + 0.5
 
+            min_height = 150
+            calc_height = 30*N_measures < min_height ? min_height : 30*N_measures
+
         
             var layout = {
                 margin: {l: 120, r: 0, b: 0, t:40},
                 hovermode: 'closest',
                 width: 600,
+                height: calc_height,
                 xaxis: {
                     showgrid: true,
                     gridwidth: 1,
@@ -172,6 +237,7 @@ Vue.component("category-tab", {
                     ticktext:wave_text,
                     tickfont:{size:20},
                     color: '#FFFFFF',
+                    fixedrange: true,
                     // tickangle: -45,
                 },
                 yaxis: {
@@ -179,33 +245,37 @@ Vue.component("category-tab", {
                     zeroline: false,
                     showline: false,
                     tickvals: Array.from({length: N_measures}, (_, j) => j + 1),
-                    ticktext: measure_short_names.reverse(),
+                    ticktext: cat_measure_short_names.reverse(),
                     range: [0, N_measures+1],
                     color: '#FFFFFF',
+                    fixedrange: true,
                 },
                 plot_bgcolor: '#083655',
                 paper_bgcolor: '#083655',
+                hovermode: 'closest',
             };
             const config = {
                 displayModeBar: false, // hide toolbar
             };
-            Plotly.newPlot(category_sn, data, layout, config);
-            var myPlot = document.getElementById(category_sn)
+            Plotly.newPlot('measure_graph', data, layout, config);
+            var myPlot = document.getElementById('measure_graph')
             myPlot.on('plotly_click',
                 function(data){
                     console.log(data)
                     x = data.points[0].x // 0,1,2,3,4,5,(6)
                     y = data.points[0].y // 1,2,3,...,n
+                    console.log(cat_measure_short_names[y-1])
                     newDeets = {}
-                    newDeets.cohort = cohorts[comp.parent_cohort]
-                    const catDisplay = cats.filter(cat => cat.short_name === category_sn)
-                    newDeets.measure_category = catDisplay[0].name
-                    newDeets.session = wave_text[x]
-                    newDeets.measure_shortname = measure_short_names[y-1]
+                    newDeets.cohort = comp.cohort_dict_long[comp.cohort]
                     var measure = comp.measure_data.filter(function(element) {
-                        return element.short_name == newDeets.measure_shortname
+                        return element.short_name == cat_measure_short_names[y-1]
                     });
                     measure = measure[0]
+                    console.log(measure)
+                    newDeets.measure_category = comp.category_dict[measure.measure_category]
+                    newDeets.session = wave_text[x]
+                    newDeets.measure_shortname = measure.short_name
+                    newDeets.measure_type = comp.type_dict[measure.measure_type]
                     newDeets.description = measure.description ? measure.description : '-'
                     newDeets.measure_name = measure.long_name
                     newDeets.respondents = measure.respondent
@@ -214,10 +284,8 @@ Vue.component("category-tab", {
                     newDeets.respondents = newDeets.respondents.replace('c', 'Child')
                     newDeets.respondents = newDeets.respondents.replace('-', ', ')
                     newDeets.references = measure.reference ? measure.reference : ''
+                    newDeets.cohort_ses = comp.cohort_dict[comp.cohort] + ', Wave ' + wave_text[x]
                     newDeets.doi = measure.doi
-
-                    console.log('insideclick')
-                    console.log(newDeets)
                     comp.updateDetails(newDeets)
                 }
             )
@@ -230,6 +298,28 @@ Vue.component("category-tab", {
                 dragLayer.style.cursor = ''
             });
         },
+        updateDetails(newDeets) {
+            // console.log('insideupdate')
+            // console.log(newDeets)
+            Object.keys(newDeets).forEach(k => {
+                this.display_details[k] = newDeets[k]
+            })
+            // console.log(this.display_details)
+        },
+        clearDetails() {
+            newDeets = {}
+            newDeets.cohort_ses = '-'
+            newDeets.measure_category = '-'
+            newDeets.measure_type = '-'
+            newDeets.session = '-'
+            newDeets.measure_shortname = '-'
+            newDeets.description = '-'
+            newDeets.measure_name = '-'
+            newDeets.respondents = '-'
+            newDeets.references = '-'
+            newDeets.doi = null
+            this.updateDetails(newDeets)
+        },        
         getCitationText(doi = "") {
 
             this.citation_text = null
@@ -262,98 +352,13 @@ Vue.component("category-tab", {
                 alert(`Copy failed! ${error}`);
               });
             this.showCopyCiteTooltip = true;
-          },
-          hideCiteTooltipLater() {
+        },
+        hideCiteTooltipLater() {
             setTimeout(() => {
-              this.showCopyCiteTooltip = false;
+                this.showCopyCiteTooltip = false;
             }, 1000);
-          },
-    },
-    mounted() {
-        if (this.category_index == 0) {
-            this.createFig(this.category.short_name)
-            this.clearDetails()
-        }
-    }
-})
-
-
-/***********/
-// Vue app //
-/***********/
-
-// Start Vue instance
-var explorer = new Vue({
-    el: "#explorer-collected",
-    data: {
-        categories: cats,
-        tabIndex: 2,
-        measure_data: {},
-        measure_pwpc_data: {},
-        measures_loaded: false,
-        measures_pwpc_loaded: false,
-        cohort: "mcc",
-        fields_to_display: [
-            "short_name",
-            "long_name",
-            "measure_category",
-            "measure_type",
-            "respondents",
-            "ecc",
-            "mcc",
-        ],
-        all_categories: categories_list,
-        filter_categories: [],
-        filter_types: [],
-        search_text: "",
-    },
-    computed: {
-        all_short_names: function () {
-            name_list = this.measure_data.map(function(measure) {
-                return measure["short_name"];
-            });
-            return [...new Set(name_list)]
         },
-        all_long_names: function () {
-            name_list = this.measure_data.map(function(measure) {
-                return measure["long_name"];
-            });
-            return [...new Set(name_list)]
-        },
-        all_types: function () {
-            types_list = this.measure_data.map(function(measure) {
-                return measure["measure_type"];
-            });
-            return [...new Set(types_list)]
-        },
-        filtered_measures_search() {
-            return this.measure_data.filter((c) => {
-              if (this.search_text == "") return true;
-              return (
-                c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
-              );
-            });
-        },
-        // filtered_measures_search() {
-        //     return this.measure_data.filter((c) => {
-        //       if (this.search_text == "") return true;
-        //       return (
-        //         c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-        //         c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
-        //       );
-        //     });
-        // },
-        // category_short_name: function () {
-        //     return this.category.short_name
-        // },
-        // measure_short_names: function () {
-        //     return Object.keys(this.measure_pwpc_data[this.cohort][this.category["short_name"]])
-        // },
     },
-    methods: {
-    },
-
     beforeMount() {
         // Load new measure data
         measure_data_file = 'inputs/processed_data/measure_data.json'
@@ -369,32 +374,67 @@ var explorer = new Vue({
         })
         .then((responseJson) => {
             this.measure_data = responseJson;
+            // categories
+            all_cats = this.measure_data.map(function(measure) {
+                return measure["measure_category"];
+            });
+            this.categories_list = [...new Set(categories_list)].sort()
+            this.category_options = this.categories_list.map((item, idx) => (
+                {'value': item, 'text': makeReadable(item)}
+            ))
+            this.category_options.unshift({value: 'all', text: 'All categories'})
+            this.category_dict = this.categories_list.reduce((output, curr) => {
+                output[curr] = makeReadable(curr)
+                return output;
+              }, {});
+            this.category_dict['all'] = 'All categories'
+            // types
+            all_types = this.measure_data.map(function(measure) {
+                return measure["measure_type"];
+            });
+            this.types_list = [...new Set(all_types)].sort()
+            this.type_options = this.types_list.map((item, idx) => (
+                {'value': item, 'text': makeReadable(item)}
+            ))
+            this.type_options.unshift({value: 'all', text: 'All types'})
+            this.type_dict = this.types_list.reduce((output, curr) => {
+                output[curr] = makeReadable(curr)
+                return output;
+              }, {});
+            
+            this.type_dict['all'] = 'All types'
             this.measures_loaded = true;
+        })
+        .then(() => {
+            this.drawGraph()
         })
         .catch((error) => {
             console.log(error);
         });
 
-        // Load measure per wave/cohort data
-        measure_pwpc_data_file = 'inputs/processed_data/measure_per_wave_per_cohort.json'
-        fetch(measure_pwpc_data_file)
-        .then((response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                console.log(
-                    "WARNING: measure_per_wave_per_cohort.json file could not be loaded"
-                );
-            }
-        })
-        .then((responseJson) => {
-            this.measure_pwpc_data = responseJson;
-            this.measures_pwpc_loaded = true;
-            console.log(this.measure_pwpc_data)
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        // // Load measure per wave/cohort data
+        // measure_pwpc_data_file = 'inputs/processed_data/measure_per_wave_per_cohort.json'
+        // fetch(measure_pwpc_data_file)
+        // .then((response) => {
+        //     if (response.ok) {
+        //         return response.json();
+        //     } else {
+        //         console.log(
+        //             "WARNING: measure_per_wave_per_cohort.json file could not be loaded"
+        //         );
+        //     }
+        // })
+        // .then((responseJson) => {
+        //     this.measure_pwpc_data = responseJson;
+        //     this.measures_pwpc_loaded = true;
+        //     console.log(this.measure_pwpc_data)
+        // })
+        // .then(() => {
+        //     this.drawGraph()
+        // })
+        // .catch((error) => {
+        //     console.log(error);
+        // });
         
     },
 });
