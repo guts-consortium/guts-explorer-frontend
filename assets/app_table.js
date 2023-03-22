@@ -26,33 +26,44 @@ var all_cohorts = [
     "MCC",
 ]
 var all_sessions = [
-    "Wave 1️⃣",
-    "Wave 2️⃣",
-    "Wave 3️⃣",
-    "Wave 4️⃣",
-    "Wave 5️⃣",
-    "Wave 6️⃣",
-    "Wave 🦠",
+    "Wave 1",
+    "Wave 2",
+    "Wave 3",
+    "Wave 4",
+    "Wave 5",
+    "Wave 6",
+    "Wave C",
 ]
 var all_sessions_nr = {
-    "Wave 1️⃣": "1",
-    "Wave 2️⃣": "2",
-    "Wave 3️⃣": "3",
-    "Wave 4️⃣": "4",
-    "Wave 5️⃣": "5",
-    "Wave 6️⃣": "6",
-    "Wave 🦠": "7",
+    "Wave 1": "1",
+    "Wave 2": "2",
+    "Wave 3": "3",
+    "Wave 4": "4",
+    "Wave 5": "5",
+    "Wave 6": "6",
+    "Wave C": "7",
 }
 var all_sessions_short = [
     "0",
-    "1️⃣",
-    "2️⃣",
-    "3️⃣",
-    "4️⃣",
-    "5️⃣",
-    "6️⃣",
-    "🦠",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "C",
 ]
+
+// var all_sessions_short = [
+//     "0",
+//     "1️⃣",
+//     "2️⃣",
+//     "3️⃣",
+//     "4️⃣",
+//     "5️⃣",
+//     "6️⃣",
+//     "🦠",
+// ]
 
 var fields = [
     "short_name",
@@ -114,6 +125,7 @@ var explorer = new Vue({
         all_sessions: all_sessions,
         filter_sessions: all_sessions,
         search_text: "",
+        search_tags: [],
         modal_details: {
             cohort: '-',
             session: '-',
@@ -164,12 +176,27 @@ var explorer = new Vue({
               if (this.search_text == "") return true;
               return (
                 c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
+                c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.measure_category.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.measure_type.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
               );
             });
         },
+        filtered_measures_tags() {
+            return this.measure_data.filter((c) => {
+                if (this.search_tags.length == 0) return true;
+                return this.search_tags.every((v) =>
+                    c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.measure_category.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.measure_type.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0
+                );
+            });
+        },
         filtered_measures_category() {
-            filter_measures = this.filtered_measures_search;
+            filter_measures = this.filtered_measures_tags;
             return filter_measures.filter((c) => {
                 if (this.filter_arrays["category"].length == this.all_arrays["category"].length) return true;
                 return this.filter_arrays["category"].indexOf(c.measure_category ) >= 0
@@ -224,6 +251,19 @@ var explorer = new Vue({
         },
     },
     methods: {
+        addSearchTag(option) {
+            this.search_tags.push(this.search_text);
+            this.search_text = "";
+        },
+        removeSearchTag(tag) {
+            idx = this.search_tags.indexOf(tag);
+            if (idx > -1) {
+                this.search_tags.splice(idx, 1);
+            }
+        },
+        clearSearchTagText() {
+            this.search_text = "";
+        },
         exportTable() {
             downloadObjectAsJson(this.filtered_measures_search, "lcid_metadata.json")
         },

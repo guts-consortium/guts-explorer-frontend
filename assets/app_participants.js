@@ -26,13 +26,13 @@ var explorer = new Vue({
             bar_thickness = 40
             pad_thickness = 15
             bar_color = "#D6BCB4"
-            wave_text = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣"]
-            wave_text_long = ["Wave 1️⃣", "Wave 2️⃣", "Wave 3️⃣", "Wave 4️⃣", "Wave 5️⃣", "Wave 6️⃣"]
+            wave_text = ["1", "2", "3", "4", "5", "6"]
+            wave_text_long = ["Wave 1", "Wave 2", "Wave 3", "Wave 4", "Wave 5", "Wave 6"]
             label_text = ["V1", "V2", "V3", "V4", "V5", "V6"]
             label_text_long = ["Visit 1", "Visit 2", "Visit 3", "Visit 4", "Visit 5", "Visit 6"]
             label = this.participant_data[cohort]['label']
             for(var i=0; i < label.length; i++) {
-                label[i] = wave_text[label_text.indexOf(label[i])]
+                label[i] = wave_text_long[label_text.indexOf(label[i])]
             }
             attendance = this.participant_data[cohort]['attendance']
             for(var i=0; i < attendance.length; i++) {
@@ -82,43 +82,78 @@ var explorer = new Vue({
             var data = [data]
 
             annts = []
-            y_below = -0.15
-            annotation_text = ["Visit (1-6)", "Attended", "Did not attend", "N=238<br>(100%)", "N=177<br>(74.4%)"]
-            annotation_position = [[0.2, y_below], [0.48, y_below], [0.8, y_below], [-0.09, 0.5], [1.1, 0.5]]
-            annotation_color = [bar_color, yesno_colors['yes_color'], yesno_colors['no_color'], bar_color, bar_color]
-            annotation_opacity = [0.9, 0.4, 0.4, 0.6, 0.6]
-            // for (var i=0; i<annotation_text.length; i++) {
-            //     annts.push(
-            //         {
-            //             x: annotation_position[i][0],
-            //             y: annotation_position[i][1],
-            //             xref: "paper",
-            //             yref: "paper",
-            //             text: annotation_text[i],
-            //             showarrow: False,
-            //             font: {
-            //                 family:"Courier New, monospace",
-            //                 size:16,
-            //                 color:"#ffffff",
-            //             },
-            //             align: "center",
-            //             bgcolor: annotation_color[i],
-            //             opacity: annotation_opacity[i],
-            //             bordercolor: annotation_color[i],
-            //             borderwidth: 2,
-            //             borderpad: 4,
-            //         }
-            //     )
-            // }
+            y_below = -0.20
+            annotation_text = ["Wave 1-6", "Attended", "Did not attend", "N=238<br>(100%)", "N=177<br>(74.4%)", "Legend:"]
+            annotation_position = [[0.74, y_below], [0.84, y_below], [1, y_below], [-0.09, 0.5], [1.1, 0.5], [0.58, y_below]]
+            annotation_color = [bar_color, yesno_colors['yes_color'], yesno_colors['no_color'], bar_color, bar_color, '#FFF0DF']
+            annotation_font_color = ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', 'black']
+            annotation_opacity = [0.6, 0.4, 0.4, 0.6, 0.6, 1]
+            for (var i=0; i<annotation_text.length; i++) {
+                annts.push(
+                    {
+                        x: annotation_position[i][0],
+                        y: annotation_position[i][1],
+                        xref: "paper",
+                        yref: "paper",
+                        text: annotation_text[i],
+                        showarrow: false,
+                        font: {
+                            family:"Courier New, monospace",
+                            size:16,
+                            color: 'black',//annotation_font_color[i],
+                        },
+                        align: "center",
+                        bgcolor: annotation_color[i],
+                        opacity: annotation_opacity[i],
+                        bordercolor: annotation_color[i],
+                        borderwidth: 2,
+                        borderpad: 4,
+                    }
+                )
+            }
+            y_above = 1.1
+            wave_text_position = [-0.01, 0.18, 0.40, 0.6, 0.82, 1.01]
+            for (var i=0; i<wave_text_long.length; i++) {
+                annts.push(
+                    {
+                        x: wave_text_position[i],
+                        y: y_above,
+                        xref: "paper",
+                        yref: "paper",
+                        text: wave_text_long[i],
+                        showarrow: false,
+                        align: "center",
+                    }
+                )
+            }
 
             var layout = {
-                margin: {l: 0, r: 0, b: 20, t:20},
+                margin: {l: 120, r: 120, b: 100, t:50},
                 font: {
                     size: 16
                 },
                 paper_bgcolor: 'rgba(0,0,0,0)',
                 plot_bgcolor: 'rgba(0,0,0,0)',
-                annotations: [],
+                annotations: annts,
+                // annotations: [{
+                //     xref: 'paper',
+                //     yref: 'paper',
+                //     x: 0,
+                //     xanchor: 'right',
+                //     y: 1,
+                //     yanchor: 'bottom',
+                //     text: 'X axis label',
+                //     showarrow: true
+                //   }, {
+                //     xref: 'paper',
+                //     yref: 'paper',
+                //     x: 1,
+                //     xanchor: 'left',
+                //     y: 0,
+                //     yanchor: 'top',
+                //     text: 'Y axis label',
+                //     showarrow: true
+                //   }]
             }
             const config = {
                 displayModeBar: false, // hide toolbar

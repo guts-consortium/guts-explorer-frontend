@@ -158,10 +158,12 @@ var explorer = new Vue({
                 console.log('---')
                 console.log('cat: ' + cat)
                 console.log('---')
+                // ln = []
                 for (var cm=0; cm<this.filtered_measures_per_category[cat].length; cm++) {
                     cat_measure = this.filtered_measures_per_category[cat][cm];
                     console.log(cat_measure)
                     cat_measure_short_names.push(cat_measure['short_name'])
+                    // ln.push(cat_measure['long_name'])
                     // now we get the actual data
                     cat_measure_cohort_waves = cat_measure[cohort_waves][this.respondent]
                     row = [0,0,0,0,0,0,0].map(function(element, idx) {
@@ -178,6 +180,8 @@ var explorer = new Vue({
                         row.pop()
                     }
                     // Add trace to data
+                    ln = cat_measure['long_name']
+                    longnames = [ln, ln, ln, ln, ln, ln, ln]
                     trace = {
                         y: row,
                         mode: 'lines+markers',
@@ -197,7 +201,8 @@ var explorer = new Vue({
                         },
                         connectgaps: true,
                         showlegend: false,
-                        hovertemplate: '<b>%{x}<br>%{y}</b>' +
+                        customdata: longnames,
+                        hovertemplate: '<b>%{x}<br>%{customdata}</b>' +
                                         '<extra></extra>'
                     }
                     data.push(trace);
@@ -207,7 +212,7 @@ var explorer = new Vue({
             console.log(data)
 
             // Variables influenced by inclusion/exclusion of covid wave (7)
-            wave_text = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "🦠"]
+            wave_text = ["1", "2", "3", "4", "5", "6", "🦠"]
             wave_vals = [0,1,2,3,4,5,6]
             if (!include_wave_7) {
                 wave_text.pop()

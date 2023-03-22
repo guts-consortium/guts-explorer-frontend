@@ -52,16 +52,24 @@
                 <b-col cols="3">
                     <b-row>
                         <!-- SEARCH TEXT -->
-                        <b-form-group label="Filter by short/long name:" v-slot="{ ariaDescribedby }"
+                        <b-form-group label="Filter by text:" v-slot="{ ariaDescribedby }"
                         label-size="lg"
                         label-class="font-weight-bold pt-0">
                             <b-form-input size="sm"
                             id="inline-form-input-name"
                             class="mb-2 mr-sm-2 mb-sm-0"
-                            placeholder="Enter search text"
+                            placeholder="Add text (hit enter to add tag)"
                             v-model="search_text"
+                            v-on:keyup.enter="addSearchTag"
                             ></b-form-input>
                         </b-form-group>
+                    </b-row>
+                    <b-row>
+                        <!-- SEARCH TAGS -->
+                        <div class="d-inline-block" style="font-size: 1.5rem;">
+                            <span v-for="tag in search_tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchTag(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
+                        </div>
+                         
                     </b-row>
                     <br>
                     <b-row>
@@ -168,8 +176,8 @@
               <!-- Sessions column -->
               <template #cell(sessions)="data">
                 <span v-for="i in [1,2,3,4,5,6,7]">
-                    <span v-if="containsDigit(i, data.item.ecc) || containsDigit(i, data.item.mcc)" style="font-size:1.25em">{{all_sessions_short[i]}} </span>
-                    <span v-else style="font-size:1.25em;">⏹ </span>
+                    <span v-if="containsDigit(i, data.item.ecc) || containsDigit(i, data.item.mcc)" style="text-align: center; font-size:1.25em; margin: 0.25em; font-family: 'Courier New', Courier, monospace;">{{all_sessions_short[i]}}</span>
+                    <span v-else style="text-align: center; font-size:1.25em; margin: 0.25em; font-family: 'Courier New', Courier, monospace; color: var(--lcid_grey_alpha)">X</span>
                 </span>
               </template>
               <!-- Info column -->
