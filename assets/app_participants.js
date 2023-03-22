@@ -15,6 +15,8 @@ var explorer = new Vue({
             { value: 'ecc', text: 'Early Childhood Cohort (ECC)' },
             { value: 'mcc', text: 'Middle Childhood Cohort (MCC)' },
         ],
+        text_content: {},
+        text_content_loaded: false,
     },
     computed: {
     },
@@ -125,6 +127,22 @@ var explorer = new Vue({
         }
     },
     beforeMount() {
+        // Load text for headings/paragraphs
+        text_content_file = 'assets/text_content.json'
+        fetch(text_content_file)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.log(
+                    "WARNING: text_content.json file could not be loaded"
+                );
+            }
+        })
+        .then((responseJson) => {
+            this.text_content = responseJson;
+            this.text_content_loaded = true;
+        })
         // Load new measure data
         participant_file = 'inputs/processed_data/participant_data.json'
         fetch(participant_file)

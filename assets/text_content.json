@@ -1,0 +1,34 @@
+{
+    "participants": {
+        "url": "participants.html",
+        "title": "Participants",
+        "menu":"Participants",
+        "card_description": "An interactive infograph of participant dropout and recovery for all cohorts.",
+        "card_img": "participants.png",
+        "descriptive_paragraph":""
+    },
+    "measures-collected": {
+        "url": "measures-collected.html",
+        "title": "Measures Collected",
+        "menu":"Measures collected",
+        "card_description": "An interactive infograph of all measures collected over the course of 6 data collection waves, for all cohorts.",
+        "card_img": "collected_new.png",
+        "descriptive_paragraph":""
+    },
+    "measures-table": {
+        "url": "measures-table.html",
+        "title":"Measures Table",
+        "menu":"Measures table",
+        "card_description": "A filterable and downloadable table of all measures collected over the course of 6 data collection waves, for all cohorts.",
+        "card_img": "participants.png",
+        "descriptive_paragraph":""
+    },
+    "mri": {
+        "url": "mri.html",
+        "title":"MRI Measures",
+        "menu":"MRI measures",
+        "card_description": "Summary plots of all MRI measures collected during three waves for all cohorts.",
+        "card_img": "participants.png",
+        "descriptive_paragraph":""
+    }
+}
