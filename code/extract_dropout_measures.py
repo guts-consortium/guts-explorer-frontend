@@ -3,9 +3,6 @@ import json
 import numpy as np
 import pandas as pd
 import sys
-# import plotly.graph_objects as go
-# import plotly.colors as pc
-
 
 
 def get_participation_counts(cohort, filename, col_elements):
@@ -101,7 +98,6 @@ def get_participation_counts(cohort, filename, col_elements):
         attendance.append('could not attend Visit ' + visits[i][3])
         
         n = n+2
-    
     return {
         "source": source,
         "target": target,
@@ -128,68 +124,68 @@ for i, fn in enumerate(spss_fns):
 package_path = Path(__file__).resolve().parent.parent
 out_dir = package_path / 'inputs' / 'processed_data'
 out_dir.mkdir(parents=True, exist_ok=True)
-out_file = out_dir / 'participation_data.json'
+out_file = out_dir / 'participant_data.json'
 with open(out_file, 'w') as f:
     json.dump(out_data, f)
 
 
 
-opacity = 0.25
-link_color_rgba = [f"rgba{str(pc.hex_to_rgb(cl))[:-1]}, {opacity})" for cl in link_color]
-link_color_rgb = [f"rgb{str(pc.hex_to_rgb(cl))}" for cl in link_color]
+# opacity = 0.25
+# link_color_rgba = [f"rgba{str(pc.hex_to_rgb(cl))[:-1]}, {opacity})" for cl in link_color]
+# link_color_rgb = [f"rgb{str(pc.hex_to_rgb(cl))}" for cl in link_color]
 
 
-bar_thickness = 40
-pad_thickness = 15
-bar_color = steel_blue
+# bar_thickness = 40
+# pad_thickness = 15
+# bar_color = steel_blue
 
-fig = go.Figure(data=[go.Sankey(
-    node = dict(
-      pad = pad_thickness,
-      thickness = bar_thickness,
-      line = dict(color = "black", width = 0.5),
-      label = label,
-      customdata = attendance,
-      hovertemplate='N=%{value:.0f} participants %{customdata}<extra></extra>',
-      color = bar_color
-    ),
-    link = dict(
-      source = source,
-      target = target,
-      value = value,
-      color = link_color_rgba,
-      hovertemplate='Of the %{source.value} participants <br />that %{source.customdata},<br />' +
-        '%{value:.0f} %{target.customdata}<extra></extra>',
-  ))])
+# fig = go.Figure(data=[go.Sankey(
+#     node = dict(
+#       pad = pad_thickness,
+#       thickness = bar_thickness,
+#       line = dict(color = "black", width = 0.5),
+#       label = label,
+#       customdata = attendance,
+#       hovertemplate='N=%{value:.0f} participants %{customdata}<extra></extra>',
+#       color = bar_color
+#     ),
+#     link = dict(
+#       source = source,
+#       target = target,
+#       value = value,
+#       color = link_color_rgba,
+#       hovertemplate='Of the %{source.value} participants <br />that %{source.customdata},<br />' +
+#         '%{value:.0f} %{target.customdata}<extra></extra>',
+#   ))])
 
-fig.update_layout(title_text="ECC participant dropout and recovery (N_total=238)", font_size=10,
-                 paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)')
-fontt = dict(
-            family="Courier New, monospace",
-            size=16,
-            color="#ffffff"
-            )
-y_below = -0.15
-annotation_text = ["Visit (1-6)", "Attended", "Did not attend", "N=238<br>(100%)", "N=177<br>(74.4%)"]
-annotation_position = [[0.2, y_below], [0.48, y_below], [0.8, y_below], [-0.09, 0.5], [1.1, 0.5]]
-annotation_color = [bar_color, "yes_color", "no_color", bar_color, bar_color]
-annotation_opacity = [0.9, 0.4, 0.4, 0.6, 0.6]
+# fig.update_layout(title_text="ECC participant dropout and recovery (N_total=238)", font_size=10,
+#                  paper_bgcolor='rgba(0,0,0,0)',
+#             plot_bgcolor='rgba(0,0,0,0)')
+# fontt = dict(
+#             family="Courier New, monospace",
+#             size=16,
+#             color="#ffffff"
+#             )
+# y_below = -0.15
+# annotation_text = ["Visit (1-6)", "Attended", "Did not attend", "N=238<br>(100%)", "N=177<br>(74.4%)"]
+# annotation_position = [[0.2, y_below], [0.48, y_below], [0.8, y_below], [-0.09, 0.5], [1.1, 0.5]]
+# annotation_color = [bar_color, "yes_color", "no_color", bar_color, bar_color]
+# annotation_opacity = [0.9, 0.4, 0.4, 0.6, 0.6]
 
-for i,t in enumerate(annotation_text):
-    fig.add_annotation(
-            x=annotation_position[i][0],
-            y=annotation_position[i][1],
-            xref="paper",
-            yref="paper",
-            text=annotation_text[i],
-            showarrow=False,
-            font=fontt,
-            align="center",
-            bgcolor=annotation_color[i],
-            opacity=annotation_opacity[i],
-            bordercolor=annotation_color[i],
-            borderwidth=2,
-            borderpad=4,
-            )
-# fig.show()
+# for i,t in enumerate(annotation_text):
+#     fig.add_annotation(
+#             x=annotation_position[i][0],
+#             y=annotation_position[i][1],
+#             xref="paper",
+#             yref="paper",
+#             text=annotation_text[i],
+#             showarrow=False,
+#             font=fontt,
+#             align="center",
+#             bgcolor=annotation_color[i],
+#             opacity=annotation_opacity[i],
+#             bordercolor=annotation_color[i],
+#             borderwidth=2,
+#             borderpad=4,
+#             )
+# # fig.show()

@@ -6,9 +6,9 @@
 
 // Start Vue instance
 var explorer = new Vue({
-    el: "#explorer-participation",
+    el: "#explorer-participants",
     data: {
-        participation_data: {},
+        participant_data: {},
         measures_loaded: false,
         selected_cohort: 'ecc',
         cohort_options: [
@@ -28,11 +28,11 @@ var explorer = new Vue({
             wave_text_long = ["Wave 1️⃣", "Wave 2️⃣", "Wave 3️⃣", "Wave 4️⃣", "Wave 5️⃣", "Wave 6️⃣"]
             label_text = ["V1", "V2", "V3", "V4", "V5", "V6"]
             label_text_long = ["Visit 1", "Visit 2", "Visit 3", "Visit 4", "Visit 5", "Visit 6"]
-            label = this.participation_data[cohort]['label']
+            label = this.participant_data[cohort]['label']
             for(var i=0; i < label.length; i++) {
                 label[i] = wave_text[label_text.indexOf(label[i])]
             }
-            attendance = this.participation_data[cohort]['attendance']
+            attendance = this.participant_data[cohort]['attendance']
             for(var i=0; i < attendance.length; i++) {
                 for(var j=0; j < label_text_long.length; j++) {
                     if (attendance[i].indexOf(label_text_long[j] >= 0)) {
@@ -40,10 +40,10 @@ var explorer = new Vue({
                     }
                 }
             }
-            source = this.participation_data[cohort]['source']
-            target = this.participation_data[cohort]['target']
-            value = this.participation_data[cohort]['value']
-            link_color = this.participation_data[cohort]['link_color']
+            source = this.participant_data[cohort]['source']
+            target = this.participant_data[cohort]['target']
+            value = this.participant_data[cohort]['value']
+            link_color = this.participant_data[cohort]['link_color']
             opacity = 0.25
             yesno_colors = {
                 "yes_color": "#197278",
@@ -126,19 +126,19 @@ var explorer = new Vue({
     },
     beforeMount() {
         // Load new measure data
-        participation_file = 'inputs/processed_data/participation_data.json'
-        fetch(participation_file)
+        participant_file = 'inputs/processed_data/participant_data.json'
+        fetch(participant_file)
         .then((response) => {
             if (response.ok) {
                 return response.json();
             } else {
                 console.log(
-                    "WARNING: participation_data.json file could not be loaded"
+                    "WARNING: participant_data.json file could not be loaded"
                 );
             }
         })
         .then((responseJson) => {
-            this.participation_data = responseJson;
+            this.participant_data = responseJson;
             this.measures_loaded = true;
         })
         .then(() => {

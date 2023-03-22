@@ -83,7 +83,7 @@ python code/extract_dropout_measures.py inputs/raw_data/[name-of-ECC-file.sav] i
 
 NOTE: The order of the input files is important!
 
-This script generates the file at: `inputs/processed_data/participation_data.json`
+This script generates the file at: `inputs/processed_data/participant_data.json`
 
 ## Changing text content of explorer pages
 
