@@ -8,9 +8,7 @@ var explorer = new Vue({
     data: {
         categories: cats,
         measure_data: {},
-        measure_pwpc_data: {},
         measures_loaded: false,
-        measures_pwpc_loaded: false,
         cohort: "mcc",
         cohort_options: [
             { value: 'ecc', text: 'Early Childhood Cohort (ECC)' },
@@ -411,30 +409,5 @@ var explorer = new Vue({
         .catch((error) => {
             console.log(error);
         });
-
-        // // Load measure per wave/cohort data
-        // measure_pwpc_data_file = 'inputs/processed_data/measure_per_wave_per_cohort.json'
-        // fetch(measure_pwpc_data_file)
-        // .then((response) => {
-        //     if (response.ok) {
-        //         return response.json();
-        //     } else {
-        //         console.log(
-        //             "WARNING: measure_per_wave_per_cohort.json file could not be loaded"
-        //         );
-        //     }
-        // })
-        // .then((responseJson) => {
-        //     this.measure_pwpc_data = responseJson;
-        //     this.measures_pwpc_loaded = true;
-        //     console.log(this.measure_pwpc_data)
-        // })
-        // .then(() => {
-        //     this.drawGraph()
-        // })
-        // .catch((error) => {
-        //     console.log(error);
-        // });
-        
     },
-});
+})

@@ -81,9 +81,7 @@ var explorer = new Vue({
         categories: cats,
         tabIndex: 0,
         measure_data: {},
-        measure_pwpc_data: {},
         measures_loaded: false,
-        measures_pwpc_loaded: false,
         cohort: "mcc",
         fields_to_display: fields,
         filter_toggles: {
@@ -222,22 +220,6 @@ var explorer = new Vue({
             }
             return "fas fa-minus"
         },
-
-        // filtered_measures_search() {
-        //     return this.measure_data.filter((c) => {
-        //       if (this.search_text == "") return true;
-        //       return (
-        //         c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-        //         c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
-        //       );
-        //     });
-        // },
-        // category_short_name: function () {
-        //     return this.category.short_name
-        // },
-        // measure_short_names: function () {
-        //     return Object.keys(this.measure_pwpc_data[this.cohort][this.category["short_name"]])
-        // },
     },
     methods: {
         exportTable() {
@@ -348,27 +330,5 @@ var explorer = new Vue({
         .catch((error) => {
             console.log(error);
         });
-
-        // Load measure per wave/cohort data
-        measure_pwpc_data_file = 'inputs/processed_data/measure_per_wave_per_cohort.json'
-        fetch(measure_pwpc_data_file)
-        .then((response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                console.log(
-                    "WARNING: measure_per_wave_per_cohort.json file could not be loaded"
-                );
-            }
-        })
-        .then((responseJson) => {
-            this.measure_pwpc_data = responseJson;
-            this.measures_pwpc_loaded = true;
-            console.log(this.measure_pwpc_data)
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-        
     },
 });
