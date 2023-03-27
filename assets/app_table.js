@@ -11,7 +11,6 @@ var all_respondents_short = {
     "other parent": "op",
     "primary parent": "pp",
 }
-
 var respondent_text = {
     "c": "Child",
     "op": "Other parent",
@@ -20,7 +19,6 @@ var respondent_text = {
     "pp-c": "Primary parent\nChild",
     "ra": "Research assistant",
 }
-
 var all_cohorts = [
     "ECC",
     "MCC",
@@ -53,18 +51,6 @@ var all_sessions_short = [
     "6",
     "C",
 ]
-
-// var all_sessions_short = [
-//     "0",
-//     "1️⃣",
-//     "2️⃣",
-//     "3️⃣",
-//     "4️⃣",
-//     "5️⃣",
-//     "6️⃣",
-//     "🦠",
-// ]
-
 var fields = [
     "short_name",
     "long_name",
@@ -74,17 +60,18 @@ var fields = [
 ]
 fields.forEach(function(el, idx, arr) {
     arr[idx] = {key: el, sortable: false};
-    if (idx == 1) {
-        arr[idx].thStyle = { fontWeight: 'bold', fontStyle: 'italic', width: '25%'}    
+    if (idx == 1) { // long name
+        arr[idx].thStyle = { fontWeight: 'bold', fontStyle: 'italic', width: '25%'}
+    } else if (idx == 4) { // respondents
+        arr[idx].thStyle = { fontWeight: 'bold', fontStyle: 'italic', width: '11%'}
     } else {
         arr[idx].thStyle = { fontWeight: 'bold', fontStyle: 'italic'}
     }
     
   });
 fields = fields.concat([{ key: 'cohorts', label: 'Cohorts', sortable: false, thStyle: { fontWeight: 'bold', fontStyle: 'italic', width: '6%'}}])
-fields = fields.concat([{ key: 'sessions', label: 'Sessions', sortable: false, thStyle: { fontWeight: 'bold', fontStyle: 'italic', width: '14%'}}])
+fields = fields.concat([{ key: 'sessions', label: 'Sessions', sortable: false, thStyle: { fontWeight: 'bold', fontStyle: 'italic', width: '15%'}}])
 fields = fields.concat([{ key: 'info', label: 'Info', sortable: false, thStyle: { fontWeight: 'bold', fontStyle: 'italic', width: '4%'}}])
-console.log(fields)
 
 var explorer = new Vue({
     el: "#explorer-table",
@@ -135,6 +122,7 @@ var explorer = new Vue({
             measure_shortname: '-',
             respondents: '-',
             description: '-',
+            keywords: '-',
             references: '-',
         },
         modal_details_names: {
@@ -147,6 +135,7 @@ var explorer = new Vue({
             measure_shortname: 'Measure Shortname',
             respondents: 'Respondents',
             description: 'Description',
+            keywords: 'Keywords',
             references: 'Measure sources',
         },
         modal_keys_basic: ['cohort', 'session', 'measure_category', 'measure_name', 'respondents'],
@@ -171,7 +160,9 @@ var explorer = new Vue({
             });
             return [...new Set(name_list)]
         },
+        
         filtered_measures_search() {
+            regex = new RegExp(this.search_text.toLowerCase())
             return this.measure_data.filter((c) => {
               if (this.search_text == "") return true;
               return (
@@ -179,19 +170,22 @@ var explorer = new Vue({
                 c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
                 c.measure_category.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
                 c.measure_type.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
+                c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.keywords ? c.keywords.some(kw => kw.includes(this.search_text.toLowerCase())) : null
               );
             });
         },
         filtered_measures_tags() {
-            return this.measure_data.filter((c) => {
+            filter_measures = this.filtered_measures_search;
+            return filter_measures.filter((c) => {
                 if (this.search_tags.length == 0) return true;
                 return this.search_tags.every((v) =>
                     c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
                     c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
                     c.measure_category.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
                     c.measure_type.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                    c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0
+                    c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.keywords ? c.keywords.includes(v.toLowerCase()): null
                 );
             });
         },
@@ -264,8 +258,8 @@ var explorer = new Vue({
         clearSearchTagText() {
             this.search_text = "";
         },
-        exportTable() {
-            downloadObjectAsJson(this.filtered_measures_search, "lcid_metadata.json")
+        exportTable(format) {
+            downloadArrayAsFormat(this.filtered_measures_session, format, "lcid_metadata")
         },
         showInfoModal(idx) {
             newDeets = {}
@@ -280,7 +274,7 @@ var explorer = new Vue({
                 if (this.containsDigit(i, measure.ecc) || this.containsDigit(i, measure.mcc)) {
                     newDeets.session+= this.all_sessions_short[i] + ' '
                 } else {
-                    newDeets.session+=  '⏹ '
+                    newDeets.session+= 'X '
                 }
 
             }
@@ -297,6 +291,7 @@ var explorer = new Vue({
             newDeets.respondents = newDeets.respondents.replace('-', ', ')
             newDeets.references = measure.reference ? measure.reference : ''
             newDeets.doi = measure.doi
+            newDeets.keywords = measure.keywords ? measure.keywords : '-'
             this.updateDetails(newDeets)
             this.$refs['info-modal'].show()
             console.log(this.filtered_measures_search[idx])
@@ -317,6 +312,7 @@ var explorer = new Vue({
             newDeets.measure_name = '-'
             newDeets.respondents = '-'
             newDeets.references = '-'
+            newDeets.keywords = '-'
             newDeets.doi = null
             this.updateDetails(newDeets)
         },
@@ -345,7 +341,6 @@ var explorer = new Vue({
             return res
         }
     },
-
     beforeMount() {
         // Load text for headings/paragraphs
         text_content_file = 'assets/text_content.json'
@@ -362,10 +357,10 @@ var explorer = new Vue({
         .then((responseJson) => {
             this.text_content = responseJson;
             this.text_content_loaded = true;
+            // Load new measure data
+            measure_data_file = 'inputs/processed_data/measure_data.json'
+            return fetch(measure_data_file)
         })
-        // Load new measure data
-        measure_data_file = 'inputs/processed_data/measure_data.json'
-        fetch(measure_data_file)
         .then((response) => {
             if (response.ok) {
                 return response.json();

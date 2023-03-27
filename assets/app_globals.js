@@ -116,11 +116,17 @@ async function checkFileExists(url) {
   }
 }
 
-function downloadObjectAsJson(obj, filename){
-  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+function downloadArrayAsFormat(arr, format = 'json', filename){
+  var dataStr;
+  if (format == 'json') {
+    dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(arr));
+  }
+  if (format == 'csv') {
+    dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent(getCSVfromArray(arr));
+  }
   var downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute("href",     dataStr);
-  downloadAnchorNode.setAttribute("download", filename + ".json");
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", filename + "." + format);
   document.body.appendChild(downloadAnchorNode);
   downloadAnchorNode.click();
   downloadAnchorNode.remove();
@@ -138,4 +144,23 @@ function makeReadable(input) {
 function addAlphaToHex(hexcode, opacity) {
   var _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);
   return hexcode + _opacity.toString(16).toUpperCase();
+}
+
+function getCSVfromArray(arr) {
+  const replacer = (key, value) => value === null ? '' : value
+  for (var i=0; i<arr.length; i++) {
+    row = arr[i]
+    delete row['respondents'];
+    delete row['cohorts'];
+    delete row['ecc_waves'];
+    delete row['mcc_waves'];
+    if (row.keywords) { row['keywords'] = row['keywords'].join(';')}
+    if (row.doi) { row['doi'] = row['doi'].join(';')}
+  }
+  const header = Object.keys(arr[0])
+  const csv = [
+    header.join(','),
+    ...arr.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
+  ].join('\r\n')
+  return csv
 }

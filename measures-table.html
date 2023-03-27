@@ -32,7 +32,7 @@
 
     <div class="header">
         <a href="./"><img src="img/Leiden-CID-logo_200.png" alt="" height="90"></a>
-        &nbsp;&nbsp;
+        &nbsp;
         <h1><strong>LCID Metadata Explorer</strong></h1>
         <div class="dropdown push">
             <button class="dropbtn"><i class="fas fa-bars"></i></button>
@@ -47,39 +47,22 @@
     </div>
 
     <b-container id="explorer-table" v-if="measures_loaded">
+
+        <div class="intro">
+            <h2><strong><em>{{text_content['measures-table']['title']}}</em></strong></h2>
+            {{text_content['measures-table']['descriptive_paragraph']}}
+        </div>
+
         <b-card style="background-color: var(--lcid_dark_blue); color: white">
             <b-row>
-                <b-col cols="3">
-                    <b-row>
-                        <!-- SEARCH TEXT -->
-                        <b-form-group label="Filter by text:" v-slot="{ ariaDescribedby }"
-                        label-size="lg"
-                        label-class="font-weight-bold pt-0">
-                            <b-form-input size="sm"
-                            id="inline-form-input-name"
-                            class="mb-2 mr-sm-2 mb-sm-0"
-                            placeholder="Add text (hit enter to add tag)"
-                            v-model="search_text"
-                            v-on:keyup.enter="addSearchTag"
-                            ></b-form-input>
-                        </b-form-group>
-                    </b-row>
-                    <b-row>
-                        <!-- SEARCH TAGS -->
-                        <div class="d-inline-block" style="font-size: 1.5rem;">
-                            <span v-for="tag in search_tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchTag(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
-                        </div>
-                         
-                    </b-row>
-                    <br>
+                <b-col cols="4">
                     <b-row>
                         <b-col cols="6">
                             <!-- RESPONDENTS -->
-                            <b-form-group label="Respondents:" v-slot="{ ariaDescribedbyResp }"
-                            label-size="lg"
-                            label-class="font-weight-bold pt-0">
+                            <b-form-group v-slot="{ ariaDescribedbyResp }">
+                            <label for="respondents_checkbox" class="filter-label"><i class="fas fa-users"></i>&nbsp;In which respondents are you interested?</label>
                                 <b-form-checkbox-group
-                                    id="checkbox-group--0"
+                                    id="respondents_checkbox"
                                     v-model="filter_arrays['respondent']"
                                     :options="all_arrays['respondent']"
                                     :aria-describedby="ariaDescribedbyResp"
@@ -89,11 +72,10 @@
                         </b-col>
                         <b-col cols="6">
                             <!-- COHORTS -->
-                            <b-form-group label="Cohorts:" v-slot="{ ariaDescribedbyCohort }"
-                            label-size="lg"
-                            label-class="font-weight-bold pt-0">
+                            <b-form-group v-slot="{ ariaDescribedbyCohort }">
+                            <label for="cohorts_checkbox" class="filter-label"><i class="fas fa-table-columns"></i>&nbsp;Which cohorts would you like to view?</label>
                                 <b-form-checkbox-group
-                                    id="checkbox-group-0"
+                                    id="cohorts_checkbox"
                                     v-model="filter_arrays['cohort']"
                                     :options="all_arrays['cohort']"
                                     :aria-describedby="ariaDescribedbyCohort"
@@ -102,14 +84,38 @@
                             </b-form-group>
                         </b-col>
                     </b-row>
+                    <br>
+                    <b-row>
+                        <!-- SEARCH TEXT -->
+                        <b-col cols="10">
+                            <b-form-group v-slot="{ ariaDescribedby }">
+                                <label for="search_text_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Filter by text</label>
+                                <b-form-input size="sm"
+                                id="search_text_input"
+                                class="mb-2 mr-sm-2 mb-sm-0"
+                                placeholder="Add text (hit enter to add tag)"
+                                v-model="search_text"
+                                v-on:keyup.enter="addSearchTag"
+                                ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                        <b-col></b-col>
+                    </b-row>
+                    <b-row>
+                        <!-- SEARCH TAGS -->
+                        <div class="d-inline-block" style="font-size: 1.5rem;">
+                            <span v-for="tag in search_tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchTag(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
+                        </div>
+                    </b-row>
                 </b-col>
                 <b-col cols="2">
                     <!-- SESSIONS -->
-                    <b-form-group label="Sessions:" v-slot="{ ariaDescribedbySes }" label-size="lg"
-                    label-class="font-weight-bold pt-0">
+                    <b-form-group v-slot="{ ariaDescribedbySes }">
+                    <label for="session_checkbox" class="filter-label"><i class="fas fa-list"></i>&nbsp;Which sessions would you like to view?</label>
+                    <br>
                     <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('session')"><i :class="session_check_icon"></i></b-button> <em>All</em></span>
                         <b-form-checkbox-group
-                            id="checkbox-group-3"
+                            id="session_checkbox"
                             v-model="filter_arrays['session']"
                             :options="all_arrays['session']"
                             :aria-describedby="ariaDescribedbySes"
@@ -117,14 +123,14 @@
                         ></b-form-checkbox-group>
                     </b-form-group>
                 </b-col>
-                <b-col cols="4">
+                <b-col cols="3">
                     <!-- CATEGORY -->
-                    <b-form-group label="Filter by category:" v-slot="{ ariaDescribedbyCat }"
-                    label-size="lg"
-                    label-class="font-weight-bold pt-0">
+                    <b-form-group v-slot="{ ariaDescribedbyCat }">
+                    <label for="category_checkbox" class="filter-label"><i class="fas fa-pie-chart"></i>&nbsp;Which categories would you like to view?</label>
+                    <br>
                     <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('category')"><i :class="category_check_icon"></i></b-button> <em>All</em></span>
                         <b-form-checkbox-group
-                            id="checkbox-group-1"
+                            id="category_checkbox"
                             v-model="filter_arrays['category']"
                             :options="all_arrays['category']"
                             :aria-describedby="ariaDescribedbyCat"
@@ -135,11 +141,12 @@
                 <!-- <b-col cols="1"></b-col> -->
                 <b-col>
                     <!-- TYPE -->
-                    <b-form-group label="Filter by type:" v-slot="{ ariaDescribedbyType }" label-size="lg"
-                    label-class="font-weight-bold pt-0">
+                    <b-form-group v-slot="{ ariaDescribedbyType }">
+                    <label for="type_checkbox" class="filter-label"><i class="fas fa-ruler"></i>&nbsp;Which types would you like to view?</label>
+                    <br>
                     <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('type')"><i :class="type_check_icon"></i></b-button> <em>All</em></span>
                         <b-form-checkbox-group
-                            id="checkbox-group-2"
+                            id="type_checkbox"
                             v-model="filter_arrays['type']"
                             :options="all_arrays['type']"
                             :aria-describedby="ariaDescribedbyType"
@@ -150,7 +157,10 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <b-button variant="outline-light" size="sm" @click="exportTable()"><i class="fas fa-share"></i> Export Table</b-button>
+                    <b-dropdown size="sm" text="Export Table" variant="outline-light" class="m-2">
+                        <b-dropdown-item @click="exportTable('csv')"><i class="fas fa-file-csv"></i> CSV</b-dropdown-item>
+                        <b-dropdown-item @click="exportTable('json')"><i class="fas fa-file-code"></i> JSON</b-dropdown-item>
+                      </b-dropdown>
                 </b-col>
                 <b-col cols="1"></b-col>
                 <b-col></b-col>
@@ -202,6 +212,14 @@
                         <td>{{modal_details['description']}}</td>
                     </tr>
                     <tr>
+                        <td style="width:30%">{{modal_details_names['keywords']}}:</td>
+                        <td style="font-size: 0.5em;">
+                            <span v-for="kw in modal_details.keywords">
+                                <b-button disabled pill variant="outline-dark" size="sm">{{kw}}</b-button> 
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="width:30%">{{modal_details_names['measure_category']}}:</td>
                         <td>{{modal_details['measure_category']}}</td>
                     </tr>
@@ -219,13 +237,14 @@
                     </tr>
                     <tr>
                         <td style="width:30%">{{modal_details_names['session']}}:</td>
-                        <td style="font-size:1.25em">{{modal_details['session']}}</td>
+                        <td style="font-size:1.25em; font-family: 'Courier New', Courier, monospace;">{{modal_details['session']}}</td>
                     </tr>
                     <tr>
                         <td style="width:30%">Measure sources:</td>
                         <td>{{modal_details['references']}}
-                            <span v-for="doi in modal_details.doi">
-                                <br>
+                            <span v-for="(doi, index) in modal_details.doi">
+                                <span v-if="(index==0)&&(!modal_details['references'])"></span>
+                                <span v-else><br></span>
                                 <a :href="'https://doi.org/'+doi"><small>{{doi}}</small></a>
                             </span>
                         </td>

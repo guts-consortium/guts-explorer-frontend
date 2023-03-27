@@ -46,11 +46,24 @@
     </div>
 
     <b-container id="explorer-mri">
+
+        <div class="intro">
+            <h2><strong><em>{{text_content['mri']['title']}}</em></strong></h2>
+            {{text_content['mri']['descriptive_paragraph']}}
+        </div>
+
         <b-card no-body style="background-color: var(--lcid_dark_blue); color: white">
           <b-tabs card pills class="d-flex flex-column" content-class="flex-grow-1" v-model="tabIndex">
 
+            <b-tab title="Structural scan quality" :title-link-class="linkClass(0)">
+                <div style="display: flex; flex-direction: column; margin:auto">
+                    <div id="quality_plot"></div>
+                </div>
+
+            </b-tab>
+
             
-            <b-tab title="fMRI group stats 1" :title-link-class="linkClass(0)">
+            <b-tab title="fMRI group stats 1" :title-link-class="linkClass(1)">
                 <div style="display: flex; flex-direction: column; margin:auto">
                     <h5><a href="https://doi.org/10.1073/pnas.1915124117" style="color: var(--lcid_bluegreen);">Longitudinal changes in DLPFC activation during childhood are related to decreased aggression following social rejection</a></h5>
                     <h6><em>Michelle Achterberg, Anna C. K. van Duijvenvoorde, Marinus H. van IJzendoorn, and Eveline A. Crone</em></h6>
@@ -77,7 +90,7 @@
                 </div>
             </b-tab>
             
-            <b-tab title="fMRI group stats 2" :title-link-class="linkClass(1)">
+            <b-tab title="fMRI group stats 2" :title-link-class="linkClass(2)">
                 <div style="display: flex; flex-direction: column; margin:auto">
                     <h5><a href="https://doi.org/10.1093/scan/nsac039"  style="color: var(--lcid_bluegreen);">Development of social feedback processing and responses in childhood: an fMRI test-replication design in two age cohorts</a></h5>
                     <h6><em>Simone Dobbelaar, Michelle Achterberg, Lina van Drunen, Anna c.k van Duijvenvoorde, Marinus H van IJzendoorn, Eveline A Crone</em></h6>

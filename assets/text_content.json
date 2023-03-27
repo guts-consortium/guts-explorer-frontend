@@ -5,7 +5,7 @@
         "menu":"Participants",
         "card_description": "An interactive infograph of participant dropout and recovery for all cohorts.",
         "card_img": "participants.png",
-        "descriptive_paragraph":""
+        "descriptive_paragraph":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam imperdiet efficitur ipsum, dignissim vestibulum turpis ultricies ac. Sed molestie eget leo sed luctus. Aenean tincidunt venenatis magna eu congue. Nulla sagittis enim at sem suscipit auctor. Cras placerat ultrices tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget urna turpis. Mauris non diam ante. Praesent ut dolor id justo vestibulum dictum. Morbi quis pharetra magna, a rutrum massa. Praesent sodales leo sit amet ornare eleifend. Phasellus in massa laoreet mauris suscipit dictum nec ut lectus. In sit amet consectetur augue. Nulla et leo id nisi dignissim consequat nec pretium arcu. Pellentesque efficitur scelerisque vulputate."
     },
     "measures-collected": {
         "url": "measures-collected.html",
@@ -13,7 +13,7 @@
         "menu":"Measures collected",
         "card_description": "An interactive infograph of all measures collected over the course of 6 data collection waves, for all cohorts.",
         "card_img": "collected_new.png",
-        "descriptive_paragraph":""
+        "descriptive_paragraph":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam imperdiet efficitur ipsum, dignissim vestibulum turpis ultricies ac. Sed molestie eget leo sed luctus. Aenean tincidunt venenatis magna eu congue. Nulla sagittis enim at sem suscipit auctor. Cras placerat ultrices tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget urna turpis. Mauris non diam ante. Praesent ut dolor id justo vestibulum dictum. Morbi quis pharetra magna, a rutrum massa. Praesent sodales leo sit amet ornare eleifend. Phasellus in massa laoreet mauris suscipit dictum nec ut lectus. In sit amet consectetur augue. Nulla et leo id nisi dignissim consequat nec pretium arcu. Pellentesque efficitur scelerisque vulputate."
     },
     "measures-table": {
         "url": "measures-table.html",
@@ -21,7 +21,7 @@
         "menu":"Measures table",
         "card_description": "A filterable and downloadable table of all measures collected over the course of 6 data collection waves, for all cohorts.",
         "card_img": "participants.png",
-        "descriptive_paragraph":""
+        "descriptive_paragraph":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam imperdiet efficitur ipsum, dignissim vestibulum turpis ultricies ac. Sed molestie eget leo sed luctus. Aenean tincidunt venenatis magna eu congue. Nulla sagittis enim at sem suscipit auctor. Cras placerat ultrices tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget urna turpis. Mauris non diam ante. Praesent ut dolor id justo vestibulum dictum. Morbi quis pharetra magna, a rutrum massa. Praesent sodales leo sit amet ornare eleifend. Phasellus in massa laoreet mauris suscipit dictum nec ut lectus. In sit amet consectetur augue. Nulla et leo id nisi dignissim consequat nec pretium arcu. Pellentesque efficitur scelerisque vulputate."
     },
     "mri": {
         "url": "mri.html",
@@ -29,6 +29,6 @@
         "menu":"MRI measures",
         "card_description": "Summary plots of all MRI measures collected during three waves for all cohorts.",
         "card_img": "participants.png",
-        "descriptive_paragraph":""
+        "descriptive_paragraph":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam imperdiet efficitur ipsum, dignissim vestibulum turpis ultricies ac. Sed molestie eget leo sed luctus. Aenean tincidunt venenatis magna eu congue. Nulla sagittis enim at sem suscipit auctor. Cras placerat ultrices tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget urna turpis. Mauris non diam ante. Praesent ut dolor id justo vestibulum dictum. Morbi quis pharetra magna, a rutrum massa. Praesent sodales leo sit amet ornare eleifend. Phasellus in massa laoreet mauris suscipit dictum nec ut lectus. In sit amet consectetur augue. Nulla et leo id nisi dignissim consequat nec pretium arcu. Pellentesque efficitur scelerisque vulputate."
     }
 }

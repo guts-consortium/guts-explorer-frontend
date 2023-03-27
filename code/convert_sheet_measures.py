@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import sys
 
-def parse_cohort_waves(measure_entry, cohort, n_resps):
+def parse_cohort_waves(measure_entry, cohort, n_resps, cd2_data):
     """"""
     # First create a list of 
     # We are working with string values. If value in ecc or mcc column is not a string:
@@ -29,6 +29,13 @@ def parse_cohort_waves(measure_entry, cohort, n_resps):
         measure_entry[waves_key]["all"] += parsed_waves
     # ensure unique elements in "all" list
     measure_entry[waves_key]["all"] = list(set(measure_entry[waves_key]["all"]))
+    # Add keywords from cd2
+    matching_entry = next((item for item in cd2_data if item['mapping_variable'] == measure_entry['mapping']), None)
+    if matching_entry is not None:
+        measure_entry['keywords'] = [k.strip() for k in matching_entry['keywords'].split(',')]
+    else:
+        measure_entry['keywords'] = []
+
 
 
 # SCRIPT STARTS RUNNING HERE
@@ -43,6 +50,10 @@ sheet_list = ['overview_measures',
               'n_quests',
               'n_visits']
 df_settings = pd.read_excel(measures_fn, sheet_list)
+
+# Get cd2 keywords
+cd2_sheet = df_settings['cd2']
+cd2_sheet_list = cd2_sheet.to_dict('records')
 # Access the important dataframe
 overview_measures = df_settings['overview_measures']
 # Convert the dataframe to a list of dictionaries
@@ -79,15 +90,15 @@ for x,q in enumerate(overview_measures_list):
     if any(w in new_list[x]['mcc'] for w in waves):
         new_list[x]['cohorts'].append('mcc')
     # Parse all the rest
-    parse_cohort_waves(new_list[x], 'ecc', n_resps)
-    parse_cohort_waves(new_list[x], 'mcc', n_resps)
+    parse_cohort_waves(new_list[x], 'ecc', n_resps, cd2_sheet_list)
+    parse_cohort_waves(new_list[x], 'mcc', n_resps, cd2_sheet_list)
     # Parse DOIs
     if isinstance(q['doi'], str):
         new_list[x]['doi'] = [d.strip() for d in q['doi'].split(';')]
     else:
         new_list[x]['doi'] = []
 
-# Lastly Write list of dictionaries to file
+# Write list of dictionaries to file
 package_path = Path(__file__).resolve().parent.parent
 out_dir = package_path / 'inputs' / 'processed_data'
 out_dir.mkdir(parents=True, exist_ok=True)
@@ -95,3 +106,38 @@ out_dir.mkdir(parents=True, exist_ok=True)
 out_file = out_dir / 'measure_data.json'
 with open(out_file, 'w') as f:
     json.dump(new_list, f)
+
+# -- Now create summary data --
+
+# Get ages and years
+info_sheet = df_settings['data_info']
+summary_data_raw = {}
+summary_data = {
+    'ecc': {},
+    'mcc': {},
+}
+cols = ['cohort', 'cohort_long-name', 'wave', 'wave_code', 'year', 'age in years']
+for c in cols:
+    summary_data_raw[c] = info_sheet[c].to_list()
+
+for i, wave_c in enumerate(summary_data_raw['wave_code']):
+
+    if i > 13:
+        break
+
+    years = str(summary_data_raw['year'][i])
+    years_list = [y.strip() for y in years.split(',')]
+    ages = str(summary_data_raw['age in years'][i])
+    ages_list = [a.strip() for a in ages.split(',')]
+
+    summary_data[summary_data_raw['cohort'][i]][str(round(wave_c))] = {
+        'wave': summary_data_raw['wave'][i],
+        'age_from': ages_list[0],
+        'age_to': ages_list[1] if len(ages_list) > 1 else None,
+        'year_from': years_list[0],
+        'year_to': years_list[1] if len(years_list) > 1 else None,
+    }
+
+out_file = out_dir / 'summary_data.json'
+with open(out_file, 'w') as f:
+    json.dump(summary_data, f)

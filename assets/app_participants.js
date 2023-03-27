@@ -17,6 +17,8 @@ var explorer = new Vue({
         ],
         text_content: {},
         text_content_loaded: false,
+        summary_data: {},
+        summary_data_loaded: false,
     },
     computed: {
     },
@@ -30,10 +32,7 @@ var explorer = new Vue({
             wave_text_long = ["Wave 1", "Wave 2", "Wave 3", "Wave 4", "Wave 5", "Wave 6"]
             label_text = ["V1", "V2", "V3", "V4", "V5", "V6"]
             label_text_long = ["Visit 1", "Visit 2", "Visit 3", "Visit 4", "Visit 5", "Visit 6"]
-            label = this.participant_data[cohort]['label']
-            for(var i=0; i < label.length; i++) {
-                label[i] = wave_text_long[label_text.indexOf(label[i])]
-            }
+
             attendance = this.participant_data[cohort]['attendance']
             for(var i=0; i < attendance.length; i++) {
                 for(var j=0; j < label_text_long.length; j++) {
@@ -42,9 +41,29 @@ var explorer = new Vue({
                     }
                 }
             }
+
+            // Create inclusion and dropout labels
+            value = this.participant_data[cohort]['value']
+            vals = []
+            const chunkSize = 4;
+            for (let i = 0; i < value.length; i += chunkSize) {
+                vals.push(value.slice(i, i + chunkSize));
+            }
+            N_total = vals[0].reduce((partialSum, a) => partialSum + a, 0);
+            label = []
+            label.push(vals[0][0] + vals[0][1])
+            label.push(vals[0][2])
+            for(var i=0; i < 5; i++) {
+                label.push(vals[i][0] + vals[i][2])
+                label.push(vals[i][1] + vals[i][3])
+            }
             source = this.participant_data[cohort]['source']
             target = this.participant_data[cohort]['target']
-            value = this.participant_data[cohort]['value']
+            // Start and end values and percentages
+            start_text = 'N=' + N_total.toString() + '<br>(100%)'
+            N_end = label[label.length-2]
+            perc_end = Math.round(N_end/N_total*100)
+            end_text =  'N=' + N_end.toString() + '<br>(' + perc_end.toString() + '%)'
             link_color = this.participant_data[cohort]['link_color']
             opacity = 0.25
             yesno_colors = {
@@ -83,8 +102,8 @@ var explorer = new Vue({
 
             annts = []
             y_below = -0.20
-            annotation_text = ["Wave 1-6", "Attended", "Did not attend", "N=238<br>(100%)", "N=177<br>(74.4%)", "Legend:"]
-            annotation_position = [[0.74, y_below], [0.84, y_below], [1, y_below], [-0.09, 0.5], [1.1, 0.5], [0.58, y_below]]
+            annotation_text = ["Wave 1-6", "Attended", "Did not attend", start_text, end_text, "Legend:"]
+            annotation_position = [[0.715, y_below], [0.825, y_below], [1, y_below], [-0.09, 0.5], [1.1, 0.5], [0.56, y_below]]
             annotation_color = [bar_color, yesno_colors['yes_color'], yesno_colors['no_color'], bar_color, bar_color, '#FFF0DF']
             annotation_font_color = ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', 'black']
             annotation_opacity = [0.6, 0.4, 0.4, 0.6, 0.6, 1]
@@ -111,22 +130,29 @@ var explorer = new Vue({
                     }
                 )
             }
-            y_above = 1.1
+            y_above = 1.15
             wave_text_position = [-0.01, 0.18, 0.40, 0.6, 0.82, 1.01]
+            wave_text_ages = []
             for (var i=0; i<wave_text_long.length; i++) {
+                wave_text_ages.push(
+                    "Wave " + (i+1).toString() + "<br><i>"
+                    + this.summary_data[cohort][(i+1).toString()]['age_from'] 
+                    + '-'
+                    + this.summary_data[cohort][(i+1).toString()]['age_to'] 
+                    + 'y</i>'
+                )
                 annts.push(
                     {
                         x: wave_text_position[i],
                         y: y_above,
                         xref: "paper",
                         yref: "paper",
-                        text: wave_text_long[i],
+                        text: wave_text_ages[i],
                         showarrow: false,
                         align: "center",
                     }
                 )
             }
-
             var layout = {
                 margin: {l: 120, r: 120, b: 100, t:50},
                 font: {
@@ -135,25 +161,6 @@ var explorer = new Vue({
                 paper_bgcolor: 'rgba(0,0,0,0)',
                 plot_bgcolor: 'rgba(0,0,0,0)',
                 annotations: annts,
-                // annotations: [{
-                //     xref: 'paper',
-                //     yref: 'paper',
-                //     x: 0,
-                //     xanchor: 'right',
-                //     y: 1,
-                //     yanchor: 'bottom',
-                //     text: 'X axis label',
-                //     showarrow: true
-                //   }, {
-                //     xref: 'paper',
-                //     yref: 'paper',
-                //     x: 1,
-                //     xanchor: 'left',
-                //     y: 0,
-                //     yanchor: 'top',
-                //     text: 'Y axis label',
-                //     showarrow: true
-                //   }]
             }
             const config = {
                 displayModeBar: false, // hide toolbar
@@ -177,10 +184,26 @@ var explorer = new Vue({
         .then((responseJson) => {
             this.text_content = responseJson;
             this.text_content_loaded = true;
+            // Load summary data
+            summary_file = 'inputs/processed_data/summary_data.json'
+            return fetch(summary_file)
         })
-        // Load new measure data
-        participant_file = 'inputs/processed_data/participant_data.json'
-        fetch(participant_file)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.log(
+                    "WARNING: summary_data.json file could not be loaded"
+                );
+            }
+        })
+        .then((responseJson) => {
+            this.summary_data = responseJson;
+            this.summary_data_loaded = true;
+            // Load new measure data
+            participant_file = 'inputs/processed_data/participant_data.json'
+            return fetch(participant_file)
+        })
         .then((response) => {
             if (response.ok) {
                 return response.json();

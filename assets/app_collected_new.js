@@ -1,7 +1,56 @@
 /***********/
 // Vue app //
 /***********/
-
+var all_respondents = [
+    "child",
+    "other parent",
+    "primary parent",
+]
+var all_respondents_short = {
+    "child": "c",
+    "other parent": "op",
+    "primary parent": "pp",
+}
+var respondent_text = {
+    "c": "Child",
+    "op": "Other parent",
+    "pp": "Primary parent",
+    "pp-op": "Primary parent\nOther Parent",
+    "pp-c": "Primary parent\nChild",
+    "ra": "Research assistant",
+}
+var all_cohorts = [
+    "ECC",
+    "MCC",
+]
+var all_sessions = [
+    "Wave 1",
+    "Wave 2",
+    "Wave 3",
+    "Wave 4",
+    "Wave 5",
+    "Wave 6",
+    "Wave C",
+]
+var all_sessions_nr = {
+    "Wave 1": "1",
+    "Wave 2": "2",
+    "Wave 3": "3",
+    "Wave 4": "4",
+    "Wave 5": "5",
+    "Wave 6": "6",
+    "Wave C": "7",
+}
+var all_sessions_short = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "C",
+]
 // Start Vue instance
 var explorer = new Vue({
     el: "#explorer-collected",
@@ -9,40 +58,41 @@ var explorer = new Vue({
         categories: cats,
         measure_data: {},
         measures_loaded: false,
-        cohort: "mcc",
+        filter_toggles: {
+            "category": true,
+            "session": true,
+            "type": true,
+        },
+        filter_arrays: {
+            "category": categories_list,
+            "session": all_sessions,
+            "type": [],
+            "respondent": all_respondents,
+            "cohort": all_cohorts,
+        },        
+        all_arrays: {
+            "category": categories_list,
+            "session": all_sessions,
+            "type": [],
+            "respondent": all_respondents,
+            "cohort": all_cohorts,
+        },
+        all_types: [],
+        filter_types: [],
+        all_respondents: all_respondents,
+        filter_respondents: all_respondents,
+        all_cohorts: all_cohorts,
+        filter_cohorts: all_cohorts,
+        all_sessions: all_sessions,
+        filter_sessions: all_sessions,
+        search_text: "",
+        search_tags: [],
         cohort_options: [
-            { value: 'ecc', text: 'Early Childhood Cohort (ECC)' },
-            { value: 'mcc', text: 'Middle Childhood Cohort (MCC)' },
+            { value: 'ecc', text: 'ECC' },
+            { value: 'mcc', text: 'MCC' },
         ],
-        cohort_dict: {
-            ecc: 'ECC',
-            mcc: 'MCC',
-        },
-        cohort_dict_long: {
-            'ecc': 'Early Childhood Cohort (ECC)',
-            'mcc': 'Middle Childhood Cohort (MCC)',
-        },
-        respondent: "all",
-        respondent_options: [
-            {value: "all", text: "All respondents"},
-            {value: "c", text: "Child"},
-            {value: "op", text: "Other parent"},
-            {value: "pp", text: "Primary parent"},
-            {value: "ra", text: "Research assistant"},
-        ],
-        respondent_dict: {
-            "all": "All respondents",
-            "c": "Child",
-            "op": "Other parent",
-            "pp": "Primary parent",
-            "ra": "Research assistant",
-        },
-        type_dict: {},
-        type_options:[],
-        type: "all",
-        category_dict: {},
-        category_options:[],
-        category: "all",
+        all_sessions_short: all_sessions_short,
+
         fields_to_display: [
             "short_name",
             "long_name",
@@ -92,34 +142,103 @@ var explorer = new Vue({
 
     },
     computed: {
-        filtered_measures_cohort() {
-            return this.measure_data.filter((item) => {
-                return item.cohorts.indexOf(this.cohort) >= 0
+        all_short_names: function () {
+            name_list = this.measure_data.map(function(measure) {
+                return measure["short_name"];
+            });
+            return [...new Set(name_list)]
+        },
+        all_long_names: function () {
+            name_list = this.measure_data.map(function(measure) {
+                return measure["long_name"];
+            });
+            return [...new Set(name_list)]
+        },
+        
+        filtered_measures_search() {
+            regex = new RegExp(this.search_text.toLowerCase())
+            return this.measure_data.filter((c) => {
+              if (this.search_text == "") return true;
+              return (
+                c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.measure_category.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.measure_type.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.keywords ? c.keywords.some(kw => kw.includes(this.search_text.toLowerCase())) : null
+              );
             });
         },
-        filtered_measures_respondent() {
-            filter_measures = this.filtered_measures_cohort;
-            return filter_measures.filter((item) => {
-                if (this.respondent == "all") return true;
-                return item.respondents.indexOf(this.respondent) >= 0
+        filtered_measures_tags() {
+            filter_measures = this.filtered_measures_search;
+            return filter_measures.filter((c) => {
+                if (this.search_tags.length == 0) return true;
+                return this.search_tags.every((v) =>
+                    c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.measure_category.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.measure_type.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.keywords ? c.keywords.includes(v.toLowerCase()): null
+                );
             });
         },
         filtered_measures_category() {
-            filter_measures = this.filtered_measures_respondent;
-            return filter_measures.filter((item) => {
-                if (this.category == "all") return true;
-                return item.measure_category == this.category
+            filter_measures = this.filtered_measures_tags;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["category"].length == this.all_arrays["category"].length) return true;
+                return this.filter_arrays["category"].indexOf(c.measure_category ) >= 0
             });
         },
         filtered_measures_type() {
             filter_measures = this.filtered_measures_category;
-            return filter_measures.filter((item) => {
-                if (this.type == "all") return true;
-                return item.measure_type == this.type
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["type"].length == this.all_arrays["type"].length) return true;
+                return this.filter_arrays["type"].indexOf(c.measure_type ) >= 0
             });
         },
+        filtered_measures_cohort() {
+            filter_measures = this.filtered_measures_type;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["cohort"].length == this.all_arrays["cohort"].length) return true;
+                return this.filter_arrays["cohort"].some(r=>c["cohorts"].includes(r.toLowerCase()))
+            });
+        },
+        filtered_measures_respondent() {
+            filter_measures = this.filtered_measures_cohort;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["respondent"].length == this.all_arrays["respondent"].length) return true;
+                return this.filter_arrays["respondent"].some(r=>c["respondents"].includes(all_respondents_short[r]))
+            });
+        },
+        filtered_measures_session() {
+            filter_measures = this.filtered_measures_respondent;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["session"].length == this.all_arrays["session"].length) return true;
+                return (this.filter_arrays["session"].some(r=>c["ecc"].includes(all_sessions_nr[r])) ||
+                this.filter_arrays["session"].some(r=>c["mcc"].includes(all_sessions_nr[r])))
+            });
+        },
+        category_check_icon() {
+            if (this.filter_toggles["category"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
+        type_check_icon() {
+            if (this.filter_toggles["type"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
+        session_check_icon() {
+            if (this.filter_toggles["session"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
         filtered_measures() {
-            return this.filtered_measures_type
+            return this.filtered_measures_session
         },
         filtered_measures_per_category() {
             filter_measures = this.filtered_measures;
@@ -170,7 +289,6 @@ var explorer = new Vue({
                         el = cat_measure_cohort_waves.indexOf((idx+1).toString()) >= 0 ? 1 : 0
                         return (N_measures-i)*el
                     })
-                    console.log(row)
                     // Set zero to null
                     row = row.map(function(val, i) {
                         val = parseInt(val, 10); 
@@ -213,7 +331,7 @@ var explorer = new Vue({
             console.log(data)
 
             // Variables influenced by inclusion/exclusion of covid wave (7)
-            wave_text = ["1", "2", "3", "4", "5", "6", "🦠"]
+            wave_text = ["Wave 1", "Wave 2", "Wave 3", "Wave 4", "Wave 5", "Wave 6", "Wave C"]
             wave_vals = [0,1,2,3,4,5,6]
             if (!include_wave_7) {
                 wave_text.pop()
