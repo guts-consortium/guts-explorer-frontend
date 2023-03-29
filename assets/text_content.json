@@ -13,7 +13,7 @@
         "menu":"Measures collected",
         "card_description": "An interactive infograph of all measures collected over the course of 6 data collection waves, for all cohorts.",
         "card_img": "collected_new.png",
-        "descriptive_paragraph":"To ease the process of filtering through all Leiden-CID data  , we’ve created an interactive info graph you can browse through in any way you like. Are you interested in finding out what questionnaires were filled out by the primary parent in the Middle Childhood Cohort to assess parenting?  No problem! You can select these criteria in the top part of the infographic. By clicking on the circles corresponding to the available waves, you can gain information about the measure itself. Not really an info graph kind of person? Don’t worry, here  you can find a measures table and search through all Leiden-CID data in a more standardized way. ."
+        "descriptive_paragraph":"To ease the process of filtering through all Leiden-CID data, we’ve created an interactive info graph you can browse through in any way you like. Are you interested in finding out what questionnaires were filled out by the primary parent in the Middle Childhood Cohort to assess parenting? No problem! You can select these criteria in the top part of the infographic. By clicking on the markers corresponding to the available waves, you can gain information about the measure itself. Not really an info graph kind of person? Don’t worry, here  you can find a measures table and search through all Leiden-CID data in a more standardized way."
     },
     "measures-table": {
         "url": "measures-table.html",
