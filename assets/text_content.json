@@ -5,7 +5,7 @@
         "menu":"Participants",
         "card_description": "An interactive infograph of participant dropout and recovery for all cohorts.",
         "card_img": "participants.png",
-        "descriptive_paragraph":"The Leiden-CID study includes a lot of people  . Over two cohorts, no less than 495(!) twin pairs  participated. Inherent to a longitudinal study is, of course, that not all these participants make it to the end. Therefore, we’ve created an interactive info graph with information about the number of participants in every wave. For each cohort, you can hover over the blocks and the lines in the infographic to gain insights into the participant flow. For example, to see how many participants did not participate in wave 3, but did participate in wave 4. "
+        "descriptive_paragraph":"The Leiden-CID study includes a lot of people. Over two cohorts, no less than 495(!) twin pairs participated. Inherent to a longitudinal study is, of course, that not all these participants make it to the end. Therefore, we’ve created an interactive info graph with information about the number of participants in every wave. For each cohort, you can hover over the blocks and the lines in the infographic to gain insights into the participant flow. For example, to see how many participants did not participate in Wave 3, but did participate in Wave 4."
     },
     "measures-collected": {
         "url": "measures-collected.html",
