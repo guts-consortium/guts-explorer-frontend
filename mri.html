@@ -45,80 +45,40 @@
         </div>
     </div>
 
-    <b-container id="explorer-mri">
+    <b-container id="explorer-mri" >
 
         <div class="intro">
             <h2><strong><em>{{text_content['mri']['title']}}</em></strong></h2>
             {{text_content['mri']['descriptive_paragraph']}}
         </div>
 
-        <b-card no-body style="background-color: var(--lcid_dark_blue); color: white">
+        <b-card no-body style="background-color: var(--lcid_dark_blue); color: white; margin-left: 5%; width: 90%;">
           <b-tabs card pills class="d-flex flex-column" content-class="flex-grow-1" v-model="tabIndex">
 
             <b-tab title="Structural scan quality" :title-link-class="linkClass(0)">
+                <p style="text-align: justify;">
+                    All structural MRI scans underwent manual quality control assisted by the tool <strong>Qoala-T</strong> (<a href="https://doi.org/10.1016/j.neuroimage.2019.01.014">Klapwijk et al. 2019</a>).
+                    Qoala-T is a supervised learning tool that asseses accuracy of manual quality control of T1 imaging scans and their automated neuroanatomical labeling processed in FreeSurfer.
+                    It is particularly intended to use in developmental datasets, which was the case for the Leiden-CID MRI data.
+                    The plots below show the Qoala-T scores for several waves of both the Early and Middle Childhood Cohort of Leiden-CID.
+                </p>
                 <div style="display: flex; flex-direction: column; margin:auto">
                     <div id="quality_plot"></div>
                 </div>
 
             </b-tab>
 
-            
-            <b-tab title="fMRI group stats 1" :title-link-class="linkClass(1)">
+            <b-tab title="Functional scan quality" :title-link-class="linkClass(1)" >
                 <div style="display: flex; flex-direction: column; margin:auto">
-                    <h5><a href="https://doi.org/10.1073/pnas.1915124117" style="color: var(--lcid_bluegreen);">Longitudinal changes in DLPFC activation during childhood are related to decreased aggression following social rejection</a></h5>
-                    <h6><em>Michelle Achterberg, Anna C. K. van Duijvenvoorde, Marinus H. van IJzendoorn, and Eveline A. Crone</em></h6>
-                    <p style="text-align: justify;"><small>
-                        Regulating aggression after social feedback is an important prerequisite for
-                        developing and maintaining social relations, especially in the current times
-                        with larger emphasis on online social evaluation. Studies in adults highlighted
-                        the role of the dorsolateral prefrontal cortex (DLPFC) in regulating aggression.
-                        Little is known about the development of aggression regulation following social
-                        feedback during childhood, while this is an important period for both brain
-                        maturation and social relations. The current study sed a longitudinal design,
-                        with 456 twins undergoing two functional MRI sessions across the transition from
-                        middle (7 to 9 y) to late (9 to 11 y) childhood. Aggression regulation was studied
-                        using the Social Network Aggression Task. Behavioral aggression after social
-                        evaluation decreased over time, whereas activation in the insula, dorsomedial
-                        PFC and DLPFC increased over time. Brain-behavior analyses showed that increased
-                        DLPFC activation after negative feedback was associated with decreased aggression.
-                        Change analyses further revealed that children with larger increases in DLPFC
-                        activity from middle to late childhood showed stronger decreases in aggression
-                        over time. These findings provide insights into the development of social evaluation
-                        sensitivity and aggression control in childhood.
-                    </small></p>
-                    <iframe style="flex-grow: 1; min-height: 500px;" src="https://neurovault.org/media/images/6070/pycortex_all/index.html"></iframe>
+                    <br>
+                    <h3><em>Coming soon!</em></h3>
+                    <br>
                 </div>
-            </b-tab>
-            
-            <b-tab title="fMRI group stats 2" :title-link-class="linkClass(2)">
-                <div style="display: flex; flex-direction: column; margin:auto">
-                    <h5><a href="https://doi.org/10.1093/scan/nsac039"  style="color: var(--lcid_bluegreen);">Development of social feedback processing and responses in childhood: an fMRI test-replication design in two age cohorts</a></h5>
-                    <h6><em>Simone Dobbelaar, Michelle Achterberg, Lina van Drunen, Anna c.k van Duijvenvoorde, Marinus H van IJzendoorn, Eveline A Crone</em></h6>
-                    <p style="text-align: justify;"><small>
-                        This study investigated behavioral and neural correlates underlying social
-                        feedback processing and subsequent aggressive behaviors in childhood in two
-                        age cohorts (test sample: n=509/n=385 and replication sample: n=354/n=195,
-                        7-9 years old). Using a previously validated Social Network Aggression Task,
-                        we showed that negative social feedback resulted in most behavioral aggression,
-                        followed by less aggression after neutral and least aggression after positive
-                        feedback. Receiving positive and negative social feedback was associated with
-                        increased activity in the insula, medial prefrontal cortex and ventrolateral
-                        prefrontal cortex. Responding to feedback was associated with additional
-                        activation in the dorsolateral prefrontal cortex (DLPFC) following positive
-                        feedback. This DLPFC activation correlated negatively with aggression.
-                        Furthermore, age analyses showed that older children showed larger reductions
-                        in aggression following positive feedback and more neural activation in the
-                        DLPFC when responding to positive feedback compared to younger children.
-                        To assess the robustness of our results, we examined these processes in two
-                        independent behavioral/functional magnetic resonance imaging samples using
-                        equivalence testing, thereby contributing to replicable reports. Together,
-                        these findings demonstrate an important role of social saliency and regulatory
-                        processes where regulation of aggression rapidly develops between the ages of
-                        7 and 9 years.
-                    </small></p>
-                    
-                    <iframe style="flex-grow: 1; min-height: 500px;" src="https://neurovault.org/media/images/GMFZUABO/pycortex_all/index.html"></iframe>
-                </div>
+
+                
+
+
+
             </b-tab>
 
             

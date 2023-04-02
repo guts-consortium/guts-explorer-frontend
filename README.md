@@ -14,8 +14,6 @@ _TBC_
 
 #### Step 0 - development setup
 
-
-
 In order to run the data preparation scripts, you will first need to get the repository and its content.
 
 Clone the repository to your local machine and navigate to it:
@@ -84,6 +82,21 @@ python code/extract_dropout_measures.py inputs/raw_data/[name-of-ECC-file.sav] i
 NOTE: The order of the input files is important!
 
 This script generates the file at: `inputs/processed_data/participant_data.json`
+
+#### Step 4 - `.csv`-files to structured JSON
+
+This converts the CSV files into structured JSON for structural MRI quality plots
+
+Run the following from the repo's root directory (replace with actual filenames!):
+
+```python
+python code/extract_quality_measures.py inputs/raw_data/[name-of-ECC-file.csv] inputs/raw_data/[name-of-MCC-file.csv]
+```
+
+NOTE: The order of the input files is important!
+
+This script generates the file at: `inputs/processed_data/quality_data_structural.json`
+
 
 ## Changing text content of explorer pages
 

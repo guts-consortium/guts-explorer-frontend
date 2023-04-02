@@ -12,19 +12,19 @@
   --lcid_beige: #FFF0DF;
   --lcid_orange: #FFA87C;
   --lcid_light_orange: #FFDBBE;
-  --plotly_x: #242A33;
   --lcid_grey_alpha: #64646434;
-  --plotly_x: #74a29f;
-  --plotly_x: #197278;
-  --plotly_x: #D6BCB4;
-  --plotly_x: #AB5B24;
-  --plotly_x: #DE752F;
-  --plotly_x: #C44536;
-  --plotly_x: #9b544b;
-  --plotly_x: #EDDDD4;
-
+  --lcid_seriously_dark_blue: #242A33; /*0*/
+  --lcid_grey: #505F73;  /*1*/
+  --lcid_duck_egg: #74a29f;  /*2*/
+  --lcid_dark_wing_duck: #197278;  /*3*/
+  --lcid_ligh_salmon: #D6BCB4;  /*4*/
+  --lcid_burnt_orange: #AB5B24;  /*5*/
+  --lcid_dark_orange: #DE752F;  /*6*/
+  --lcid_red_ish: #C44536;  /*7*/
+  --lcid_red_brown: #9b544b;  /*8*/
+  --lcid_something: #EDDDD4;  /*9*/
+  --lcid_a: #edddd43b;
 }
-
 
 
 @font-face {
@@ -184,9 +184,6 @@ table td:first-child {
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {background-color: var(--lcid_orange);}
 
-
-
-
 .maincards {
   align-items: flex-start;
   border: 0 !important; /* null both border-tops and -bottoms */
@@ -296,8 +293,6 @@ table td:first-child {
 }
 
 .intro {
-  /* display: flex;
-  flex-wrap: nowrap; */
   text-align: justify;
   font: 1.5em;
   margin-left: 5%;
@@ -306,14 +301,13 @@ table td:first-child {
 }
 .intro h2 {
   color: var(--lcid_dark_blue);
-  margin-left: 1em;
+  margin-right: 1em;
   margin-bottom: 0.25em;
-  float: right;
+  float: left;
   font: 3em;
 }
 
 .filter-label {
-  /* font-weight: bold; */
   font-size: 1.2em;
   margin-bottom: 0.5em;
 }
