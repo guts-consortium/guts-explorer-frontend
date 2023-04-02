@@ -84,7 +84,6 @@ var explorer = new Vue({
                         color: "black",
                         width: 0.5
                     },
-                    label: label,
                     customdata: attendance,
                     hovertemplate:'N=%{value:.0f} participants %{customdata}<extra></extra>',
                     color: bar_color
@@ -148,6 +147,35 @@ var explorer = new Vue({
                         xref: "paper",
                         yref: "paper",
                         text: wave_text_ages[i],
+                        showarrow: false,
+                        align: "center",
+                    }
+                )
+            }
+            y_label_in = 0.7
+            y_label_out = 0
+            label_text_position = [0.005, 0.195, 0.405, 0.595, 0.805, 0.997]
+            for (var i=0; i<(label.length)/2; i++) {
+                an_in = label[i*2]
+                an_out = label[i*2+1]
+                annts.push(
+                    {
+                        x: label_text_position[i],
+                        y: y_label_in,
+                        xref: "paper",
+                        yref: "paper",
+                        text: an_in,
+                        showarrow: false,
+                        align: "center",
+                    }
+                )
+                annts.push(
+                    {
+                        x: label_text_position[i],
+                        y: y_label_out,
+                        xref: "paper",
+                        yref: "paper",
+                        text: an_out,
                         showarrow: false,
                         align: "center",
                     }
