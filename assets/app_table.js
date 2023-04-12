@@ -5,11 +5,13 @@ var all_respondents = [
     "child",
     "other parent",
     "primary parent",
+    "research assistant",
 ]
 var all_respondents_short = {
     "child": "c",
     "other parent": "op",
     "primary parent": "pp",
+    "research assistant": "ra",
 }
 var respondent_text = {
     "c": "Child",
@@ -83,6 +85,8 @@ var explorer = new Vue({
         cohort: "mcc",
         fields_to_display: fields,
         filter_toggles: {
+            "cohort": true,
+            "respondent": true,
             "category": true,
             "session": true,
             "type": true,
@@ -112,7 +116,7 @@ var explorer = new Vue({
         all_sessions: all_sessions,
         filter_sessions: all_sessions,
         search_text: "",
-        search_tags: [],
+        search_text_tags: [],
         modal_details: {
             cohort: '-',
             session: '-',
@@ -146,51 +150,72 @@ var explorer = new Vue({
         all_sessions_short: all_sessions_short,
         text_content: {},
         text_content_loaded: false,
+        search_keywords: [],
+        keyword_text: "",
+        keyword_dropdown_open: false,
+        keyword_options: [],
+        keyword_options_filtered: [],
+        keyword_options_available: [],
+        keywords_ready: false,
+        popoverShow: false,
     },
-    computed: {
-        all_short_names: function () {
-            name_list = this.measure_data.map(function(measure) {
-                return measure["short_name"];
-            });
-            return [...new Set(name_list)]
-        },
-        all_long_names: function () {
-            name_list = this.measure_data.map(function(measure) {
-                return measure["long_name"];
-            });
-            return [...new Set(name_list)]
-        },
-        
+    computed: {      
+        // filtering
         filtered_measures_search() {
-            regex = new RegExp(this.search_text.toLowerCase())
-            return this.measure_data.filter((c) => {
+            // regex = new RegExp(this.search_text.toLowerCase())
+            filter_measures = this.measure_data;
+            return filter_measures.filter((c) => {
               if (this.search_text == "") return true;
               return (
                 c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
                 c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.measure_category.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.measure_type.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.keywords ? c.keywords.some(kw => kw.includes(this.search_text.toLowerCase())) : null
+                c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
+                // c.keywords ? c.keywords.some(kw => kw.includes(this.search_text.toLowerCase())) : null
               );
             });
         },
-        filtered_measures_tags() {
+        // filtered_measures_tags() {
+        //     filter_measures = this.measure_data;
+        //     return filter_measures.filter((c) => {
+        //         if (this.search_text_tags.length == 0) return true;
+        //         return this.search_text_tags.every((v) =>
+        //             c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+        //             c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+        //             c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0
+        //         );
+        //     });
+        // },
+        filtered_measures_keywords() {
             filter_measures = this.filtered_measures_search;
             return filter_measures.filter((c) => {
-                if (this.search_tags.length == 0) return true;
-                return this.search_tags.every((v) =>
-                    c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                    c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                    c.measure_category.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                    c.measure_type.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                    c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                    c.keywords ? c.keywords.includes(v.toLowerCase()): null
-                );
+              if (this.search_keywords.length == 0) return true;
+              return this.search_keywords.some((v) => c.keywords ? c.keywords.includes(v): null);
+            });
+          },
+        filtered_measures_respondent() {
+            filter_measures = this.filtered_measures_keywords;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["respondent"].length == this.all_arrays["respondent"].length) return true;
+                return this.filter_arrays["respondent"].some(r=>c["respondents"].includes(all_respondents_short[r]))
+            });
+        },
+        filtered_measures_cohort() {
+            filter_measures = this.filtered_measures_respondent;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["cohort"].length == this.all_arrays["cohort"].length) return true;
+                return this.filter_arrays["cohort"].some(r=>c["cohorts"].includes(r.toLowerCase()))
+            });
+        },
+        filtered_measures_session() {
+            filter_measures = this.filtered_measures_cohort;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["session"].length == this.all_arrays["session"].length) return true;
+                return (this.filter_arrays["session"].some(r=>c["ecc"].includes(all_sessions_nr[r])) ||
+                this.filter_arrays["session"].some(r=>c["mcc"].includes(all_sessions_nr[r])))
             });
         },
         filtered_measures_category() {
-            filter_measures = this.filtered_measures_tags;
+            filter_measures = this.filtered_measures_session;
             return filter_measures.filter((c) => {
                 if (this.filter_arrays["category"].length == this.all_arrays["category"].length) return true;
                 return this.filter_arrays["category"].indexOf(c.measure_category ) >= 0
@@ -203,28 +228,7 @@ var explorer = new Vue({
                 return this.filter_arrays["type"].indexOf(c.measure_type ) >= 0
             });
         },
-        filtered_measures_cohort() {
-            filter_measures = this.filtered_measures_type;
-            return filter_measures.filter((c) => {
-                if (this.filter_arrays["cohort"].length == this.all_arrays["cohort"].length) return true;
-                return this.filter_arrays["cohort"].some(r=>c["cohorts"].includes(r.toLowerCase()))
-            });
-        },
-        filtered_measures_respondent() {
-            filter_measures = this.filtered_measures_cohort;
-            return filter_measures.filter((c) => {
-                if (this.filter_arrays["respondent"].length == this.all_arrays["respondent"].length) return true;
-                return this.filter_arrays["respondent"].some(r=>c["respondents"].includes(all_respondents_short[r]))
-            });
-        },
-        filtered_measures_session() {
-            filter_measures = this.filtered_measures_respondent;
-            return filter_measures.filter((c) => {
-                if (this.filter_arrays["session"].length == this.all_arrays["session"].length) return true;
-                return (this.filter_arrays["session"].some(r=>c["ecc"].includes(all_sessions_nr[r])) ||
-                this.filter_arrays["session"].some(r=>c["mcc"].includes(all_sessions_nr[r])))
-            });
-        },
+        // other
         category_check_icon() {
             if (this.filter_toggles["category"]) {
                 return "fas fa-check"
@@ -243,20 +247,80 @@ var explorer = new Vue({
             }
             return "fas fa-minus"
         },
+        respondent_check_icon() {
+            if (this.filter_toggles["respondent"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
+        cohort_check_icon() {
+            if (this.filter_toggles["cohort"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
     },
     methods: {
-        addSearchTag(option) {
-            this.search_tags.push(this.search_text);
+        resetTable() {
+            Object.keys(this.filter_toggles).forEach(key => {
+                this.filter_toggles[key] = true
+                this.filter_arrays[key] = this.all_arrays[key]
+            })
+            this.search_keywords = []
+            this.search_text = ""
+            this.keyword_text = ""
+            this.keyword_options = all_keywords;
+            this.keyword_options_filtered = this.keyword_options;
+            this.keyword_options_available = this.keyword_options;
+            this.keywords_ready = true;
+
+        },
+        addSearchTextTag(option) {
+            if (this.search_text_tags.indexOf(this.search_text) < 0) {
+                this.search_text_tags.push(this.search_text);
+            }
             this.search_text = "";
         },
-        removeSearchTag(tag) {
-            idx = this.search_tags.indexOf(tag);
+        removeSearchTextTag(tag) {
+            idx = this.search_text_tags.indexOf(tag);
             if (idx > -1) {
-                this.search_tags.splice(idx, 1);
+                this.search_text_tags.splice(idx, 1);
             }
         },
-        clearSearchTagText() {
-            this.search_text = "";
+        addSearchKeyword(option) {
+            this.search_keywords.push(option);
+            this.clearSearchKeywordText();
+            this.filterKeywords();
+        },
+        removeSearchKeyword(kw) {
+            idx = this.search_keywords.indexOf(kw);
+            if (idx > -1) {
+                this.search_keywords.splice(idx, 1);
+            }
+            this.filterKeywords();
+        },
+        clearSearchKeywordText() {
+            this.keyword_text = "";
+            this.filterKeywords();
+            this.popoverShow = false;
+        },
+        filterKeywords() {
+            this.keyword_options_available = this.keyword_options.filter(
+                (x) => this.search_keywords.indexOf(x) === -1
+            );
+            this.keyword_options_filtered = this.keyword_options_available.filter(
+                (str) => str.toLowerCase().indexOf(this.keyword_text.toLowerCase()) >= 0
+            );
+        },
+        inputKeywordText() {
+            this.popoverShow = true;
+            this.filterKeywords();
+        },
+        onClose() {
+            this.popoverShow = false;
+        },
+        validator(kw) {
+            return this.keyword_options_available.indexOf(kw) >= 0;
         },
         exportTable(format) {
             downloadArrayAsFormat(this.filtered_measures_session, format, "lcid_metadata")
@@ -294,7 +358,7 @@ var explorer = new Vue({
             newDeets.keywords = measure.keywords ? measure.keywords : '-'
             this.updateDetails(newDeets)
             this.$refs['info-modal'].show()
-            console.log(this.filtered_measures_search[idx])
+            // console.log(this.filtered_measures_search[idx])
         },
         updateDetails(newDeets) {
             Object.keys(newDeets).forEach(k => {
@@ -378,6 +442,19 @@ var explorer = new Vue({
             this.all_arrays["type"] = [...new Set(types_list)]
             this.all_arrays["type"] = this.all_arrays["type"].sort()
             this.filter_arrays["type"] = this.all_arrays["type"]
+
+            all_keywords = this.measure_data.map(function(measure) {
+                return measure["keywords"];
+            });
+            all_keywords = [...new Set(all_keywords.flat())]
+            all_keywords.splice(all_keywords.indexOf(''), 1);
+            all_keywords = all_keywords.sort()
+
+
+            this.keyword_options = all_keywords;
+            this.keyword_options_filtered = this.keyword_options;
+            this.keyword_options_available = this.keyword_options;
+            this.keywords_ready = true;
             this.measures_loaded = true;
         })
         .catch((error) => {

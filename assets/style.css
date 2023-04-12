@@ -311,3 +311,9 @@ table td:first-child {
   font-size: 1.2em;
   margin-bottom: 0.5em;
 }
+
+.popover-body {
+  height: 300px;
+  overflow-y: auto;
+  white-space:pre-wrap;
+}

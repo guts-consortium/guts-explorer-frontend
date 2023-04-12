@@ -58,22 +58,11 @@
                 <b-col cols="4">
                     <b-row>
                         <b-col cols="6">
-                            <!-- RESPONDENTS -->
-                            <b-form-group v-slot="{ ariaDescribedbyResp }">
-                            <label for="respondents_checkbox" class="filter-label"><i class="fas fa-users"></i>&nbsp;In which respondents are you interested?</label>
-                                <b-form-checkbox-group
-                                    id="respondents_checkbox"
-                                    v-model="filter_arrays['respondent']"
-                                    :options="all_arrays['respondent']"
-                                    :aria-describedby="ariaDescribedbyResp"
-                                    name="flavour--0"
-                                ></b-form-checkbox-group>
-                            </b-form-group>
-                        </b-col>
-                        <b-col cols="6">
                             <!-- COHORTS -->
                             <b-form-group v-slot="{ ariaDescribedbyCohort }">
-                            <label for="cohorts_checkbox" class="filter-label"><i class="fas fa-table-columns"></i>&nbsp;Which cohorts would you like to view?</label>
+                                <label for="cohorts_checkbox" class="filter-label"><i class="fas fa-table-columns"></i>&nbsp;Which cohorts would you like to view?</label>
+                                <br>
+                                <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('cohort')"><i :class="cohort_check_icon"></i></b-button> <em>All</em></span>
                                 <b-form-checkbox-group
                                     id="cohorts_checkbox"
                                     v-model="filter_arrays['cohort']"
@@ -83,30 +72,80 @@
                                 ></b-form-checkbox-group>
                             </b-form-group>
                         </b-col>
+                        <b-col cols="6">
+                            <!-- RESPONDENTS -->
+                            <b-form-group v-slot="{ ariaDescribedbyResp }">
+                                <label for="respondents_checkbox" class="filter-label"><i class="fas fa-users"></i>&nbsp;Which respondents would you like to view?</label>
+                                <br>
+                                <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('respondent')"><i :class="respondent_check_icon"></i></b-button> <em>All</em></span>
+                                <b-form-checkbox-group
+                                    id="respondents_checkbox"
+                                    v-model="filter_arrays['respondent']"
+                                    :options="all_arrays['respondent']"
+                                    :aria-describedby="ariaDescribedbyResp"
+                                    name="flavour--0"
+                                ></b-form-checkbox-group>
+                            </b-form-group>
+                        </b-col>
                     </b-row>
                     <br>
                     <b-row>
                         <!-- SEARCH TEXT -->
-                        <b-col cols="10">
+                        <b-col cols="11">
                             <b-form-group v-slot="{ ariaDescribedby }">
-                                <label for="search_text_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Filter by text</label>
+                                <label for="search_text_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Filter by short/long name or description</label>
                                 <b-form-input size="sm"
                                 id="search_text_input"
                                 class="mb-2 mr-sm-2 mb-sm-0"
-                                placeholder="Add text (hit enter to add tag)"
+                                placeholder="Add text"
                                 v-model="search_text"
-                                v-on:keyup.enter="addSearchTag"
                                 ></b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col></b-col>
                     </b-row>
+                    <br>
                     <b-row>
-                        <!-- SEARCH TAGS -->
-                        <div class="d-inline-block" style="font-size: 1.5rem;">
-                            <span v-for="tag in search_tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchTag(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
-                        </div>
+                        <b-col cols="11">
+                            <label for="keyword_search_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Filter by keyword</label>
+                            <b-input-group>
+                                <b-form-tags v-model="search_keywords" :tag-validator="validator" no-outer-focus class="border-0 p-0" style="background-color: var(--lcid_dark_blue);">
+                                  <template v-slot="{ tags, inputAttrs, inputHandlers, tagVariant, addTag, removeTag}">
+                                    <b-input-group class="mb-0">
+                                      <b-form-input size="sm"
+                                        v-bind="inputAttrs"
+                                        v-model="keyword_text"
+                                        v-on="inputHandlers"
+                                        placeholder="Add keyword"
+                                        class="form-control"
+                                        id="keyword_search_input"
+                                        @input="inputKeywordText()"
+                                        v-on:keyup.enter="clearSearchKeywordText()"
+                                      ></b-form-input>
+                                    </b-input-group>
+                                    <div class="d-inline-block" style="font-size: 1.5rem; background-color: var(--lcid_dark_blue);">
+                                      <span v-for="tag in tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchKeyword(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
+                                    </div>
+                                  </template>
+                                </b-form-tags>
+                                <template #append>
+                                  <b-button size="sm" variant="outline-light" id="popover-target-1" class="pl-0 pr-0">Keywords</b-button>
+                                  <b-popover target="popover-target-1" triggers="hover" :show.sync="popoverShow" placement="auto" ref="popover">
+                                    <div v-if="keywords_ready">
+                                      <span v-if="keyword_options_filtered.length == 0"><em>No keywords found</em></span>
+                                      <span v-else v-for="option in keyword_options_filtered"><b-button pill size="sm" class="p-1" variant="outline-dark" @click="addSearchKeyword(option)">{{option}}</b-button>&nbsp;</span>
+                                    </div>
+                                  </b-popover>
+                                </template>
+                              </b-input-group>
+                        </b-col>
+                        <b-col></b-col>
                     </b-row>
+                    <!-- <b-row>
+                        <div class="d-inline-block" style="font-size: 1.5rem;">
+                            <span v-for="tag in search_text_tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchTextTag(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
+                        </div>
+                    </b-row> -->
                 </b-col>
                 <b-col cols="2">
                     <!-- SESSIONS -->
@@ -156,21 +195,21 @@
                 </b-col>
             </b-row>
             <b-row>
-                <b-col>
+                <b-col style="text-align: right;">
+                    <b-button size="sm" variant="outline-light" @click="resetTable()"><i class="fas fa-rotate-left"></i> Reset Table</b-button>
                     <b-dropdown size="sm" text="Export Table" variant="outline-light" class="m-2">
                         <b-dropdown-item @click="exportTable('csv')"><i class="fas fa-file-csv"></i> CSV</b-dropdown-item>
                         <b-dropdown-item @click="exportTable('json')"><i class="fas fa-file-code"></i> JSON</b-dropdown-item>
                       </b-dropdown>
                 </b-col>
-                <b-col cols="1"></b-col>
-                <b-col></b-col>
-                <b-col></b-col>
+                
+                
                 
             </b-row>
         </b-card>
         <br>
         <b-card no-body>
-            <b-table ref="itemtable" responsive small v-bind:items="filtered_measures_session" v-bind:fields="fields_to_display"
+            <b-table ref="itemtable" responsive small v-bind:items="filtered_measures_type" v-bind:fields="fields_to_display"
               style="margin-bottom: 5px;"
               class="lcid-info-table">
               <!-- Respondents column -->

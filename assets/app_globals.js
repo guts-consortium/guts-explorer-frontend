@@ -6,13 +6,6 @@ const template_dir = "./templates";
 const data_dir = "./inputs/processed_data";
 
 
-/*********/
-// Flags //
-/*********/
-
-const include_wave_7 = true;
-
-
 /********/
 // Data //
 /********/
