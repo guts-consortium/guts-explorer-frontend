@@ -2,15 +2,114 @@
 // Vue app //
 /***********/
 
+var all_respondents = [
+    "child",
+    "other parent",
+    "primary parent",
+    "research assistant",
+]
+var all_respondents_short = {
+    "child": "c",
+    "other parent": "op",
+    "primary parent": "pp",
+    "research assistant": "ra",
+}
+var respondent_text = {
+    "c": "Child",
+    "op": "Other parent",
+    "pp": "Primary parent",
+    "pp-op": "Primary parent\nOther Parent",
+    "pp-c": "Primary parent\nChild",
+    "ra": "Research assistant",
+}
+var all_cohorts = [
+    "ECC",
+    "MCC",
+]
+var all_sessions = [
+    "Wave 1",
+    "Wave 2",
+    "Wave 3",
+    "Wave 4",
+    "Wave 5",
+    "Wave 6",
+    "Wave C",
+]
+var all_sessions_nr = {
+    "Wave 1": "1",
+    "Wave 2": "2",
+    "Wave 3": "3",
+    "Wave 4": "4",
+    "Wave 5": "5",
+    "Wave 6": "6",
+    "Wave C": "7",
+}
+var all_sessions_short = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "C",
+]
+
 // Start Vue instance
 var explorer = new Vue({
     el: "#explorer-collected",
     data: {
+        filter_toggles: {
+            "cohort": true,
+            "respondent": true,
+            "category": true,
+            "session": true,
+            "type": true,
+        },
+        filter_arrays: {
+            "category": categories_list,
+            "session": all_sessions,
+            "type": [],
+            "respondent": all_respondents,
+            "cohort": all_cohorts,
+        },        
+        all_arrays: {
+            "category": categories_list,
+            "session": all_sessions,
+            "type": [],
+            "respondent": all_respondents,
+            "cohort": all_cohorts,
+        },
+        // all_categories: categories_list,
+        // filter_categories: categories_list,
+        all_types: [],
+        filter_types: [],
+        all_respondents: all_respondents,
+        filter_respondents: all_respondents,
+        all_cohorts: all_cohorts,
+        filter_cohorts: all_cohorts,
+        all_sessions: all_sessions,
+        filter_sessions: all_sessions,
+        search_text: "",
+        search_text_tags: [],
+        all_sessions_short: all_sessions_short,
+        text_content: {},
+        text_content_loaded: false,
+        search_keywords: [],
+        keyword_text: "",
+        keyword_dropdown_open: false,
+        keyword_options: [],
+        keyword_options_filtered: [],
+        keyword_options_available: [],
+        keywords_ready: false,
+        popoverShow: false,
+
         categories: cats,
-        measure_data: {},
+        measure_data: [],
         measures_loaded: false,
-        cohort: "mcc",
+        cohort: "all",
         cohort_options: [
+            { value: "all", text: "All cohorts"},
             { value: 'ecc', text: 'Early Childhood Cohort (ECC)' },
             { value: 'mcc', text: 'Middle Childhood Cohort (MCC)' },
         ],
@@ -92,30 +191,100 @@ var explorer = new Vue({
 
     },
     computed: {
-        filtered_measures_cohort() {
-            return this.measure_data.filter((item) => {
-                return item.cohorts.indexOf(this.cohort) >= 0
+        // filtered_measures_cohort() {
+        //     filter_measures = this.measure_data;
+        //     return filter_measures.filter((item) => {
+        //         if (this.cohort == "all") return true;
+        //         return item.cohorts.indexOf(this.cohort) >= 0
+        //     });
+        // },
+        // filtered_measures_respondent() {
+        //     filter_measures = this.filtered_measures_cohort;
+        //     return filter_measures.filter((item) => {
+        //         if (this.respondent == "all") return true;
+        //         return item.respondents.indexOf(this.respondent) >= 0
+        //     });
+        // },
+        // filtered_measures_category() {
+        //     filter_measures = this.filtered_measures_respondent;
+        //     return filter_measures.filter((item) => {
+        //         if (this.category == "all") return true;
+        //         return item.measure_category == this.category
+        //     });
+        // },
+        // filtered_measures_type() {
+        //     filter_measures = this.filtered_measures_category;
+        //     return filter_measures.filter((item) => {
+        //         if (this.type == "all") return true;
+        //         return item.measure_type == this.type
+        //     });
+        // },
+        // filtering
+        filtered_measures_search() {
+            // regex = new RegExp(this.search_text.toLowerCase())
+            filter_measures = this.measure_data;
+            return filter_measures.filter((c) => {
+              if (this.search_text == "") return true;
+              return (
+                c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+                c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
+                // c.keywords ? c.keywords.some(kw => kw.includes(this.search_text.toLowerCase())) : null
+              );
             });
         },
+        // filtered_measures_tags() {
+        //     filter_measures = this.measure_data;
+        //     return filter_measures.filter((c) => {
+        //         if (this.search_text_tags.length == 0) return true;
+        //         return this.search_text_tags.every((v) =>
+        //             c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+        //             c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+        //             c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0
+        //         );
+        //     });
+        // },
+        filtered_measures_keywords() {
+            filter_measures = this.filtered_measures_search;
+            return filter_measures.filter((c) => {
+              if (this.search_keywords.length == 0) return true;
+              return this.search_keywords.some((v) => c.keywords ? c.keywords.includes(v): null);
+            });
+          },
         filtered_measures_respondent() {
-            filter_measures = this.filtered_measures_cohort;
-            return filter_measures.filter((item) => {
-                if (this.respondent == "all") return true;
-                return item.respondents.indexOf(this.respondent) >= 0
+            filter_measures = this.filtered_measures_keywords;
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["respondent"].length == this.all_arrays["respondent"].length) return true;
+                return this.filter_arrays["respondent"].some(r=>c["respondents"].includes(all_respondents_short[r]))
             });
         },
+        // filtered_measures_cohort() {
+        //     filter_measures = this.filtered_measures_respondent;
+        //     return filter_measures.filter((c) => {
+        //         if (this.filter_arrays["cohort"].length == this.all_arrays["cohort"].length) return true;
+        //         return this.filter_arrays["cohort"].some(r=>c["cohorts"].includes(r.toLowerCase()))
+        //     });
+        // },
+        // filtered_measures_session() {
+        //     filter_measures = this.filtered_measures_cohort;
+        //     return filter_measures.filter((c) => {
+        //         if (this.filter_arrays["session"].length == this.all_arrays["session"].length) return true;
+        //         return (this.filter_arrays["session"].some(r=>c["ecc"].includes(all_sessions_nr[r])) ||
+        //         this.filter_arrays["session"].some(r=>c["mcc"].includes(all_sessions_nr[r])))
+        //     });
+        // },
         filtered_measures_category() {
             filter_measures = this.filtered_measures_respondent;
-            return filter_measures.filter((item) => {
-                if (this.category == "all") return true;
-                return item.measure_category == this.category
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["category"].length == this.all_arrays["category"].length) return true;
+                return this.filter_arrays["category"].indexOf(c.measure_category ) >= 0
             });
         },
         filtered_measures_type() {
             filter_measures = this.filtered_measures_category;
-            return filter_measures.filter((item) => {
-                if (this.type == "all") return true;
-                return item.measure_type == this.type
+            return filter_measures.filter((c) => {
+                if (this.filter_arrays["type"].length == this.all_arrays["type"].length) return true;
+                return this.filter_arrays["type"].indexOf(c.measure_type ) >= 0
             });
         },
         filtered_measures() {
@@ -134,8 +303,48 @@ var explorer = new Vue({
                 }
             }
             return output
-        }
+        },
+        filt_count() {
+            return this.filtered_measures.length
+        },
+        category_check_icon() {
+            if (this.filter_toggles["category"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
+        type_check_icon() {
+            if (this.filter_toggles["type"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
+        session_check_icon() {
+            if (this.filter_toggles["session"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
+        respondent_check_icon() {
+            if (this.filter_toggles["respondent"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
+        cohort_check_icon() {
+            if (this.filter_toggles["cohort"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
 
+    },
+    watch: {
+        filtered_measures_per_category(newState) {
+
+            // console.log("filtered_measuressddffdsfv has changed")
+            this.drawGraph()
+        }
     },
     methods: {
         drawGraph2() {
@@ -144,91 +353,117 @@ var explorer = new Vue({
         drawGraph() {
             this.clearDetails()
             var comp = this;
-            var cohort_waves = this.cohort + '_waves';
+            // var cohort_waves = this.cohort + '_waves';
+            var cohorts_list = Object.keys(this.cohort_dict)
             var N_measures = this.filtered_measures.length;
             var cat_measure_short_names = []
-            var measure_short_names = this.filtered_measures.map(
-                function(element) { return element.short_name }
-            )
+
+            // var measure_short_names = this.filtered_measures.map(
+            //     function(element) { return element.short_name }
+            // )
+            // var data = {
+            //     "ecc": [],
+            //     "mcc": []
+            // };
             var data = [];
+            // after measures have been filtered (this.filtered_measures_per_category),
+            // which categories are still included?
             var available_cats = Object.keys(this.filtered_measures_per_category)
             var i = 0;
+            // Now loop through the categories that are still included in the filtered measures
             for (var c=0; c<available_cats.length; c++) {
                 cat = available_cats[c];
                 console.log('---')
                 console.log('cat: ' + cat)
                 console.log('---')
-                // ln = []
+                // for a given category, loop through all its measures
                 for (var cm=0; cm<this.filtered_measures_per_category[cat].length; cm++) {
                     cat_measure = this.filtered_measures_per_category[cat][cm];
-                    console.log(cat_measure)
-                    cat_measure_short_names.push(cat_measure['short_name'])
-                    // ln.push(cat_measure['long_name'])
-                    // now we get the actual data
-                    cat_measure_cohort_waves = cat_measure[cohort_waves][this.respondent]
-                    row = [0,0,0,0,0,0,0].map(function(element, idx) {
-                        el = cat_measure_cohort_waves.indexOf((idx+1).toString()) >= 0 ? 1 : 0
-                        return (N_measures-i)*el
-                    })
-                    console.log(row)
-                    // Set zero to null
-                    row = row.map(function(val, i) {
-                        val = parseInt(val, 10); 
-                        return val === 0 ? null : val;
-                    });
-                    // Remove wave 7 if specified
-                    if (!include_wave_7) {
-                        row.pop()
-                    }
-                    // Add trace to data
                     ln = cat_measure['long_name']
                     longnames = [ln, ln, ln, ln, ln, ln, ln]
-                    trace = {
-                        y: row,
-                        mode: 'lines+markers',
-                        type: 'scatter',
-                        line: {
-                            width: 3,
-                            color: lcid_colors[this.categories_list.indexOf(cat)+1],
-                        },
-                        marker: {
-                            size: 14,
-                            color: addAlphaToHex(lcid_colors[this.categories_list.indexOf(cat)+1],0.5),
+                    console.log(cat_measure)
+                    // Get the value for the y-axis => short name
+                    cat_measure_short_names.push(cat_measure['short_name'])
+                    // now we get the actual data, for both cohorts
+                    var cat_measure_cohort_waves = {}
+                    var row = {}
+                    var trace = {}
+                    for (var ch=0; ch<cohorts_list.length; ch++) {
+                        coh = cohorts_list[ch]
+                        cohort_waves = coh + '_waves';
+                        cat_measure_cohort_waves[coh] = cat_measure[cohort_waves][this.respondent]
+                        row[coh] = [0,0,0,0,0,0,0].map(function(element, idx) {
+                            el = cat_measure_cohort_waves[coh].indexOf((idx+1).toString()) >= 0 ? 1 : 0
+                            return (N_measures-i)*el
+                        })
+                        // put MCC covid wave in the correct position: 1,2,3,4,5,7,6
+                        if (coh == 'mcc') {
+                            row[coh] = row[coh].slice(0,5).concat([row[coh][6], row[coh][5]])
+                        }
+                        // console.log(row)
+                        // Set zero to null
+                        row[coh] = row[coh].map(function(val, x) {
+                            val = parseInt(val, 10); 
+                            return val === 0 ? null : val;
+                        });
+                        // Add trace to cohort data
+                        trace[coh] = {
+                            y: row[coh],
+                            mode: 'lines+markers',
+                            type: 'scatter',
                             line: {
-                                width: 2,
-                                color: lcid_colors[this.categories_list.indexOf(cat)+1],
-                            }
-                            // symbol: 'square'
-                        },
-                        connectgaps: true,
-                        showlegend: false,
-                        customdata: longnames,
-                        hovertemplate: '<b>%{x}<br>%{customdata}</b>' +
-                                        '<extra></extra>'
+                                width: 3,
+                                color: lcid_colors[categories_list.indexOf(cat)+1],
+                            },
+                            marker: {
+                                size: 14,
+                                color: addAlphaToHex(lcid_colors[categories_list.indexOf(cat)+1],0.5),
+                                line: {
+                                    width: 2,
+                                    color: lcid_colors[categories_list.indexOf(cat)+1],
+                                }
+                                // symbol: 'square'
+                            },
+                            connectgaps: true,
+                            showlegend: false,
+                            customdata: longnames,
+                            hovertemplate: '<b>%{x}<br>%{customdata}</b>' +
+                                            '<extra></extra>'
+                        }
+                        if (ch==1) {
+                            trace[coh]['xaxis'] = 'x2';
+                        }
+                        data.push(trace[coh]);
                     }
-                    data.push(trace);
                     i++;
                 }
             }
             console.log(data)
 
             // Variables influenced by inclusion/exclusion of covid wave (7)
-            wave_text = ["1", "2", "3", "4", "5", "6", "🦠"]
-            wave_vals = [0,1,2,3,4,5,6]
-            if (!include_wave_7) {
-                wave_text.pop()
-                wave_vals.pop()
+            wave_text = {
+                ecc: ["Wave 1", "Wave 2", "Wave 3", "Wave 4", "Wave 5", "Wave 6", "Wave C"],
+                mcc: ["Wave 1", "Wave 2", "Wave 3", "Wave 4", "Wave 5", "Wave C", "Wave 6"]
             }
-            range_max = wave_text.length + 0.5
-
-            min_height = 150
+            wave_vals = {
+                ecc: [0,1,2,3,4,5,6],
+                mcc: [0,1,2,3,4,5,6]
+            }
+            // wave_text = ["1", "2", "3", "4", "5", "6", "🦠"]
+            // wave_vals = [0,1,2,3,4,5,6]
+            // if (coh) {
+            //     wave_text = ["1", "2", "3", "4", "5", "6", "🦠"]
+            //     wave_vals = [0,1,2,3,4,5,6]
+            // }
+            range_max = 7.5
+            min_height = 280
             calc_height = 30*N_measures < min_height ? min_height : 30*N_measures
+            var layout = {}
 
-        
-            var layout = {
-                margin: {l: 120, r: 0, b: 0, t:40},
+            layout = {
+                margin: {l: 120, r: 0, b: 0, t:110},
                 hovermode: 'closest',
-                width: 600,
+                width: 800, // var
                 height: calc_height,
                 xaxis: {
                     showgrid: true,
@@ -239,15 +474,53 @@ var explorer = new Vue({
                     showline: false,
                     side: 'top',
                     showticklabels: true,
-                    tickvals:wave_vals,
-                    ticktext:wave_text,
-                    tickfont:{size:20},
+                    tickvals:wave_vals['ecc'],
+                    ticktext:wave_text['ecc'],
+                    tickfont:{size:16},
                     color: '#FFFFFF',
                     fixedrange: true,
-                    // tickangle: -45,
+                    tickangle: -50,
+                    title: {
+                        text: 'Early Childhood Cohort',
+                        font: {
+                        //   family: 'Courier New, monospace',
+                          size: 18,
+                        //   color: '#7f7f7f'
+                        }
+                    },
+                    // domain: {
+                    //     x: [0, 0.6]
+                    // }
+                },
+                xaxis2: {
+                    showgrid: true,
+                    gridwidth: 1,
+                    gridcolor: '#EDDDD4',
+                    zeroline: false,
+                    range: [-0.5, range_max],
+                    showline: false,
+                    side: 'top',
+                    showticklabels: true,
+                    tickvals:wave_vals['mcc'],
+                    ticktext:wave_text['mcc'],
+                    tickfont:{size:16},
+                    color: '#FFFFFF',
+                    fixedrange: true,
+                    tickangle: -50,
+                    title: {
+                        text: 'Middle Childhood Cohort',
+                        font: {
+                        //   family: 'Courier New, monospace',
+                          size: 18,
+                        //   color: '#7f7f7f'
+                        }
+                    },
+                    // domain: {
+                    //     x: [0.4, 1]
+                    // }
                 },
                 yaxis: {
-                    showgrid: false,
+                    showgrid: true,
                     zeroline: false,
                     showline: false,
                     tickvals: Array.from({length: N_measures}, (_, j) => j + 1),
@@ -256,10 +529,62 @@ var explorer = new Vue({
                     color: '#FFFFFF',
                     fixedrange: true,
                 },
+                grid: {
+                    rows: 1,
+                    columns: 2,
+                    pattern: 'coupled',
+                },
                 plot_bgcolor: '#083655',
                 paper_bgcolor: '#083655',
                 hovermode: 'closest',
-            };
+            }
+
+            // fig.update_yaxes(title_text="", showgrid=False, tickvals=y_tickvals, ticktext=y_ticktext, row=i+1, col=1)
+
+            // for (var ch=0; ch<cohorts_list.length; ch++) {
+            //     coh = cohorts_list[ch]
+            //     layout[coh] = {
+            //         margin: {l: 120, r: 0, b: 0, t:80},
+            //         hovermode: 'closest',
+            //         width: 600,
+            //         height: calc_height,
+            //         xaxis: {
+            //             showgrid: true,
+            //             gridwidth: 1,
+            //             gridcolor: '#EDDDD4',
+            //             zeroline: false,
+            //             range: [-0.5, range_max],
+            //             showline: false,
+            //             side: 'top',
+            //             showticklabels: true,
+            //             tickvals:wave_vals[coh],
+            //             ticktext:wave_text[coh],
+            //             tickfont:{size:20},
+            //             color: '#FFFFFF',
+            //             fixedrange: true,
+            //             tickangle: -45,
+            //         },
+            //         yaxis: {
+            //             showgrid: false,
+            //             zeroline: false,
+            //             showline: false,
+            //             tickvals: Array.from({length: N_measures}, (_, j) => j + 1),
+            //             ticktext: cat_measure_short_names.reverse(),
+            //             range: [0, N_measures+1],
+            //             color: '#FFFFFF',
+            //             fixedrange: true,
+            //         },
+            //         grid: {
+            //             rows: 1,
+            //             columns: 2,
+            //             pattern: 'coupled',
+            //         },
+            //         plot_bgcolor: '#083655',
+            //         paper_bgcolor: '#083655',
+            //         hovermode: 'closest',
+            //     }
+            // }
+            
             const config = {
                 displayModeBar: false, // hide toolbar
             };
@@ -268,7 +593,7 @@ var explorer = new Vue({
             myPlot.on('plotly_click',
                 function(data){
                     console.log(data)
-                    x = data.points[0].x // 0,1,2,3,4,5,(6)
+                    x = data.points[0].x // 0,1,2,3,4,5,6
                     y = data.points[0].y // 1,2,3,...,n
                     console.log(cat_measure_short_names[y-1])
                     newDeets = {}
@@ -279,7 +604,7 @@ var explorer = new Vue({
                     measure = measure[0]
                     console.log(measure)
                     newDeets.measure_category = comp.category_dict[measure.measure_category]
-                    newDeets.session = wave_text[x]
+                    
                     newDeets.measure_shortname = measure.short_name
                     newDeets.measure_type = comp.type_dict[measure.measure_type]
                     newDeets.description = measure.description ? measure.description : '-'
@@ -288,9 +613,12 @@ var explorer = new Vue({
                     newDeets.respondents = newDeets.respondents.replace('pp', 'Primary parent')
                     newDeets.respondents = newDeets.respondents.replace('op', 'Other parent')
                     newDeets.respondents = newDeets.respondents.replace('c', 'Child')
+                    newDeets.respondents = newDeets.respondents.replace('ra', 'Research assistant')
                     newDeets.respondents = newDeets.respondents.replace('-', ', ')
                     newDeets.references = measure.reference ? measure.reference : ''
-                    newDeets.cohort_ses = comp.cohort_dict[comp.cohort] + ', Wave ' + wave_text[x]
+                    chrt = data.points[0].xaxis._name == 'xaxis2' ? 'mcc' : 'ecc'
+                    newDeets.session = wave_text[chrt][x]
+                    newDeets.cohort_ses = chrt.toUpperCase() + ', ' + newDeets.session
                     newDeets.doi = measure.doi
                     comp.updateDetails(newDeets)
                 }
@@ -364,6 +692,86 @@ var explorer = new Vue({
                 this.showCopyCiteTooltip = false;
             }, 1000);
         },
+        resetTable() {
+            Object.keys(this.filter_toggles).forEach(key => {
+                this.filter_toggles[key] = true
+                this.filter_arrays[key] = this.all_arrays[key]
+            })
+            this.search_keywords = []
+            this.search_text = ""
+            this.keyword_text = ""
+            this.keyword_options = all_keywords;
+            this.keyword_options_filtered = this.keyword_options;
+            this.keyword_options_available = this.keyword_options;
+            this.keywords_ready = true;
+
+        },
+        addSearchTextTag(option) {
+            if (this.search_text_tags.indexOf(this.search_text) < 0) {
+                this.search_text_tags.push(this.search_text);
+            }
+            this.search_text = "";
+        },
+        removeSearchTextTag(tag) {
+            idx = this.search_text_tags.indexOf(tag);
+            if (idx > -1) {
+                this.search_text_tags.splice(idx, 1);
+            }
+        },
+        addSearchKeyword(option) {
+            this.search_keywords.push(option);
+            this.clearSearchKeywordText();
+            this.filterKeywords();
+        },
+        removeSearchKeyword(kw) {
+            idx = this.search_keywords.indexOf(kw);
+            if (idx > -1) {
+                this.search_keywords.splice(idx, 1);
+            }
+            this.filterKeywords();
+        },
+        clearSearchKeywordText() {
+            this.keyword_text = "";
+            this.filterKeywords();
+            this.popoverShow = false;
+        },
+        filterKeywords() {
+            this.keyword_options_available = this.keyword_options.filter(
+                (x) => this.search_keywords.indexOf(x) === -1
+            );
+            this.keyword_options_filtered = this.keyword_options_available.filter(
+                (str) => str.toLowerCase().indexOf(this.keyword_text.toLowerCase()) >= 0
+            );
+        },
+        inputKeywordText() {
+            this.popoverShow = true;
+            this.filterKeywords();
+        },
+        onClose() {
+            this.popoverShow = false;
+        },
+        validator(kw) {
+            return this.keyword_options_available.indexOf(kw) >= 0;
+        },
+        exportTable(format) {
+            downloadArrayAsFormat(this.filtered_measures, format, "lcid_metadata")
+        },
+        toggleChecks(name) {
+            this.filter_toggles[name] = !this.filter_toggles[name]
+
+            console.log(name)
+            console.log(this.filter_toggles[name])
+            console.log(this.filter_arrays)
+            if (this.filter_toggles[name]) {
+                this.filter_arrays[name] = this.all_arrays[name]
+            }
+            else {
+                this.filter_arrays[name] = []
+            }
+        },
+        getRespondentText(resp) {
+            return respondent_text[resp]
+        },
     },
     beforeMount() {
         // Load text for headings/paragraphs
@@ -425,6 +833,37 @@ var explorer = new Vue({
               }, {});
             
             this.type_dict['all'] = 'All types'
+
+            // all_keywords = this.measure_data.map(function(measure) {
+            //     return measure["keywords"];
+            // });
+            // all_keywords = [...new Set(all_keywords.flat())]
+            // all_keywords.splice(all_keywords.indexOf(''), 1);
+            // all_keywords = all_keywords.sort()
+            // console.log("all keywords bish!")
+            // console.log(all_keywords)
+            // console.log(all_keywords.length)
+
+            // this.measure_data = responseJson;
+            types_list = this.measure_data.map(function(measure) {
+                return measure["measure_type"];
+            });
+            this.all_arrays["type"] = [...new Set(types_list)]
+            this.all_arrays["type"] = this.all_arrays["type"].sort()
+            this.filter_arrays["type"] = this.all_arrays["type"]
+
+            all_keywords = this.measure_data.map(function(measure) {
+                return measure["keywords"];
+            });
+            all_keywords = [...new Set(all_keywords.flat())]
+            all_keywords.splice(all_keywords.indexOf(''), 1);
+            all_keywords = all_keywords.sort()
+
+
+            this.keyword_options = all_keywords;
+            this.keyword_options_filtered = this.keyword_options;
+            this.keyword_options_available = this.keyword_options;
+            this.keywords_ready = true;
             this.measures_loaded = true;
         })
         .then(() => {
