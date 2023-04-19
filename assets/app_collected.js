@@ -191,88 +191,46 @@ var explorer = new Vue({
 
     },
     computed: {
-        // filtered_measures_cohort() {
-        //     filter_measures = this.measure_data;
-        //     return filter_measures.filter((item) => {
-        //         if (this.cohort == "all") return true;
-        //         return item.cohorts.indexOf(this.cohort) >= 0
-        //     });
-        // },
-        // filtered_measures_respondent() {
-        //     filter_measures = this.filtered_measures_cohort;
-        //     return filter_measures.filter((item) => {
-        //         if (this.respondent == "all") return true;
-        //         return item.respondents.indexOf(this.respondent) >= 0
-        //     });
-        // },
-        // filtered_measures_category() {
-        //     filter_measures = this.filtered_measures_respondent;
-        //     return filter_measures.filter((item) => {
-        //         if (this.category == "all") return true;
-        //         return item.measure_category == this.category
-        //     });
-        // },
-        // filtered_measures_type() {
-        //     filter_measures = this.filtered_measures_category;
-        //     return filter_measures.filter((item) => {
-        //         if (this.type == "all") return true;
-        //         return item.measure_type == this.type
-        //     });
-        // },
-        // filtering
-        filtered_measures_search() {
-            // regex = new RegExp(this.search_text.toLowerCase())
+        included_measures_tags() {
             filter_measures = this.measure_data;
             return filter_measures.filter((c) => {
-              if (this.search_text == "") return true;
-              return (
-                c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
-                // c.keywords ? c.keywords.some(kw => kw.includes(this.search_text.toLowerCase())) : null
-              );
+                if (this.search_text_tags.length == 0) return true;
+                return this.search_text_tags.some((v) =>
+                    c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0
+                );
             });
         },
-        // filtered_measures_tags() {
-        //     filter_measures = this.measure_data;
-        //     return filter_measures.filter((c) => {
-        //         if (this.search_text_tags.length == 0) return true;
-        //         return this.search_text_tags.every((v) =>
-        //             c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-        //             c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-        //             c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0
-        //         );
-        //     });
-        // },
-        filtered_measures_keywords() {
-            filter_measures = this.filtered_measures_search;
+        included_measures_keywords() {
+            filter_measures = this.measure_data;
             return filter_measures.filter((c) => {
               if (this.search_keywords.length == 0) return true;
               return this.search_keywords.some((v) => c.keywords ? c.keywords.includes(v): null);
             });
           },
+        included_measures() {
+            if (this.search_text_tags.length == 0 && this.search_keywords.length == 0) {
+                return this.measure_data
+            }
+            else if (this.search_text_tags.length > 0 && this.search_keywords.length == 0) {
+                return this.included_measures_tags
+            }
+            else if (this.search_text_tags.length == 0 && this.search_keywords.length > 0) {
+                return this.included_measures_keywords
+            }
+            else {
+                var ids = new Set(this.included_measures_tags.map(d => d.short_name));
+                return [...this.included_measures_tags, ...this.included_measures_keywords.filter(d => !ids.has(d.short_name))];
+            }
+        },
         filtered_measures_respondent() {
-            filter_measures = this.filtered_measures_keywords;
+            filter_measures = this.included_measures;
             return filter_measures.filter((c) => {
                 if (this.filter_arrays["respondent"].length == this.all_arrays["respondent"].length) return true;
                 return this.filter_arrays["respondent"].some(r=>c["respondents"].includes(all_respondents_short[r]))
             });
         },
-        // filtered_measures_cohort() {
-        //     filter_measures = this.filtered_measures_respondent;
-        //     return filter_measures.filter((c) => {
-        //         if (this.filter_arrays["cohort"].length == this.all_arrays["cohort"].length) return true;
-        //         return this.filter_arrays["cohort"].some(r=>c["cohorts"].includes(r.toLowerCase()))
-        //     });
-        // },
-        // filtered_measures_session() {
-        //     filter_measures = this.filtered_measures_cohort;
-        //     return filter_measures.filter((c) => {
-        //         if (this.filter_arrays["session"].length == this.all_arrays["session"].length) return true;
-        //         return (this.filter_arrays["session"].some(r=>c["ecc"].includes(all_sessions_nr[r])) ||
-        //         this.filter_arrays["session"].some(r=>c["mcc"].includes(all_sessions_nr[r])))
-        //     });
-        // },
         filtered_measures_category() {
             filter_measures = this.filtered_measures_respondent;
             return filter_measures.filter((c) => {
@@ -341,8 +299,6 @@ var explorer = new Vue({
     },
     watch: {
         filtered_measures_per_category(newState) {
-
-            // console.log("filtered_measuressddffdsfv has changed")
             this.drawGraph()
         }
     },
@@ -353,18 +309,9 @@ var explorer = new Vue({
         drawGraph() {
             this.clearDetails()
             var comp = this;
-            // var cohort_waves = this.cohort + '_waves';
             var cohorts_list = Object.keys(this.cohort_dict)
             var N_measures = this.filtered_measures.length;
             var cat_measure_short_names = []
-
-            // var measure_short_names = this.filtered_measures.map(
-            //     function(element) { return element.short_name }
-            // )
-            // var data = {
-            //     "ecc": [],
-            //     "mcc": []
-            // };
             var data = [];
             // after measures have been filtered (this.filtered_measures_per_category),
             // which categories are still included?
@@ -445,27 +392,26 @@ var explorer = new Vue({
                 ecc: ["Wave 1", "Wave 2", "Wave 3", "Wave 4", "Wave 5", "Wave 6", "Wave C"],
                 mcc: ["Wave 1", "Wave 2", "Wave 3", "Wave 4", "Wave 5", "Wave C", "Wave 6"]
             }
+            wave_text_html = {
+                ecc: ["<b>Wave 1</b><br>&nbsp;&nbsp;3-5y", "<b>Wave 2</b><br>&nbsp;&nbsp;4-6y", "<b>Wave 3</b><br>&nbsp;&nbsp;5-7y", "<b>Wave 4</b><br>&nbsp;&nbsp;6-8y", "<b>Wave 5</b><br>&nbsp;&nbsp;7-9y", "<b>Wave 6</b><br>&nbsp;&nbsp;8-10y", "<b>Wave C</b><br>&nbsp;&nbsp;8-10y"],
+                mcc: ["<b>Wave 1</b><br>&nbsp;&nbsp;7-9y", "<b>Wave 2</b><br>&nbsp;&nbsp;8-10y", "<b>Wave 3</b><br>&nbsp;&nbsp;9-11y", "<b>Wave 4</b><br>&nbsp;10-12y", "<b>Wave 5</b><br>&nbsp;11-13y", "<b>Wave C</b><br>&nbsp;11-13y", "<b>Wave 6</b><br>&nbsp;12-14y"]
+            }
             wave_vals = {
                 ecc: [0,1,2,3,4,5,6],
                 mcc: [0,1,2,3,4,5,6]
             }
-            // wave_text = ["1", "2", "3", "4", "5", "6", "🦠"]
-            // wave_vals = [0,1,2,3,4,5,6]
-            // if (coh) {
-            //     wave_text = ["1", "2", "3", "4", "5", "6", "🦠"]
-            //     wave_vals = [0,1,2,3,4,5,6]
-            // }
             range_max = 7.5
             min_height = 280
             calc_height = 30*N_measures < min_height ? min_height : 30*N_measures
             var layout = {}
 
             layout = {
-                margin: {l: 120, r: 0, b: 0, t:110},
+                margin: {l: 120, r: 0, b: 0, t:90},
                 hovermode: 'closest',
                 width: 800, // var
                 height: calc_height,
                 xaxis: {
+                    automargin: true,
                     showgrid: true,
                     gridwidth: 1,
                     gridcolor: '#EDDDD4',
@@ -475,24 +421,21 @@ var explorer = new Vue({
                     side: 'top',
                     showticklabels: true,
                     tickvals:wave_vals['ecc'],
-                    ticktext:wave_text['ecc'],
-                    tickfont:{size:16},
+                    ticktext:wave_text_html['ecc'],
+                    tickfont:{size:12},
                     color: '#FFFFFF',
                     fixedrange: true,
                     tickangle: -50,
                     title: {
                         text: 'Early Childhood Cohort',
+                        standoff: 30,
                         font: {
-                        //   family: 'Courier New, monospace',
                           size: 18,
-                        //   color: '#7f7f7f'
                         }
                     },
-                    // domain: {
-                    //     x: [0, 0.6]
-                    // }
                 },
                 xaxis2: {
+                    automargin: true,
                     showgrid: true,
                     gridwidth: 1,
                     gridcolor: '#EDDDD4',
@@ -502,13 +445,14 @@ var explorer = new Vue({
                     side: 'top',
                     showticklabels: true,
                     tickvals:wave_vals['mcc'],
-                    ticktext:wave_text['mcc'],
-                    tickfont:{size:16},
+                    ticktext:wave_text_html['mcc'],
+                    tickfont:{size:12},
                     color: '#FFFFFF',
                     fixedrange: true,
                     tickangle: -50,
                     title: {
                         text: 'Middle Childhood Cohort',
+                        standoff: 30,
                         font: {
                         //   family: 'Courier New, monospace',
                           size: 18,
@@ -538,52 +482,6 @@ var explorer = new Vue({
                 paper_bgcolor: '#083655',
                 hovermode: 'closest',
             }
-
-            // fig.update_yaxes(title_text="", showgrid=False, tickvals=y_tickvals, ticktext=y_ticktext, row=i+1, col=1)
-
-            // for (var ch=0; ch<cohorts_list.length; ch++) {
-            //     coh = cohorts_list[ch]
-            //     layout[coh] = {
-            //         margin: {l: 120, r: 0, b: 0, t:80},
-            //         hovermode: 'closest',
-            //         width: 600,
-            //         height: calc_height,
-            //         xaxis: {
-            //             showgrid: true,
-            //             gridwidth: 1,
-            //             gridcolor: '#EDDDD4',
-            //             zeroline: false,
-            //             range: [-0.5, range_max],
-            //             showline: false,
-            //             side: 'top',
-            //             showticklabels: true,
-            //             tickvals:wave_vals[coh],
-            //             ticktext:wave_text[coh],
-            //             tickfont:{size:20},
-            //             color: '#FFFFFF',
-            //             fixedrange: true,
-            //             tickangle: -45,
-            //         },
-            //         yaxis: {
-            //             showgrid: false,
-            //             zeroline: false,
-            //             showline: false,
-            //             tickvals: Array.from({length: N_measures}, (_, j) => j + 1),
-            //             ticktext: cat_measure_short_names.reverse(),
-            //             range: [0, N_measures+1],
-            //             color: '#FFFFFF',
-            //             fixedrange: true,
-            //         },
-            //         grid: {
-            //             rows: 1,
-            //             columns: 2,
-            //             pattern: 'coupled',
-            //         },
-            //         plot_bgcolor: '#083655',
-            //         paper_bgcolor: '#083655',
-            //         hovermode: 'closest',
-            //     }
-            // }
             
             const config = {
                 displayModeBar: false, // hide toolbar
@@ -633,12 +531,9 @@ var explorer = new Vue({
             });
         },
         updateDetails(newDeets) {
-            // console.log('insideupdate')
-            // console.log(newDeets)
             Object.keys(newDeets).forEach(k => {
                 this.display_details[k] = newDeets[k]
             })
-            // console.log(this.display_details)
         },
         clearDetails() {
             newDeets = {}
@@ -698,6 +593,7 @@ var explorer = new Vue({
                 this.filter_arrays[key] = this.all_arrays[key]
             })
             this.search_keywords = []
+            this.search_text_tags = []
             this.search_text = ""
             this.keyword_text = ""
             this.keyword_options = all_keywords;
@@ -858,8 +754,6 @@ var explorer = new Vue({
             all_keywords = [...new Set(all_keywords.flat())]
             all_keywords.splice(all_keywords.indexOf(''), 1);
             all_keywords = all_keywords.sort()
-
-
             this.keyword_options = all_keywords;
             this.keyword_options_filtered = this.keyword_options;
             this.keyword_options_available = this.keyword_options;

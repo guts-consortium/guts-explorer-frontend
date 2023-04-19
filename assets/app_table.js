@@ -161,39 +161,55 @@ var explorer = new Vue({
     },
     computed: {      
         // filtering
-        filtered_measures_search() {
-            // regex = new RegExp(this.search_text.toLowerCase())
-            filter_measures = this.measure_data;
-            return filter_measures.filter((c) => {
-              if (this.search_text == "") return true;
-              return (
-                c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
-                c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
-                // c.keywords ? c.keywords.some(kw => kw.includes(this.search_text.toLowerCase())) : null
-              );
-            });
-        },
-        // filtered_measures_tags() {
+        // filtered_measures_search() {
+        //     // regex = new RegExp(this.search_text.toLowerCase())
         //     filter_measures = this.measure_data;
         //     return filter_measures.filter((c) => {
-        //         if (this.search_text_tags.length == 0) return true;
-        //         return this.search_text_tags.every((v) =>
-        //             c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-        //             c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-        //             c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0
-        //         );
+        //       if (this.search_text == "") return true;
+        //       return (
+        //         c.short_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+        //         c.long_name.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0 ||
+        //         c.description.toLowerCase().indexOf(this.search_text.toLowerCase()) >= 0
+        //         // c.keywords ? c.keywords.some(kw => kw.includes(this.search_text.toLowerCase())) : null
+        //       );
         //     });
         // },
-        filtered_measures_keywords() {
-            filter_measures = this.filtered_measures_search;
+        included_measures_tags() {
+            filter_measures = this.measure_data;
+            return filter_measures.filter((c) => {
+                if (this.search_text_tags.length == 0) return true;
+                return this.search_text_tags.some((v) =>
+                    c.short_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.long_name.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c.description.toLowerCase().indexOf(v.toLowerCase()) >= 0
+                );
+            });
+        },
+        included_measures_keywords() {
+            filter_measures = this.measure_data;
             return filter_measures.filter((c) => {
               if (this.search_keywords.length == 0) return true;
               return this.search_keywords.some((v) => c.keywords ? c.keywords.includes(v): null);
             });
           },
+        included_measures() {
+
+            if (this.search_text_tags.length == 0 && this.search_keywords.length == 0) {
+                return this.measure_data
+            }
+            else if (this.search_text_tags.length > 0 && this.search_keywords.length == 0) {
+                return this.included_measures_tags
+            }
+            else if (this.search_text_tags.length == 0 && this.search_keywords.length > 0) {
+                return this.included_measures_keywords
+            }
+            else {
+                var ids = new Set(this.included_measures_tags.map(d => d.short_name));
+                return [...this.included_measures_tags, ...this.included_measures_keywords.filter(d => !ids.has(d.short_name))];
+            }
+        },
         filtered_measures_respondent() {
-            filter_measures = this.filtered_measures_keywords;
+            filter_measures = this.included_measures;
             return filter_measures.filter((c) => {
                 if (this.filter_arrays["respondent"].length == this.all_arrays["respondent"].length) return true;
                 return this.filter_arrays["respondent"].some(r=>c["respondents"].includes(all_respondents_short[r]))
@@ -268,6 +284,7 @@ var explorer = new Vue({
             })
             this.search_keywords = []
             this.search_text = ""
+            this.search_text_tags = []
             this.keyword_text = ""
             this.keyword_options = all_keywords;
             this.keyword_options_filtered = this.keyword_options;
@@ -340,7 +357,6 @@ var explorer = new Vue({
                 } else {
                     newDeets.session+= 'X '
                 }
-
             }
             newDeets.cohort = ''
             for (var i=0; i< measure.cohorts.length; i++) {

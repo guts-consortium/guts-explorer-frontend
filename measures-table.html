@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-    <title>Explore</title>
+    <title>LCID Metadata Explorer</title>
 
     <!-- Required Stylesheets -->
     <link rel="stylesheet" type="text/css" href="assets/style.css"/>
@@ -53,7 +53,70 @@
             {{text_content['measures-table']['descriptive_paragraph']}}
         </div>
 
+        <b-card style="background-color: var(--lcid_dark_blue); color: white; margin-bottom: 0.5em;">
+            <h4><em>First include all measures of interest</em></h4>
+            <br>
+            <b-row>
+                <!-- SEARCH TEXT -->
+                <b-col cols="6">
+                    <b-row>
+                        <b-form-group v-slot="{ ariaDescribedby }">
+                            <label for="search_text_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Find measures by name or description</label>
+                            <b-form-input size="sm"
+                            id="search_text_input"
+                            class="mb-2 mr-sm-2 mb-sm-0"
+                            placeholder="Enter text (hit enter to add search tag)"
+                            v-model="search_text"
+                            v-on:keyup.enter="addSearchTextTag()"
+                            ></b-form-input>
+                        </b-form-group>
+                    </b-row>
+                    <b-row>
+                        <div class="d-inline-block" style="font-size: 1.5rem;">
+                            <span v-for="tag in search_text_tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchTextTag(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
+                        </div>
+                    </b-row>
+                </b-col>
+                <b-col cols="6">
+                    <label for="keyword_search_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Find measures by keyword</label>
+                    <b-input-group>
+                        <b-form-tags v-model="search_keywords" :tag-validator="validator" no-outer-focus class="border-0 p-0" style="background-color: var(--lcid_dark_blue);">
+                          <template v-slot="{ tags, inputAttrs, inputHandlers, tagVariant, addTag, removeTag}">
+                            <b-input-group class="mb-0">
+                              <b-form-input size="sm"
+                                v-bind="inputAttrs"
+                                v-model="keyword_text"
+                                v-on="inputHandlers"
+                                placeholder="Enter keyword(s)"
+                                class="form-control"
+                                id="keyword_search_input"
+                                @input="inputKeywordText()"
+                                v-on:keyup.enter="clearSearchKeywordText()"
+                              ></b-form-input>
+                            </b-input-group>
+                            <div class="d-inline-block" style="font-size: 1.5rem; background-color: var(--lcid_dark_blue);">
+                              <span v-for="tag in tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchKeyword(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
+                            </div>
+                          </template>
+                        </b-form-tags>
+                        <template #append>
+                          <b-button size="sm" variant="outline-light" id="popover-target-1" class="pl-0 pr-0">Keywords</b-button>
+                          <b-popover target="popover-target-1" triggers="hover" :show.sync="popoverShow" placement="left" ref="popover">
+                            <div v-if="keywords_ready">
+                              <span v-if="keyword_options_filtered.length == 0"><em>No keywords found</em></span>
+                              <span v-else v-for="option in keyword_options_filtered"><b-button pill size="sm" class="p-1" variant="outline-dark" @click="addSearchKeyword(option)">{{option}}</b-button>&nbsp;</span>
+                            </div>
+                          </b-popover>
+                        </template>
+                      </b-input-group>
+                </b-col>
+            </b-row>
+            
+        </b-card>
+
         <b-card style="background-color: var(--lcid_dark_blue); color: white">
+            <h4><em>Then narrow the search space</em></h4>
+            <br>
             <b-row>
                 <b-col cols="4">
                     <b-row>
@@ -89,63 +152,6 @@
                         </b-col>
                     </b-row>
                     <br>
-                    <b-row>
-                        <!-- SEARCH TEXT -->
-                        <b-col cols="11">
-                            <b-form-group v-slot="{ ariaDescribedby }">
-                                <label for="search_text_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Filter by short/long name or description</label>
-                                <b-form-input size="sm"
-                                id="search_text_input"
-                                class="mb-2 mr-sm-2 mb-sm-0"
-                                placeholder="Enter text"
-                                v-model="search_text"
-                                ></b-form-input>
-                            </b-form-group>
-                        </b-col>
-                        <b-col></b-col>
-                    </b-row>
-                    <br>
-                    <b-row>
-                        <b-col cols="11">
-                            <label for="keyword_search_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Filter by keyword</label>
-                            <b-input-group>
-                                <b-form-tags v-model="search_keywords" :tag-validator="validator" no-outer-focus class="border-0 p-0" style="background-color: var(--lcid_dark_blue);">
-                                  <template v-slot="{ tags, inputAttrs, inputHandlers, tagVariant, addTag, removeTag}">
-                                    <b-input-group class="mb-0">
-                                      <b-form-input size="sm"
-                                        v-bind="inputAttrs"
-                                        v-model="keyword_text"
-                                        v-on="inputHandlers"
-                                        placeholder="Enter keyword(s)"
-                                        class="form-control"
-                                        id="keyword_search_input"
-                                        @input="inputKeywordText()"
-                                        v-on:keyup.enter="clearSearchKeywordText()"
-                                      ></b-form-input>
-                                    </b-input-group>
-                                    <div class="d-inline-block" style="font-size: 1.5rem; background-color: var(--lcid_dark_blue);">
-                                      <span v-for="tag in tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchKeyword(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
-                                    </div>
-                                  </template>
-                                </b-form-tags>
-                                <template #append>
-                                  <b-button size="sm" variant="outline-light" id="popover-target-1" class="pl-0 pr-0">Keywords</b-button>
-                                  <b-popover target="popover-target-1" triggers="hover" :show.sync="popoverShow" placement="auto" ref="popover">
-                                    <div v-if="keywords_ready">
-                                      <span v-if="keyword_options_filtered.length == 0"><em>No keywords found</em></span>
-                                      <span v-else v-for="option in keyword_options_filtered"><b-button pill size="sm" class="p-1" variant="outline-dark" @click="addSearchKeyword(option)">{{option}}</b-button>&nbsp;</span>
-                                    </div>
-                                  </b-popover>
-                                </template>
-                              </b-input-group>
-                        </b-col>
-                        <b-col></b-col>
-                    </b-row>
-                    <!-- <b-row>
-                        <div class="d-inline-block" style="font-size: 1.5rem;">
-                            <span v-for="tag in search_text_tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchTextTag(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
-                        </div>
-                    </b-row> -->
                 </b-col>
                 <b-col cols="2">
                     <!-- SESSIONS -->
@@ -195,16 +201,13 @@
                 </b-col>
             </b-row>
             <b-row>
-                <b-col style="text-align: right;">
+                <b-col style="text-align: left;">
                     <b-button size="sm" variant="outline-light" @click="resetTable()"><i class="fas fa-rotate-left"></i> Reset Table</b-button>
                     <b-dropdown size="sm" text="Export Table" variant="outline-light" class="m-2">
                         <b-dropdown-item @click="exportTable('csv')"><i class="fas fa-file-csv"></i> CSV</b-dropdown-item>
                         <b-dropdown-item @click="exportTable('json')"><i class="fas fa-file-code"></i> JSON</b-dropdown-item>
-                      </b-dropdown>
+                    </b-dropdown>
                 </b-col>
-                
-                
-                
             </b-row>
         </b-card>
         <br>
