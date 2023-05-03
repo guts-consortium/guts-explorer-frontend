@@ -5,7 +5,7 @@
         "menu":"Participants",
         "card_description": "An interactive infograph of participant dropout and recovery for all cohorts.",
         "card_img": "participants.png",
-        "descriptive_paragraph":"The Leiden-CID study includes a lot of people  . Over two cohorts, no less than 495(!) twin pairs  participated. Inherent to a longitudinal study is, of course, that not all these participants make it to the end. Therefore, we’ve created an interactive info graph with information about the number of participants in every wave. For each cohort, you can hover over the blocks and the lines in the infographic to gain insights into the participant flow. For example, to see how many participants did not participate in wave 3, but did participate in wave 4. "
+        "descriptive_paragraph":"The Leiden-CID study includes data of 990 (495 twin pairs) individuals and their families that are collected in two age cohorts over six annual waves of data collection. Below you will find the number of individuals that have participated in each wave. There are numerous reasons for dropout, including moving houses further away, medical reasons or live events. Please select which cohort you are interested in and explore how many individuals participated in each data collection wave."
     },
     "measures-collected": {
         "url": "measures-collected.html",
@@ -13,7 +13,7 @@
         "menu":"Measures collected",
         "card_description": "An interactive infograph of all measures collected over the course of 6 data collection waves, for all cohorts.",
         "card_img": "collected_new.png",
-        "descriptive_paragraph":"To ease the process of filtering through all Leiden-CID data  , we’ve created an interactive info graph you can browse through in any way you like. Are you interested in finding out what questionnaires were filled out by the primary parent in the Middle Childhood Cohort to assess parenting?  No problem! You can select these criteria in the top part of the infographic. By clicking on the circles corresponding to the available waves, you can gain information about the measure itself. Not really an info graph kind of person? Don’t worry, here  you can find a measures table and search through all Leiden-CID data in a more standardized way. ."
+        "descriptive_paragraph":"Welcome to our metadata explorer to find out what data we collected, in what age range and from whom. You can search for key terms related to our measures below. You can also compare different measures to find out when they were collected to fine tune your research design. All meta data information will be shown when you click on the measure of interest. Are you interested to know what questionnaires have been filled out by the primary parent in the Middle Childhood Cohort to assess parenting? No problem! You can select these criteria in the top part of the infographic."
     },
     "measures-table": {
         "url": "measures-table.html",
@@ -21,7 +21,7 @@
         "menu":"Measures table",
         "card_description": "A filterable and downloadable table of all measures collected over the course of 6 data collection waves, for all cohorts.",
         "card_img": "participants.png",
-        "descriptive_paragraph":"To ease the process of filtering through all Leiden-CID data  , we’ve created a measures table you can browse through in any way you like. Do you want to find out what measures were collected during wave 3 and 5 of the Early Childhood Cohort? Or are you interested in all neurobiological and genetic measures assessed in children in both cohorts? You can easily combine all your interests in the search fields. If you are not entirely sure what category or type of data you’re looking for, you can also use the search bar and type in keywords related to what you’re looking for. Not really a table kind of person? Don’t worry, here  you can find an interactive info graph and search through all Leiden-CID data in a more visualized way."
+        "descriptive_paragraph":"Welcome to the measure table of LCID to find out what data we collected, in what age range and from whom. This tool will allow you to browse our metadata and export all your measures of interest into a single table with one click. Do you want to find out what measures were collected during Wave 3 and 5 of the Early Childhood Cohort? Or are you interested in all neurobiological and genetic measures assessed in children in both cohorts? You can easily combine all your interests in the search fields. If you are not entirely sure what category or type of data you’re looking for, you can also use the search bar and type in keywords related your topic of interest."
     },
     "mri": {
         "url": "mri.html",
@@ -29,6 +29,6 @@
         "menu":"MRI measures",
         "card_description": "Summary plots of all MRI measures collected during three waves for all cohorts.",
         "card_img": "participants.png",
-        "descriptive_paragraph":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam imperdiet efficitur ipsum, dignissim vestibulum turpis ultricies ac. Sed molestie eget leo sed luctus. Aenean tincidunt venenatis magna eu congue. Nulla sagittis enim at sem suscipit auctor. Cras placerat ultrices tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget urna turpis. Mauris non diam ante. Praesent ut dolor id justo vestibulum dictum. Morbi quis pharetra magna, a rutrum massa. Praesent sodales leo sit amet ornare eleifend. Phasellus in massa laoreet mauris suscipit dictum nec ut lectus. In sit amet consectetur augue. Nulla et leo id nisi dignissim consequat nec pretium arcu. Pellentesque efficitur scelerisque vulputate."
+        "descriptive_paragraph":"The Leiden-CID study consisted of biennial lab visits including nneuroimaging measure (EEG or (f)MRI). Please explore the graphs below to get insight into the quality of these neuroimaging measures. All structural MRI scans underwent manual quality control using a standardized protocol (see Klapwijk et al. 2019). In addition, Qoala-T (Klapwijk et al. 2019), a supervised learning tool that asseses accuracy of manual quality control of T1 imaging scans and their automated neuroanatomical labeling processed in FreeSurfer, was run. Qoala-T scores provide an insight on scan quality (100 excellent to 0 poor). Below you will find the Qoala-T scores for each of the data waves and cohorts"
     }
 }
