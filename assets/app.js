@@ -10,11 +10,60 @@ var explorer = new Vue({
     data: {
         text_content: {},
         text_content_loaded: false,
+        isCovid: false,
+        isParenting: false,
+        isHome: false,
+        isDigital: false,
+        isEEG: false,
+        isMRI: false,
     },
     methods: {
         gotoPage(url) {
             window.location = url;
-        }
+        },
+        hoverHandlerCovid(state) {
+            if (state) {
+                this.isCovid = true
+            }
+            else {
+                this.isCovid = false
+            }
+        },
+        hoverHandlerParenting(state) {
+            if (state) {
+                this.isParenting = true;
+            } else {
+                this.isParenting = false;
+            }
+        },
+        hoverHandlerHome(state) {
+            if (state) {
+                this.isHome = true;
+            } else {
+                this.isHome = false;
+            }
+        },
+        hoverHandlerDigital(state) {
+            if (state) {
+                this.isDigital = true;
+            } else {
+                this.isDigital = false;
+            }
+        },
+        hoverHandlerEEG(state) {
+            if (state) {
+                this.isEEG = true;
+            } else {
+                this.isEEG = false;
+            }
+        },
+        hoverHandlerMRI(state) {
+            if (state) {
+                this.isMRI = true;
+            } else {
+                this.isMRI = false;
+            }
+        },
     },
 
     beforeMount() {

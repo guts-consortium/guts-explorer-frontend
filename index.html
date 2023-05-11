@@ -32,7 +32,7 @@
         <div class="dropdown push">
             <button class="dropbtn"><i class="fas fa-bars"></i></button>
             <div class="dropdown-content">
-              <a href="./">Overview</a>
+                <a onclick="window.location='overview.html'">LCID overview</a>
               <a onclick="window.location='participants.html'">Participants</a>
               <a onclick="window.location='measures-collected.html'">Measures collected</a>
               <a onclick="window.location='measures-table.html'">Measures table</a>
@@ -41,10 +41,16 @@
         </div>
     </div>
 
-    <div id="explorer" class="maincards" v-if="text_content_loaded">
+    <div id="explorer">
+
+    <div class="maincards" v-if="text_content_loaded">
         <div v-for="card in text_content" class="item" @click="gotoPage(card.url)">
-            <div class="item-logo">
+            <!-- <div class="item-logo">
+                <i class="fas fa-bars"></i>
                 <img :src="'img/'+card.card_img" alt="">
+            </div> -->
+            <div class="item-logo">
+                <i  :class="card.card_icon"></i>
             </div>
             <div class="item-info">
                 <h3>{{card.menu}}</h3>
@@ -53,6 +59,7 @@
                 </p>
             </div>
         </div>
+    </div>
     </div>
     <script src="assets/app_globals.js"></script>
     <script src="assets/app.js"></script>

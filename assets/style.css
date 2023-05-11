@@ -24,6 +24,8 @@
   --lcid_red_brown: #9b544b;  /*8*/
   --lcid_something: #EDDDD4;  /*9*/
   --lcid_a: #edddd43b;
+  --lcid_yellow: #fcb900;
+  --lcid_light_yellow: #fce4a2;
 }
 
 
@@ -205,11 +207,11 @@ table td:first-child {
   background-color: var(--lcid_dark_blue);
   border-radius: 8px;
   text-align: center;
-  height: 360px;
-  width: 300px;
+  height: 250px;
+  width: 250px;
 }
 
-.maincards .item-logo {
+/* .maincards .item-logo {
   margin: auto;
   width: 220px;
   height: 150px;
@@ -225,7 +227,22 @@ table td:first-child {
   margin: auto;
   max-height: 140px;
   max-width: 210px;
+} */
+
+.maincards .item-logo {
+  margin: auto;
+  text-align: center;
+  color: white;
 }
+
+.maincards .item-logo i {
+  font-size: xx-large;
+  border: 1px solid white;
+  border-radius: 50%;
+  padding: 0.5em;
+}
+
+
 .maincards .item-info {
   color: white;
   font-size: 16px;
@@ -316,4 +333,57 @@ table td:first-child {
   height: 300px;
   overflow-y: auto;
   white-space:pre-wrap;
+}
+
+.ecc-wave {
+  text-align: center;
+  /* width: 89px; */
+  border-radius: 1em !important;
+  background-color: var(--lcid_light_bluegreen) !important;
+  border-color: gray !important;
+
+}
+
+.mcc-wave {
+  text-align: center;
+  /* width: 89px; */
+  border-radius: 1em !important;
+  background-color: var(--lcid_light_yellow) !important;
+  border-color: gray !important;
+  
+}
+
+
+.legend {
+  text-align: center;
+  border-radius: 2em !important;
+  height: 150px;
+  background-color: var(--lcid_beige) !important;
+}
+
+.legend img {
+  height: 60px;
+  margin-bottom: 0.5em;
+}
+
+.legend:hover {
+  box-shadow: rgba(50, 50, 93, 0.25) 0 10px 24px -2px, rgba(0, 0, 0, 0.3) 0 3px 7px -3px !important;
+  transform: translateY(-0.2em);
+}
+
+.wave-icons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+.wave-icons img {
+  height: 29px;
+}
+
+.covid, .parenting, .home, .digital, .eeg, .mri {
+  box-shadow: rgba(50, 50, 93, 0.25) 0 0px 18px -2px, rgba(0, 0, 0, 0.3) 0 3px 7px -3px !important;
+  background-color: rgba(255, 255, 255, 0.914) !important;
 }

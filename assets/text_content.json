@@ -1,34 +1,47 @@
 {
+    "overview": {
+        "url": "overview.html",
+        "title": "Overview",
+        "menu":"Overview",
+        "card_description": "Get an overview of the LCID study design in terms of cohorts, collection waves, and types of data.",
+        "card_img": "participants.png",
+        "card_icon": "fas fa-earth-americas",
+        "descriptive_paragraph":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus mauris dolor, ac hendrerit sem interdum ut. Phasellus aliquet dolor non tellus vehicula, vel pharetra massa rutrum. In hac habitasse platea dictumst. Aenean non accumsan mi. Morbi a dui ex. Vivamus pellentesque porttitor euismod. Aenean sed ipsum velit. Sed scelerisque tortor id sapien tempus, nec convallis erat lacinia. Vestibulum cursus libero libero. Sed euismod, erat eget consequat tincidunt, justo est euismod ante, vitae accumsan justo turpis sed ante."
+    },
     "participants": {
         "url": "participants.html",
         "title": "Participants",
         "menu":"Participants",
-        "card_description": "An interactive infograph of participant dropout and recovery for all cohorts.",
+        "card_description": "An interactive infograph of participant dropout and recovery for both cohorts.",
         "card_img": "participants.png",
+        "card_icon": "fas fa-users",
         "descriptive_paragraph":"The Leiden-CID study includes a lot of people. Over two cohorts, no less than 495(!) twin pairs participated. Inherent to a longitudinal study is, of course, that not all these participants make it to the end. Therefore, we've created an interactive info graph with information about the number of participants in every wave. For each cohort, you can hover over the blocks and the lines in the infographic to gain insights into the participant flow. For example, to see how many participants did not participate in Wave 3, but did participate in Wave 4."
     },
     "measures-collected": {
         "url": "measures-collected.html",
         "title": "Measures Collected",
         "menu":"Measures collected",
-        "card_description": "An interactive infograph of all measures collected over the course of 6 data collection waves, for all cohorts.",
+        "card_description": "An interactive infograph of all measures collected over the course of 6 data collection waves.",
         "card_img": "collected_new.png",
-        "descriptive_paragraph":"To ease the process of filtering through all Leiden-CID data, we've created an interactive info graph you can browse through in any way you like. Are you interested in finding out what questionnaires were filled out by the primary parent in the Middle Childhood Cohort to assess parenting? No problem! You can select these criteria in the top part of the infographic. By clicking on the markers corresponding to the available waves, you can gain information about the measure itself. Not really an info graph kind of person? Don’t worry, here  you can find a measures table and search through all Leiden-CID data in a more standardized way."
+        "card_icon": "fas fa-sitemap",
+        "descriptive_paragraph":"To ease the process of filtering through all Leiden-CID data, we've created an interactive info graph you can browse through in any way you like. Are you interested in finding out what questionnaires were filled out by the primary parent in the Middle Childhood Cohort to assess parenting? No problem! You can select these criteria in the top part of the infographic. By clicking on the markers corresponding to the available waves, you can gain information about the measure itself. Not really an info graph kind of person? Don't worry, use the measures table and search through all Leiden-CID data in a more standardized way."
     },
     "measures-table": {
         "url": "measures-table.html",
         "title":"Measures Table",
         "menu":"Measures table",
-        "card_description": "A filterable and downloadable table of all measures collected over the course of 6 data collection waves, for all cohorts.",
+        "card_description": "A filterable and downloadable table of all measures collected over the course of 6 data collection waves.",
         "card_img": "participants.png",
-        "descriptive_paragraph":"To ease the process of filtering through all Leiden-CID data, we've created a measures table you can browse through in any way you like. Do you want to find out what measures were collected during Wave 3 and 5 of the Early Childhood Cohort? Or are you interested in all neurobiological and genetic measures assessed in children in both cohorts? You can easily combine all your interests in the search fields. If you are not entirely sure what category or type of data you’re looking for, you can also use the search bar and type in keywords related to what you’re looking for. Not really a table kind of person? Don’t worry, here  you can find an interactive info graph and search through all Leiden-CID data in a more visual way."
+        "card_icon": "fas fa-table",
+        "descriptive_paragraph":"To ease the process of filtering through all Leiden-CID data, we've created a measures table you can browse through in any way you like. Do you want to find out what measures were collected during Wave 3 and 5 of the Early Childhood Cohort? Or are you interested in all neurobiological and genetic measures assessed in children in both cohorts? You can easily combine all your interests in the search fields. If you are not entirely sure what category or type of data you're looking for, you can also use the search bar and type in keywords related to what you're looking for. Not really a table kind of person? Don't worry, use the interactive infograph to search through all Leiden-CID data in a more visual way."
     },
     "mri": {
         "url": "mri.html",
         "title":"MRI Measures",
         "menu":"MRI measures",
-        "card_description": "Summary plots of all MRI measures collected during three waves for all cohorts.",
+        "card_description": "Summary plots of all MRI measures collected during three waves for both cohorts.",
         "card_img": "participants.png",
+        "card_icon": "fas fa-brain",
         "descriptive_paragraph":"Leiden-CID consisted of many home and lab visits. The lab visits also included a neuroimaging measure (EEG or (f)MRI). To give you some insights into these neuroimaging measures, we've created interactive plots of the quality of both structural and functional MRI data. Have a look at more detailed descriptions and the quality plots below."
     }
 }
