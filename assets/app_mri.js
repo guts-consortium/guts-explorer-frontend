@@ -29,7 +29,8 @@ var explorer = new Vue({
             var cohorts = ['mcc', 'ecc']
             var cohorts_text = ['MCC','ECC']
             var sessions = ['1', '3', '5']
-            var waves = ['Wave 1<br><i>MCC: 7-9y</i>', 'Wave 3<br><i>MCC: 9-11y</i>', 'Wave 5<br><i>MCC: 11-13y</i><br><i>ECC: 7-9y</i>']
+            var ages = ['7-9y', '9-11y', '11-13y']
+            var waves = ['7-9y<br><i>Wave 1 (MCC), Wave 5 (ECC)</i>', '9-11y<br><i>Wave 3</i>', '11-13y<br><i>Wave 5</i>']
             var trace, ses, cohort
             var colors = [lcid_colors[7], lcid_colors[2]]
             for (var c=0; c<2; c++) {
@@ -37,7 +38,7 @@ var explorer = new Vue({
                 var x_data = [], y_data = []
                 for (var i=0; i<3; i++) {
 
-                    y_array = this.quality_data[cohort][sessions[i]]['qoalat']
+                    y_array = this.quality_data[cohort][ages[i]]['qoalat']
                     y_length = y_array.length
                     y_data = y_data.concat(y_array)
                     x_array = Array.apply(null, Array(y_array.length)).map(function () { return waves[i]})
@@ -126,6 +127,12 @@ var explorer = new Vue({
         })
         .then((responseJson) => {
             this.quality_data = responseJson;
+            this.quality_data['ecc']['7-9y'] = this.quality_data['ecc']['5']
+            this.quality_data['ecc']['9-11y'] = {"score": [],"qoalat": []}
+            this.quality_data['ecc']['11-13y'] = {"score": [],"qoalat": []}
+            this.quality_data['mcc']['7-9y'] = this.quality_data['mcc']['1']
+            this.quality_data['mcc']['9-11y'] = this.quality_data['mcc']['3']
+            this.quality_data['mcc']['11-13y'] = this.quality_data['mcc']['5']
             this.quality_data_loaded = true;
         })
         .then(() => {
