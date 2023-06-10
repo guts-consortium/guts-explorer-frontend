@@ -357,13 +357,16 @@ table td:first-child {
 .legend {
   text-align: center;
   border-radius: 2em !important;
-  height: 150px;
+  padding-top: 0;
+  height: 140px;
   background-color: var(--lcid_beige) !important;
 }
 
 .legend img {
-  height: 60px;
-  margin-bottom: 0.5em;
+  height: 58px;
+  margin-top: 0;
+  /* margin-bottom: 0.5em; */
+
 }
 
 .legend:hover {

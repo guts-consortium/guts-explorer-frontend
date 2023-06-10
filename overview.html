@@ -46,6 +46,19 @@
             <h2><strong><em>{{text_content['overview']['title']}}</em></strong></h2>
             {{text_content['overview']['descriptive_paragraph']}}
         </div>
+        <b-container id="legend-table">
+            <b-row>
+                <b-col></b-col>
+                <b-col><b-card class="legend" v-b-hover="hoverHandlerParenting"><img src="img/icon-video-min.png" alt="icon-video-min"><br>Parenting intervention</b-card></b-col>
+                <b-col><b-card class="legend" v-b-hover="hoverHandlerCovid"><img src="img/icon-corona-virus.png" alt="icon-corona-virus"><br>COVID-19 adjustments</b-card></b-col>
+                <b-col><b-card class="legend" v-b-hover="hoverHandlerHome"><img src="img/icon-home-sm-min-1.png" alt="icon-home-sm-min-1"><br>Home visits</b-card></b-col>
+                <b-col><b-card class="legend" v-b-hover="hoverHandlerDigital"><img src="img/icon-home-digital-sm-min.png" alt="icon-home-digital-sm-min"><br>Digital home visits</b-card></b-col>
+                <b-col><b-card class="legend" v-b-hover="hoverHandlerEEG"><img src="img/icon-brain-eeg-sm-min.png" alt="icon-brain-eeg-sm-min"><br>Lab: EEG measurements</b-card></b-col>
+                <b-col><b-card class="legend" v-b-hover="hoverHandlerMRI"><img src="img/icon-brain-mri-sm-min.png" alt="icon-brain-mri-sm-min"><br>Lab: MRI measurements</b-card></b-col>
+                <b-col></b-col>
+            </b-row>
+        </b-container>
+        <br>
         <b-container id="overview-table">
             <b-row style="background-color: var(--lcid_bluegreen); border-top-left-radius: 15px;">
                 <b-col></b-col>
@@ -110,18 +123,6 @@
         </b-container>
         <br>
         <br>
-        <b-container id="legend-table">
-            <b-row>
-                <b-col></b-col>
-                <b-col><b-card class="legend" v-b-hover="hoverHandlerParenting"><img src="img/icon-video-min.png" alt="icon-video-min"><br>Parenting intervention</b-card></b-col>
-                <b-col><b-card class="legend" v-b-hover="hoverHandlerCovid"><img src="img/icon-corona-virus.png" alt="icon-corona-virus"><br>COVID-19 adjustments</b-card></b-col>
-                <b-col><b-card class="legend" v-b-hover="hoverHandlerHome"><img src="img/icon-home-sm-min-1.png" alt="icon-home-sm-min-1"><br>Home visits</b-card></b-col>
-                <b-col><b-card class="legend" v-b-hover="hoverHandlerDigital"><img src="img/icon-home-digital-sm-min.png" alt="icon-home-digital-sm-min"><br>Digital home visits</b-card></b-col>
-                <b-col><b-card class="legend" v-b-hover="hoverHandlerEEG"><img src="img/icon-brain-eeg-sm-min.png" alt="icon-brain-eeg-sm-min"><br>Lab: EEG measurements</b-card></b-col>
-                <b-col><b-card class="legend" v-b-hover="hoverHandlerMRI"><img src="img/icon-brain-mri-sm-min.png" alt="icon-brain-mri-sm-min"><br>Lab: MRI measurements</b-card></b-col>
-                <b-col></b-col>
-            </b-row>
-        </b-container>
     </b-container>
     <script src="assets/app_globals.js"></script>
     <script src="assets/app.js"></script>
