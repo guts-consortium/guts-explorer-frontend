@@ -54,7 +54,8 @@
             {{text_content['measures-collected']['descriptive_paragraph']}}
         </div>
 
-        <b-card style="background-color: var(--lcid_dark_blue); color: white; margin-bottom: 0.5em;">
+        <b-container id="collected-content">
+        <b-card class="collected-card" style="background-color: var(--lcid_dark_blue); color: white; margin-bottom: 0.5em;">
             <h4><em>First include all measures of interest</em></h4>
             <br>
             <b-row>
@@ -82,9 +83,9 @@
                     <label for="keyword_search_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Find measures by keyword</label>
                     <b-input-group>
                         <b-form-tags v-model="search_keywords" :tag-validator="validator" no-outer-focus class="border-0 p-0" style="background-color: var(--lcid_dark_blue);">
-                          <template v-slot="{ tags, inputAttrs, inputHandlers, tagVariant, addTag, removeTag}">
+                        <template v-slot="{ tags, inputAttrs, inputHandlers, tagVariant, addTag, removeTag}">
                             <b-input-group class="mb-0">
-                              <b-form-input size="sm"
+                            <b-form-input size="sm"
                                 v-bind="inputAttrs"
                                 v-model="keyword_text"
                                 v-on="inputHandlers"
@@ -93,29 +94,29 @@
                                 id="keyword_search_input"
                                 @input="inputKeywordText()"
                                 v-on:keyup.enter="clearSearchKeywordText()"
-                              ></b-form-input>
+                            ></b-form-input>
                             </b-input-group>
                             <div class="d-inline-block" style="font-size: 1.5rem; background-color: var(--lcid_dark_blue);">
-                              <span v-for="tag in tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchKeyword(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
+                            <span v-for="tag in tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-light" @click="removeSearchKeyword(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
                             </div>
-                          </template>
+                        </template>
                         </b-form-tags>
                         <template #append>
-                          <b-button size="sm" variant="outline-light" id="popover-target-1" class="pl-0 pr-0">Keywords</b-button>
-                          <b-popover target="popover-target-1" triggers="hover" :show.sync="popoverShow" placement="left" ref="popover">
+                        <b-button size="sm" variant="outline-light" id="popover-target-1" class="pl-0 pr-0">Keywords</b-button>
+                        <b-popover target="popover-target-1" triggers="hover" :show.sync="popoverShow" placement="left" ref="popover">
                             <div v-if="keywords_ready">
-                              <span v-if="keyword_options_filtered.length == 0"><em>No keywords found</em></span>
-                              <span v-else v-for="option in keyword_options_filtered"><b-button pill size="sm" class="p-1" variant="outline-dark" @click="addSearchKeyword(option)">{{option}}</b-button>&nbsp;</span>
+                            <span v-if="keyword_options_filtered.length == 0"><em>No keywords found</em></span>
+                            <span v-else v-for="option in keyword_options_filtered"><b-button pill size="sm" class="p-1" variant="outline-dark" @click="addSearchKeyword(option)">{{option}}</b-button>&nbsp;</span>
                             </div>
-                          </b-popover>
+                        </b-popover>
                         </template>
-                      </b-input-group>
+                    </b-input-group>
                 </b-col>
             </b-row>
             
         </b-card>
 
-        <b-card style="background-color: var(--lcid_dark_blue); color: white">
+        <b-card class="collected-card" style="background-color: var(--lcid_dark_blue); color: white">
             <h4><em>Then narrow the search space</em></h4>
             <br>
             <b-row>
@@ -183,14 +184,14 @@
                     <b-dropdown size="sm" text="Export Graph Data" variant="outline-light" class="m-2">
                         <b-dropdown-item @click="exportTable('csv')"><i class="fas fa-file-csv"></i> CSV</b-dropdown-item>
                         <b-dropdown-item @click="exportTable('json')"><i class="fas fa-file-code"></i> JSON</b-dropdown-item>
-                      </b-dropdown>
+                    </b-dropdown>
                 </b-col>
             </b-row>
         </b-card>
         <br>
         <br>
 
-        <b-card style="background-color: var(--lcid_dark_blue); color: white"  class="text-center">
+        <b-card  style="background-color: var(--lcid_dark_blue); color: white"  class="text-center collected-card">
 
             <b-row>
                 <b-col cols="8">
@@ -270,6 +271,15 @@
                 </b-col>
             </b-row>
         </b-card>
+        </b-container>
+        <b-container class="narrow-screen">
+            <b-card style="background-color: var(--lcid_dark_blue); color: white; margin-bottom: 0.5em;">
+                <h3>Note</h3>
+                <p>Unfortunately, the content on this page is optimized for screens wider than 1200px
+                    and cannot be viewed or interacted with using your current device.
+                </p>
+            </b-card>
+        </b-container>
 
         <br>
 

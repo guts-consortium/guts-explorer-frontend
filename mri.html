@@ -52,6 +52,7 @@
             {{text_content['mri']['descriptive_paragraph']}}
         </div>
 
+        <b-container id="mri-content">
         <b-card no-body style="background-color: var(--lcid_dark_blue); color: white; margin-left: 5%; width: 90%;">
           <b-tabs card pills class="d-flex flex-column" content-class="flex-grow-1" v-model="tabIndex">
 
@@ -74,16 +75,18 @@
                     <h3><em>Coming soon!</em></h3>
                     <br>
                 </div>
-
-                
-
-
-
             </b-tab>
-
-            
           </b-tabs>
         </b-card>
+        </b-container>
+        <b-container class="narrow-screen">
+            <b-card style="background-color: var(--lcid_dark_blue); color: white; margin-bottom: 0.5em;">
+                <h3>Note</h3>
+                <p>Unfortunately, the content on this page is optimized for screens wider than 1200px
+                    and cannot be viewed or interacted with using your current device.
+                </p>
+            </b-card>
+        </b-container>
     </b-container>
 
     <!-- Run the Vue app scripts - DO NOT CHANGE ORDER -->
