@@ -26,6 +26,10 @@
   --lcid_a: #edddd43b;
   --lcid_yellow: #fcb900;
   --lcid_light_yellow: #fce4a2;
+  --guts-yellow: #FFFF00;
+  --guts-green: #03FF33;
+  --guts-pink: #ff00fb;
+  --guts-lightgreen: #d8fade;
 }
 
 
@@ -67,30 +71,31 @@
 }
 
 @font-face {
-  font-family: 'Gudea';
+  font-family: 'Helvetica Neue LT';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 550;
   font-display: block;
-  src: url("gudea-v15-latin-regular.woff2") format("woff2");
+  src: url("Helvetica-Neue-LT-W01-55-Roman.woff2") format("woff2");
 }
 @font-face {
-  font-family: 'Gudea';
-  font-style: italic;
-  font-weight: 400;
+  font-family: 'Helvetica Neue LT';
+  font-style: normal;
+  font-weight: 750;
   font-display: block;
-  src: url("gudea-v15-latin-italic.woff2") format("woff2");
+  src: url("Helvetica-Neue-LT-W05-75-Bold.woff2") format("woff2");
 }
 @font-face {
-  font-family: 'Gudea';
+  font-family: 'Helvetica Neue LT';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 850;
   font-display: block;
-  src: url("gudea-v15-latin-700.woff2") format("woff2");
+  src: url("Helvetica-Neue-LT-W05-85-Heavy.woff2") format("woff2");
 }
 
 body {
-  font-family: 'Gudea', sans-serif !important;
-  background-color: var(--lcid_beige) !important;
+  font-family: 'Helvetica Neue LT', sans-serif !important;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 table {
@@ -119,18 +124,15 @@ table td:first-child {
 
 
 .header {
-  background-color: var(--lcid_beige);
-  color: var(--lcid_dark_blue);
+
   /* text-align: center; */
   padding-top: 2em;
   padding-bottom: 2em;
   margin-bottom: 2em;
-  margin-left: 12%;
-  margin-right: 12%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  border-bottom: 1px dashed var(--lcid_dark_blue);
+  border-bottom: 1px dashed black;
   /* justify-content: center; */
 }
 
@@ -140,8 +142,6 @@ table td:first-child {
 
 /* Dropdown Button */
 .dropbtn {
-  background-color: var(--lcid_beige);
-  color: var(--lcid_dark_blue);
   padding: 0.5em;
   font-size: 1em;
   border: 1px solid var(--lcid_dark_blue);
@@ -297,10 +297,10 @@ table td:first-child {
 }
 
 .lcid-info-table tr:nth-child(odd) {
-  background-color: var(--lcid_orange); 
+  background-color: var(--guts-green); 
 }
 .lcid-info-table tr:nth-child(even) {
-  background-color: var(--lcid_light_orange); 
+  background-color: var(--guts-lightgreen); 
 }
 .lcid-info-table {
   border: 1px solid white;
@@ -394,6 +394,32 @@ table td:first-child {
 .narrow-screen {
   display: none;
 }
+
+.footer {
+  padding-top: 2em;
+  padding-bottom: 2em;
+  margin-top: 4em;
+  margin-bottom: 2em;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2em;
+  border-top: 1px dashed black;
+}
+
+.footer-funding p {
+  margin-top: 1em;
+}
+
+.partner-logos {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2em;
+}
+
+
 
 @media (max-width: 1200px) {
   #legend-table, #overview-table {

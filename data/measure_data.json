@@ -1,0 +1,618 @@
+[
+    {
+        "short-name": "srq-a",
+        "long-name": "Academic Self-Regulation Questionnaire (SRQ-A)",
+        "description": "Academic self-regulation will be measured using the Academic Self-Regulation Questionnaire (16 items, (Deci et al., 1992). Each item presents a reason to perform a given activity, such as trying to do well in school, doing classwork, or answering questions in class. Individuals score on a 4-point Likert-type scale how often they exhibit the behavior for that reason (always, most of the time, sometimes, never). This questionnaire makes use of four subscales: External Regulation (activities engaged in to avoid external consequences or to obey rules), Introjected Regulation (activities done to avoid guilt or anxiety or because the child thinks adults would approve), Identified Regulation (behavior done to achieve a self-valued goal), and Intrinsic Motivation (behavior done for inherent enjoyment).",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "ace",
+        "long-name": "Adverse Childhood Experience (ACE)",
+        "description": "We will use the Adverse Childhood Experience (11 items, (Felitti et al., 2019) questionnaire to assess adverse experiences in childhood. This questionnaire includes seven categories of adverse childhood experiences: psychological, physical, or sexual abuse; violence against mother; or living with household members who were substance abusers, mentally ill or suicidal, or ever imprisoned.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "demographics-1",
+        "long-name": "Age, cultural background, etnicity",
+        "description": "The demographics questionnaire contains several questions about age, cultural background, and ethnicity.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "audit",
+        "long-name": "Alcohol Use Disorders Identification Test (AUDIT)",
+        "description": "The Alcohol Use Disorders Identification Test (AUDIT) is a 10-question alcohol harm screening tool. It assesses the nature and severity of alcohol misuse",
+        "data-type": "questionnaire",
+        "data-category": "antisocial"
+    },
+    {
+        "short-name": "ai",
+        "long-name": "Aspiration Index (AI)",
+        "description": "The Aspiration Index (10 items, (Kasser & Ryan, 1996; Utv\u00e6r et al., 2014) assesses three extrinsic (wealth, fame, image) and four intrinsic (personal growth, community, affiliation, health) aspirations, which are each measured with 5 items. Responses are made on a 7-point scale, ranging from 1 (not at all) to 7 (very much) with the number 4 representing a neutral response.",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "softdrugs",
+        "long-name": "Basic set smoking/ alcohol/ marihuana",
+        "description": "The Soft Drugs questionnaire consists of 8 items that assess whether and to what extent someone smokes, drinks alcohol, and/or uses marihuana.",
+        "data-type": "questionnaire",
+        "data-category": "antisocial"
+    },
+    {
+        "short-name": "bisbas",
+        "long-name": "Behavioral Inhibition and Activation Scale (BIS/BAS)",
+        "description": "The BIS/BAS questionnaire (16 items, (Carver, Charles S. & White, 1994) is a self-report instrument to measure the behavioral inhibition (or avoidance) system (BIS) and the BAS (or approach) system (BAS), two motivational systems underlying behavior. The BIS/BAS questionnaire consists of 20 items divided in four subscales: BIS (e.g., \u201cI feel pretty worried or upset when I think or know somebody is angry at me\u201d), BAS reward responsiveness (e.g., \u201cIt would excite me to win a contest\u201d), BAS drive (e.g., \u201cI go out of my way to get things I want\u201d) and BAS fun seeking (e.g., \u201cI\u2019m always willing to try something new if I think it will be fun\u201d). ",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "prosocial-effort",
+        "long-name": "Behavioral Prosocial Effort Task",
+        "description": "We will include a prosocial effort task which measures how motivated participants are to obtain rewards for self and others. This task consists of decisions between options with different magnitudes of reward in exchange for different levels of (physical) effort (i.e., grip force or clicking force). For each trial, participants choose between two options: a rest baseline option associated with low reward, or a work offer which is associated with high(er) reward. Over trials, this work option will varies in the level of \neffort participants will need to put in (i.e., squeezing harder or clicking more boxes on a screen). The participants will receive the higher gain only if they succeed to exert the effort appropriately. Participants will be told that they will play this task with sometimes for themselves and sometimes for known and unknown others. This task is used in several previous studies on prosocial effort allocation (i.e., willingness to work for self and others) (Contreras-Huerta et al., 2023; Lockwood et al., 2017, 2021).",
+        "data-type": "behavioral",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "demographics-2",
+        "long-name": "Biological/birth sex, perceived sex",
+        "description": "The demographics questionnaire contains several questions about birth sex and perceived sex.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "cope-sf",
+        "long-name": "Brief COPE (shortened)",
+        "description": "The Brief COPE measures a higher number of coping strategies (14 vs. 8). The Brief COPE consists of 28 items that measure 14 different subscales (including: self-blame, behavioral disengagement, self-distraction, denial, substance use, emotional support, instrumental support, active coping, planning, acceptance, positive reframing, religion, venting, and humor), with two items for each subscale.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "bpm",
+        "long-name": "Brief Problem Monitor (BPM)",
+        "description": "Brief Problem Monitor (BPM; (Achenbach et al., 2011) parent- report is derived from ASEBA\u2019s more extensive tools for mapping the functioning of young people. Based on the 19 item scores of the BPM, the three scales Attention problems, Internalizing problems and Externalizing problems, and a Total score are calculated.",
+        "data-type": "questionnaire/diary",
+        "data-category": "antisocial"
+    },
+    {
+        "short-name": "bscs",
+        "long-name": "Brief self-control scale (BSCS)",
+        "description": "Brief Self-Control Scale (13 items, (Tangney et al., 2004) measures the behavioural aspects of self-control (e.g., breaking bad habits, persevering through a task). Participants are asked to indicate on a 5-point Likert Scale how much statements reflect the way they typically are (from 1 \u2013 not at all, to 5 \u2013 very much). ",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "ctq",
+        "long-name": "Childhood Trauma Questionnaire (CTQ)",
+        "description": "The Childhood Trauma Questionnaire (CTQ;\u00a0Bernstein & Fink, 1998) is a standardized, retrospective 28-item self-report inventory that measures the severity of different types of childhood trauma, producing five clinical subscales each comprised of five items: Emotional Abuse, Physical Abuse, Sexual Abuse, Emotional Neglect, Physical Neglect. The measure also includes a three-item Minimization/Denial scale indicating the potential underreporting of maltreatment. Participants respond to each item in the context of \u201cwhen you were growing up\u201d and answer according to a five-point Likert scale ranging from \u201cnever\u201d = 1 to \u201cvery often\u201d = 5, producing scores of 5 to 25 for each trauma subscale. The three items comprising the Minimization/Denial scale are dichotomized (\u201cnever\u201d = 0, all other responses = 1) and summed; a total of one (1) or greater \u201csuggests the possible underreporting of maltreatment (false negatives)\u201d",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "ces",
+        "long-name": "Civic Engagement Scale (CES)",
+        "description": "The Civic Engagement Scale (CES), developed by Doolittle and Faul (2013), aims to measure people's civic engagement in their communities.  It is a six-item subscale of CES comprised of questions like \u201cI stay informed of events in my community\u201d and \u201cWhen working with others, I make positive changes in the community.\u201d The questionnaire adopted a seven-point Likert scale (1\u2009=\u2009never, and 7\u2009=\u2009always), resulting in a total score from seven to 42.",
+        "data-type": "questionnaire",
+        "data-category": "prosocial-behavior"
+    },
+    {
+        "short-name": "cius",
+        "long-name": "Compulsive Internet Use Scale (CIUS)",
+        "description": "Compulsive social media use will be measured by 12 self-reported items based on the Compulsive Internet Use Scale (CIUS; (Meerkerk et al., 2009).",
+        "data-type": "questionnaire",
+        "data-category": "social-media"
+    },
+    {
+        "short-name": "ecg-bpm",
+        "long-name": "ECG - Heart Rate",
+        "description": "",
+        "data-type": "ecg",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "ecg-hrv",
+        "long-name": "ECG - Heart Rate Variability",
+        "description": "",
+        "data-type": "ecg",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "education",
+        "long-name": "Educational Achievement",
+        "description": "The Educational Achievement Questionnaire consists of 6 items that assess (expectations about) educational level.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "eeg-gonogo",
+        "long-name": "EEG - Go/NoGo Task",
+        "description": "Neural activity during the Go/NoGo Task.",
+        "data-type": "eeg",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "eeg-rest",
+        "long-name": "EEG - Resting State",
+        "description": "We will measure EEG during rest, alternating between 1-minute eyes open and 1- minute eyes closed (for a total of 6 minutes)",
+        "data-type": "eeg",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "eeg-social-flanker",
+        "long-name": "EEG - Social Flanker Task",
+        "description": "Neural activity during the Social Flanker Task.",
+        "data-type": "eeg",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "eeg-social-reward",
+        "long-name": "EEG - Social Reward Task",
+        "description": "Neural activity during the Social Reward Task.",
+        "data-type": "eeg",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "esm-regulation",
+        "long-name": "ESM - Momentary Emotion Regulation",
+        "description": "",
+        "data-type": "questionnaire/diary",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "esm-mood",
+        "long-name": "ESM - Positive and Negative Affect Schedule for Children \n(PANAS-C)",
+        "description": "",
+        "data-type": "questionnaire/diary",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "esm-relationships",
+        "long-name": "ESM - Quality Peers and Parents",
+        "description": "",
+        "data-type": "questionnaire/diary",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "esm-self-esteem",
+        "long-name": "ESM - Rosenberg Self-Esteem Scale",
+        "description": "",
+        "data-type": "questionnaire/diary",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "esm-sddt",
+        "long-name": "ESM - Social Delay Discounting",
+        "description": "",
+        "data-type": "questionnaire/diary",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "esm-pressure",
+        "long-name": "ESM - Stress and Pressure",
+        "description": "",
+        "data-type": "questionnaire/diary",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "esm-stressor",
+        "long-name": "ESM - Stressor Occurrence",
+        "description": "",
+        "data-type": "questionnaire/diary",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "esm-whereabouts",
+        "long-name": "ESM - Whereabouts",
+        "description": "",
+        "data-type": "questionnaire/diary",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "ethnocentrism",
+        "long-name": "Ethnocentrism",
+        "description": "The Ethnocentrism questionnaire consists of 3 items that assess attitudes regarding other cultures.",
+        "data-type": "questionnaire",
+        "data-category": "prosocial-behavior"
+    },
+    {
+        "short-name": "demographics-4",
+        "long-name": "Family background and SES (family situation)",
+        "description": "The demographics questionnaire contains several questions about family background and socio economic status.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "fmri-rest",
+        "long-name": "fMRI - Resting State",
+        "description": "",
+        "data-type": "fmri",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "fmri-sddt",
+        "long-name": "fMRI - Social Delay Discounting Task",
+        "description": "Brain activity during the Social Delay Discounting Task.",
+        "data-type": "fmri",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "fmri-trust-modified",
+        "long-name": "fMRI - Trust Game (modified)",
+        "description": "Brain activity during the modified Trust Game.",
+        "data-type": "fmri",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "fmri-reward",
+        "long-name": "fMRI - Vicarious Reward Task",
+        "description": "Brain activity during the Vicarious Reward Task.",
+        "data-type": "fmri",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "fmps",
+        "long-name": "Frost Multidimensional Perfectionism Scale (FMPS) - Parental expectations & Parental criticism",
+        "description": "An adapted version of the Frost Multidimensional Perfectionism Scale (St\u00f6ber, 1998) will be used to assess perfectionism. This version has four subscales: Concerns over Mistakes and Doubts (CMD), Parental Expectations and Criticism (PEC), Personal Standards (PS), and Organization (O). Items are scores using a five-point response scale ranging from \u201cstrongly disagree\u201d to \u201cstrongly agree\u201d.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "soep",
+        "long-name": "German Socio-Economic Panel (SOEP) - general/domain",
+        "description": "The German Socio-Economic Panel (SOEP) (7 items, (Fietze et al., 2011) will be used to assess risk-taking. Participants indicate the extent to which they view themselves as a risk-taker and how they rate their willingness to engage in risk-taking behaviors in various situations (e.g., while driving, during their occupation). ",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "gonogo",
+        "long-name": "Go/NoGo Task",
+        "description": "In this task, participants see letters (W and M) on a screen. They should press a button when they see a W (80% of the trials) and they should not press a button when they see an M (20% of the trials). One run of this task consists of 160 stimuli and takes about 5 minutes. After the first run, participants think they get feedback about their performance compared to their peers (either above or below average), but this feedback is automatically generated. Then, they will perform another run of the task.",
+        "data-type": "behavioral",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "hair-cort",
+        "long-name": "Hair - Cortisol",
+        "description": "To collect hair samples to assess cortisol, a tuft of hair at the at the base of the vertex posterior of the scalp will be selected and cut right at the scalp. Hair will be put into foil and stored at a dark,room-temperature location until sent to the Dresden Lab Service GmbH in Germany for analysis. The most proximal 2cm of hair will be sectioned and the hair will be minced and cortisol will be extracted. Liquid chromatography\u2013mass spectrometry (LC\u2013MS/MS) will be used for cortisol quantification.",
+        "data-type": "hair-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "hair-dheas",
+        "long-name": "Hair - Dehydroepiandrosterone sulfate (DHEAS)",
+        "description": "To collect hair samples to assess Dehydroepiandrosterone sulfate (DHEAS) , a tuft of hair at the at the base of the vertex posterior of the scalp will be selected and cut right at the scalp. Hair will be put into foil and stored at a dark,room-temperature location until sent to the Dresden Lab Service GmbH in Germany for analysis. The most proximal 2cm of hair will be sectioned and the hair will be minced and DHEAS will be extracted. Liquid chromatography\u2013mass spectrometry (LC\u2013MS/MS) will be used for DHEAS quantification.",
+        "data-type": "hair-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "hair-e2",
+        "long-name": "Hair - Estradiol",
+        "description": "To collect hair samples to assess estradiol, a tuft of hair at the at the base of the vertex posterior of the scalp will be selected and cut right at the scalp. Hair will be put into foil and stored at a dark,room-temperature location until sent to the Dresden Lab Service GmbH in Germany for analysis. The most proximal 2cm of hair will be sectioned and the hair will be minced and estradiol will be extracted. Liquid chromatography\u2013mass spectrometry (LC\u2013MS/MS) will be used for estradiol quantification.",
+        "data-type": "hair-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "hair-oxt",
+        "long-name": "Hair - Oxytocin",
+        "description": "To collect hair samples to assess oxytocin, a tuft of hair at the at the base of the vertex posterior of the scalp will be selected and cut right at the scalp. Hair will be put into foil and stored at a dark,room-temperature location until sent to the Dresden Lab Service GmbH in Germany for analysis. The most proximal 2cm of hair will be sectioned and the hair will be minced and oxytocin will be extracted. Liquid chromatography\u2013mass spectrometry (LC\u2013MS/MS) will be used for oxytocin quantification.",
+        "data-type": "hair-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "hair-testo",
+        "long-name": "Hair - Testosterone",
+        "description": "To collect hair samples to assess testosterone, a tuft of hair at the at the base of the vertex posterior of the scalp will be selected and cut right at the scalp. Hair will be put into foil and stored at a dark,room-temperature location until sent to the Dresden Lab Service GmbH in Germany for analysis. The most proximal 2cm of hair will be sectioned and the hair will be minced and testosterone will be extracted. Liquid chromatography\u2013mass spectrometry (LC\u2013MS/MS) will be used for testosterone quantification.",
+        "data-type": "hair-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "harddrugs",
+        "long-name": "Harddrugs",
+        "description": "The Hard Drugs questionnaire consists of 7 items that assess whether someone has ever used hard drugs, such as cocaine or xtc.",
+        "data-type": "questionnaire",
+        "data-category": "antisocial"
+    },
+    {
+        "short-name": "hsbc",
+        "long-name": "Health Behaviour in School-aged Children (HSBC) - School Stress",
+        "description": "The Health Behaviour in School-aged Children (HSBC) is a standard questionnaire developed by the international research network that measures genereal health and health behavior of school-aged children. Within GUTS, only the questionnaires regarding school stress are used.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "ius",
+        "long-name": "Intolerance of uncertainty (IUS)",
+        "description": "Intolerance of Uncertainty Scale-12 (12 items, (Carleton et al., 2007) will be used to evaluate two sub-scales of Intolorance of Uncertaintly (IU, i.e., prospective anxiety and inhibitory anxiety). A greater score in each subscale indicates a greater level of prospective anxiety and inhibitory anxiety. ",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "media",
+        "long-name": "Media Multitasking Index",
+        "description": "Time on social media will be measured by 9 self-reported items based on the Media Multitasking index from Pea et al., (2012). In these items, participants are asked how much time on an average weekday they spend on several types of media use, such as streaming video\u2019s, playing games, posting public messages and posting private messages.",
+        "data-type": "questionnaire",
+        "data-category": "social-media"
+    },
+    {
+        "short-name": "phq-9",
+        "long-name": "Mental health/depression (PHQ-9)",
+        "description": "The PHQ-9 is a multipurpose instrument for screening, diagnosing, monitoring and measuring the severity of depression: n The PHQ-9 incorporates DSM-IV depression diagnostic criteria with other leading major depressive symptoms into a brief self-report tool.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "mwys",
+        "long-name": "Multidimensional Wellbeing in Youth Scale (MWYS) - Self-confidence",
+        "description": "Multidimensional Wellbeing in Youth Scale (MWYS) consists of 61 items that measure five domains: 1) having impact, purpose, and meaning; 2) dealing with stress and worry, 3) family relationships; 4) self-confidence; and 5) feeling respected, appreciated, and loved.",
+        "data-type": "questionnaire",
+        "data-category": "individual-outcome"
+    },
+    {
+        "short-name": "nvs",
+        "long-name": "Neighborhood Violence Scale (NVS) Youth",
+        "description": "The Neighbordhood Violence Scale (NVS) Youth is a 7-item questionnaire that measures exposure to neighborhood violence.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "nri-wco",
+        "long-name": "Network Relationship Inventory - Warmth, Conflict and Overinvolvement",
+        "description": "The Network of Relationships Inventory (NRI; Furman & Buhrmester, 1985) consists of 30 questions, which assess the following 10 relationship qualities. The list of 10 contains six social provisions: (a) reliable alliance, (b) enhancement of worth, (c) instrumental help (guidance), (d) companionship (social integration), (e) affection, and (f) intimacy (disclosure). Additionally, four other qualities were rated: (a) relative power of the child and other, (b) conflict, (c) satisfaction, and (d) importance of the relationship. Subjects answered questions for relationships with the primary caregiver.",
+        "data-type": "questionnaire",
+        "data-category": "parenting"
+    },
+    {
+        "short-name": "o2s3",
+        "long-name": "Online and Offline Social Sensitivity Scale (O2S3) ",
+        "description": "The Online and Offline Social Sensitivity Scale (O2S3) is used to measure Social Rejection Sensitivity (SRS). The 18-item scale assesses SRS in both off- and on-line contexts. Participants are asked to indicate the extent to which such items as \u201cI worry about the effect I have on other people\u201d and \u201cI delete my social media posts if I don\u2019t get the responses I wanted\u201d describe them on a 4-point Likert scale ranging from 0 (Strongly Disagree) to 3 (Strongly Agree). ",
+        "data-type": "questionnaire",
+        "data-category": "social-media"
+    },
+    {
+        "short-name": "opbs-e",
+        "long-name": "Online Prosocial Behaviour Scale \u2013 Extended (OPBS-E)",
+        "description": "To measure online prosocial behavior we will use the 14 items of the Online Prosocial Behavior Scale \u2013 Extended (OPBS-E)(Erreygers et al., 2018; van de Groep & Crone, 2023). This selfreport questionnaire measures two types of online prosocial behaviors: online emotional support (e.g., \u2018Letting someone know that you care about them\u2019, 10 items) and online activism (Standing up for someone being bullied online\u2019, 4 items). Participants reporton a scale of 1 (\u2018never\u2019) to 5 (\u2018every day\u2019) how often they had engaged in online prosocial behaviors in the last month by means of electronic media, like their phone, computer, or the internet. Intermediate response options included 2 (\u2018Once this month\u2019), 3 (\u2018A few times this month\u2019), and 4 (\u2018Several times this month\u2019)",
+        "data-type": "questionnaire",
+        "data-category": "prosocial-behavior"
+    },
+    {
+        "short-name": "soc-act",
+        "long-name": "Online Social Activism",
+        "description": "The Online Social Activism questionnaire measures online social activism.",
+        "data-type": "questionnaire",
+        "data-category": "prosocial-behavior"
+    },
+    {
+        "short-name": "p-knowledge",
+        "long-name": "Parental Knowledge",
+        "description": "The Parental Knowledge Questionnaire consists of 8 items that assess the extent to which a child's caregiver has knowledge about what is going on in the child's life.",
+        "data-type": "questionnaire",
+        "data-category": "parenting"
+    },
+    {
+        "short-name": "inequality",
+        "long-name": "Perceived Inequality",
+        "description": "The Perceived Inequality scale is a 6-item questionnaire that assesses the extent to which respondents feel they do not have the same chances in life as other people.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "pss",
+        "long-name": "Perceived Stress Scale (PSS)",
+        "description": "The Perceived Stress Scale (14 items, (Cohen et al., 2015) is a 14-item instrument designed to measure the degree to which situations in one\u2019s life are appraised as stressful. PSS items were designed to tap the degree to which respondents found their lives unpredictable, uncontrollable, and overloading. The scale also includes a number of direct queries about current levels of experienced stress",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "health",
+        "long-name": "Physical and medication use",
+        "description": "The Physical Health Questionnaire contains several questions regarding health and medication use.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "politics",
+        "long-name": "Political Orientation",
+        "description": "The Political Orientation questionnaire consists of 21 items that asses knowledge about politics and political orientation.",
+        "data-type": "questionnaire",
+        "data-category": "prosocial-behavior"
+    },
+    {
+        "short-name": "srq-p",
+        "long-name": "Prosocial Self-Regulation Questionnaire (SRQ-P)",
+        "description": "Prosocial Self-Regulation Questionnaire (25 items, (Foulkes et al., 2014) will examine why children engage in prosocial behaviors. It uses a 4-point scale and three subscales: external regulation, introjected regulation, and identified regulation.",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "pds",
+        "long-name": "Pubertal Developmental Scale (PDS)",
+        "description": "We will use the Pubertal Development Scale (PDS, (Petersen et al., 1988) to assess individual\u2019s pubertal development. The PDS consists of five questions about physical development, scores from 1 (no) to 4 (development seems complete).",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "qcae",
+        "long-name": "Questionnaire Cognitive and Affective Empathy (QCAE)",
+        "description": "The Questionnaire of Cognitive and Affective Empathy (QCAE) is a multiple dimensional measure of cognitive empathy [comprising primary factors for perspective taking (PT), online simulation (OS)], and affective empathy [comprising primary factors for emotion contagion (EC), proximal responsivity (PRO), and peripheral responsivity (PER)]. It's a self-report measure comprised of 31 items answered on a 4-point Likert scale ranging from strongly disagree (1) to strongly agree (4). ",
+        "data-type": "questionnaire",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "demographics-3",
+        "long-name": "Romantic relationships, sexual orientation",
+        "description": "The demographics questionnaire contains several questions about romantic relationships and sexual orientation.",
+        "data-type": "questionnaire",
+        "data-category": "background"
+    },
+    {
+        "short-name": "saliva-cort",
+        "long-name": "Saliva - Cortisol",
+        "description": "The saliva sample of passive drool is used to measure cortisol. The saliva was collected by requiring the children to spit into a small tube (passive drooling).  Once collected,saliva samples were stored at \u221220\u00b0 Celsius at the university until they were sent to the laboratory of the University Trier for cortisol analyses.",
+        "data-type": "saliva-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "saliva-dheas",
+        "long-name": "Saliva - Dehydroepiandrosterone sulfate (DHEAS)",
+        "description": "The saliva sample of passive drool is used to measure dehydroepiandrosterone sulfate (DHEAS). The saliva was collected by requiring the children to spit into a small tube (passive drooling).  Once collected,saliva samples were stored at \u221220\u00b0 Celsius at the university until they were sent to the laboratory of the University Trier for DHEAS analyses.",
+        "data-type": "saliva-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "dna",
+        "long-name": "Saliva - DNA (Buccal cells)",
+        "description": "DNA information from buccal cell samples, collected via mouth swabs, is used to determine genetic markers in DNA. The DNA will be genotyped by the Genetic Laboratory of the Department of Internal Medicine (Population Genomics) at Erasmus MC using the GSA-MD array (version 3).",
+        "data-type": "saliva-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "saliva-e2",
+        "long-name": "Saliva - Estradiol",
+        "description": "The saliva sample of passive drool is used to measure estradiol. The saliva was collected by requiring the children to spit into a small tube (passive drooling).  Once collected,saliva samples were stored at \u221220\u00b0 Celsius at the university until they were sent to the laboratory of the University Trier for estradiol analyses.",
+        "data-type": "saliva-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "saliva-oxt",
+        "long-name": "Saliva - Oxytocin",
+        "description": "The saliva sample of passive drool is used to measure oxytocin. The saliva was collected by requiring the children to spit into a small tube (passive drooling).  Once collected, saliva samples were stored at \u221220\u00b0 Celsius at the university until they were sent to the laboratory of the University Trier for oxytocin analyses.",
+        "data-type": "saliva-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "saliva-testo",
+        "long-name": "Saliva - Testosterone",
+        "description": "The saliva sample of passive drool is used to measure testosterone. The saliva was collected by requiring the children to spit into a small tube (passive drooling).  Once collected,saliva samples were stored at \u221220\u00b0 Celsius at the university until they were sent to the laboratory of the University Trier for testosterone analyses.",
+        "data-type": "saliva-sample",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "scared",
+        "long-name": "Screen for Child Anxiety Related Disorder (SCARED)",
+        "description": "The Screen for Child Anxiety Related Disorder (SCARED) consists of 41 items that assess a child\u2019s recent anxiety symptoms. Participants respond on a 3-point Likert scale of 0 (Not True or Hardly Ever True), 1 (Somewhat or Sometimes True), or 2 (Very True or Often True).\u00a0",
+        "data-type": "questionnaire",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "shaps",
+        "long-name": "Snaith-Hamilton Pleasure Scale (SHAPS)",
+        "description": "Snaith\u2013Hamilton Pleasure Scale (14 items, (Snaith et al., 1995) is a self-report instrument that measures four dimensions of pleasure response/hedonic experience: interest/pastimes, social interaction, sensory experience, and food/drink. There are four response categories (Definitely Agree, Agree, Disagree, and Strongly Disagree)",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "sddt",
+        "long-name": "Social Delay Discounting Task",
+        "description": "The Social Delay Discounting Task is used to measure self-regulation. In this task, participants will be asked to make four types of choices: 1) delay discounting choices for self, 2) control choices, 3) immediate giving choices, and 4) delay discounting choices for self versus others. The first type of choice includes decisions between a smaller, sooner reward for the self, and a larger, delayed reward for the self. The second type of choice includes decisions between a smaller and larger circle, and can be contrasted with delay discounting choices for self to obtain a general neural index of delay discounting decisions. The third type of choice includes decisions between self and other here and now (a single time-point so no comparison between now and later). The fourth type of choice includes decisions between self and others (specifically an unfamiliar peer and a friend), now and later. The amounts that participants can gain during trials will be between 2 and 10 euros. There will be 4 variations of immediate rewards (2, 4, 6 or 8 euros), and 5 variations of delays for delay discounting choices (0 days, 2 days, 4 days, 30 days, 90 days).",
+        "data-type": "behavioral",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "social-flanker",
+        "long-name": "Social Flanker Task",
+        "description": "In a standard Eriksen Flanker task (Eriksen & Eriksen, 1974), participants view in each trial a row of five arrows pointing to either left or right. Participants are instructed to indicate the direction of the middle arrow. In a congruent trial, all the arrows point in the same direction, whereas in the incongruent trial, the middle error is in the opposite direction. After a block, participants receive feedback (\u2018good job\u2019, \u2018be more accurate\u2019, or \u2018go faster\u2019) to make sure that they make enough errors. In the Social Flanker task, this task is performed under two conditions: social and non-social. In the social condition, participants believe they receive feedback on their performance from a peer. In the non-social condition, the participant is not observed and receives feedback generated by a computer. The social flanker task will have a hyperscanning set-up, meaning the EEG activity of two participants will be recorded at the same time. At first, both participants will perform the task separately in different rooms. After a few runs, one of the participants will join the other participant in their room and will be seated slightly behind them while they perform the task. After the first participant finishes, they will switch positions and the second participant will perform the task while the first participant watches. Afterwards, both participants will return to their own rooms and \nanswer some questions on their experience with the tasks.",
+        "data-type": "behavioral",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "social-reward",
+        "long-name": "Social Reward Task",
+        "description": "In this task, participants must select one of two coloured squares and determine which of the two squares would more often lead to gains. After the participants select a square, they will receive feedback on their performance (win or lose). On each trial participants will receive the rewards (or no reward) associated with that option. If they respond before the cue, they will get the feedback \u201ctoo fast\u201d. Participants will play several blocks with unique colour pairs. The participants will perform this task in different conditions: winning for themselves, winning for their friend, and winning for an unknown other.",
+        "data-type": "behavioral",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "sdq",
+        "long-name": "Strengths and Difficulties Questionnaire (SDQ)",
+        "description": "The Strengths and Difficulties Questionnaire (SDQ; (Treffers & Widenfelt, ) is a 25-item questionnaire designed to evaluate the existence of psychosocial problems, the child\u2019s strengths and the influence of psychosocial problems on daily functioning on a three-point scale. Together they form the scales Emotional Symptoms, Behavioral Problems and Hyperactivity \u2013 Attention Deficit, Problems with Peers and Prosocial Behavior. The first four scales together form the scale Total Problems",
+        "data-type": "questionnaire",
+        "data-category": "individual-outcome"
+    },
+    {
+        "short-name": "smri",
+        "long-name": "Structural MRI (3DT1)",
+        "description": "High resolution T1- weighted structural brain imaging will allow us to examine cortical gray matter and subcortical volumes (Shaw et al., 2008).",
+        "data-type": "mri",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "prt",
+        "long-name": "Texas Positive Risk-Taking scale",
+        "description": "The (Texas) Positive Risk-Taking Scale (11 items, (Patterson et al., 2022) will be used to assess positive aspects of risk-taking behavior. Participants rate the frequency of their engagement in these) in the last year on a 6-point scale (0\u2014Never, 1\u20141\u20132 times, 2\u20143\u20135 times, 3\u20146\u201310 times, 4\u201411\u201315 times, 5\u201416 times or more). Example items include \u2018initiating a new friendship\u2019 and \u2018telling a secret about yourself\u2019. ",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "pops",
+        "long-name": "The Autonomy Support of the Perception of Parents Scale (POPS)",
+        "description": "The subscale Autonomy Support of the Perception of Parents Scale (POPS; (van der Kaap-Deeder et al., 2023) 3 items, and 1 item of Silk et al. (2003) will assess how children perceive their parents\u2019 level of autonomy support.",
+        "data-type": "questionnaire",
+        "data-category": "parenting"
+    },
+    {
+        "short-name": "hexaco",
+        "long-name": "The Brief HEXACO",
+        "description": "The BRIEF HEXACO (24 items; (De Vries, 2013) is a short selfreport instrument which represents the 24 HEXACO facets with 1 item per facet (i.e., 4 items per domain). The HEXACO assesses the following personality domains: Honesty-Humility, Emotionality, Extraversion, Agreeableness, Conscientiousness, and Openness to Experience",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "iri",
+        "long-name": "The Interpersonal Reactivity Index",
+        "description": "The Interpersonal Reactivity Index (28 items; (Davis, 1983) measures four aspects of empathy: Perspective Taking (i.e., the tendency to adopt the psychological point of view of others); Fantasy (i.e., the tendency to transpose oneself imaginatively into the feelings and actions of fictitious characters in books, movies, and plays); Empathic Concern (i.e., feelings of sympathy and concern for others); and Personal Distress (i.e., feelings \u201cself",
+        "data-type": "questionnaire",
+        "data-category": "self-regulation"
+    },
+    {
+        "short-name": "pcs-ysr",
+        "long-name": "The Psychological Control Scale \u2013 Youth Self-Report (PCS-YSR)",
+        "description": "The Psychological Control Scale \u2013 Youth Self-Report (PCS-YSR; (Barber, 1996) assesses the psychological control of parents have over their children and consists of 8 items. The adolescent completed the questionnaire on both the father and mother on a 5-point Likert scale. The average of both total scores indicates the degree of psychological control, with a higher score indicating a higher degree of control.",
+        "data-type": "questionnaire",
+        "data-category": "parenting"
+    },
+    {
+        "short-name": "trust",
+        "long-name": "Trust Game",
+        "description": "Participants will complete a simple Trust allocation game on the computer in which tokens can be allocated to a third party, which is a friend, caregiver, societal partner (youth organization) and a stranger. This task includes 12 trials in total with multiple rounds of token distributions (Crone & Fuligni, 2020a).",
+        "data-type": "behavioral",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "trust-modified",
+        "long-name": "Trust Game (modified)",
+        "description": "In this modified version of the Trust Game, participants play as player 1 (the trustor) and receive instructions that they will play one-shot Trust Games using fixed coin distributions with age-matched individuals as players 2 (the trustees). Participants as player 1 receive 4 coins and can make two different choices: either to divide the coins themselves equally (2-2) or to give coins to player 2, after which the coins in that trial are multiplied by 2. In the latter case, player 2 will decide how to divide the coins (1-7 or 4-4). The age-matched players 2 (i.e., the \ntargets) can represent various others, such as a community member, friend, or an unknown peer. On each trial, the name, and an avatar of player 2 are displayed at the top of the screen to indicate the target of the choice (i.e., trust or no trust). After a fixation cross, the entire decision tree will be shown. Participants indicate within 5000 ms whether they choose the \u2018no trust\u2019 option (i.e., left button), resulting in the end of the trial, or the \u2018trust\u2019 option (i.e., right button), allowing the trustee to decide the outcome of the trial. In the latter case, the coins in that trial are multiplied by 2. The game includes 42 trials for each target, which allows us to analyze approximately 30 trust choices for each target. This results in 184 trials in total (14 trials x 2 targets x 3 coin values). The game consists of two blocks of each approximately 6 minutes, with a short break in between the two blocks. All combinations will randomly presented and equally distributed across trials.",
+        "data-type": "behavioral",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "intrust",
+        "long-name": "Trust in Institutions",
+        "description": "The Trust in Institutions questionnaire consists of 7 items that assess the level of trust in several groups of people, such as teachers and friends.",
+        "data-type": "questionnaire",
+        "data-category": "prosocial-behavior"
+    },
+    {
+        "short-name": "reward",
+        "long-name": "Vicarious Reward Task",
+        "description": "This task can be used to characterize individual\u2019s (vicarious) reward representation, which has been linked to prosocial tendencies, such as exerting prosocial effort (Contreras-Huerta et al., 2023). In this task, \nparticipants can in each trial win a certain set of points by selecting the correct one of two cups (i.e., they have a 50% chance of winning or losing) Before the start of the task, participants will be told that they will sometimes play this task for themselves, \nand sometimes for others. In each trial, they will be presented with feedback on how much they won or lost. The number of pointsthat they can win or lose will be varied over trials",
+        "data-type": "behavioral",
+        "data-category": "tba"
+    },
+    {
+        "short-name": "ypt-s",
+        "long-name": "Youth Psychopathic Traits Inventory-Short Version (YPI-S)",
+        "description": "The Youth Psychopathic Traits Inventory-Short Version (YPI-S) is an 18-item self-report questionnaire designed to measure psychopathic-like traits in adolescents (van Baardewijk et al.\u00a02010).",
+        "data-type": "questionnaire",
+        "data-category": "antisocial"
+    },
+    {
+        "short-name": "yqol-sf",
+        "long-name": "Youth Quality of Life \u2013 Short Form Instrument (YQOL-SF)",
+        "description": "The Youth Quality of Life-Short Form Instrument (YQOL-SF; (Patrick et al., 2002) consists of 16 items that represent the longer form. This condensed version can be easily used in conjunction with condition-specific modules to compare the generic quality of life of adolescents with diverse chronic conditions and disabilities. ",
+        "data-type": "questionnaire",
+        "data-category": "individual-outcome"
+    }
+]

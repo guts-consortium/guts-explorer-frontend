@@ -1,0 +1,22 @@
+[
+    {
+        "code": "A",
+        "topic": "Social learning",
+        "name": "A: Social learning"
+    },
+    {
+        "code": "B",
+        "topic": "Learning in school context",
+        "name": "B: Learning in school context"
+    },
+    {
+        "code": "C",
+        "topic": "Vicarious gains and social connection",
+        "name": "C: Vicarious gains and social connection"
+    },
+    {
+        "code": "D",
+        "topic": "Empathy",
+        "name": "D: Empathy"
+    }
+]

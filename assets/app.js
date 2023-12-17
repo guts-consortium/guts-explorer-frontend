@@ -6,10 +6,11 @@
 
 // Start Vue instance
 var explorer = new Vue({
-    el: "#explorer",
+    el: "#measures",
     data: {
-        text_content: {},
-        text_content_loaded: false,
+        measure_data: {},
+        measure_headings: [],
+        measure_data_loaded: false,
         isCovid: false,
         isParenting: false,
         isHome: false,
@@ -68,20 +69,42 @@ var explorer = new Vue({
 
     beforeMount() {
         // Load text for headings/paragraphs
-        text_content_file = 'assets/text_content.json'
-        fetch(text_content_file)
+        measure_data_file = 'data/measure_data.json'
+        fetch(measure_data_file)
         .then((response) => {
             if (response.ok) {
                 return response.json();
             } else {
                 console.log(
-                    "WARNING: text_content.json file could not be loaded"
+                    "WARNING: measure_data.json file could not be loaded"
                 );
             }
         })
         .then((responseJson) => {
-            this.text_content = responseJson;
-            this.text_content_loaded = true;
+            this.measure_data = responseJson;
+            this.measure_data_loaded = true;
+            this.measure_headings = [
+                {
+                    key: "short-name",
+                    label: "Code",
+                },
+                {
+                    key: "long-name",
+                    label: "Name",
+                },
+                {
+                    key: "description",
+                    label: "Description",
+                },
+                {
+                    key: "data-type",
+                    label: "Type",
+                },
+                {
+                    key: "data-category",
+                    label: "Category",
+                }
+            ]
         })
     },
 });
