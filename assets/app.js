@@ -8,65 +8,53 @@
 var explorer = new Vue({
     el: "#measures",
     data: {
-        measure_data: {},
+        measure_data: [],
         measure_headings: [],
         measure_data_loaded: false,
-        isCovid: false,
-        isParenting: false,
-        isHome: false,
-        isDigital: false,
-        isEEG: false,
-        isMRI: false,
+        search_text: "",
+        search_text_tags: [],
+    },
+    computed: {
+        included_measures_tags() {
+            var filter_measures = this.measure_data;
+            return filter_measures.filter((c) => {
+                if (this.search_text_tags.length == 0) return true;
+                return this.search_text_tags.some((v) =>
+                    c["short-name"].toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c["long-name"].toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c["description"].toLowerCase().indexOf(v.toLowerCase()) >= 0
+                );
+            });
+        },
+        included_measures() {
+            return this.included_measures_tags
+        },
     },
     methods: {
         gotoPage(url) {
             window.location = url;
         },
-        hoverHandlerCovid(state) {
-            if (state) {
-                this.isCovid = true
+        resetTable() {
+            this.search_text = ""
+            this.search_text_tags = []
+
+        },
+        addSearchTextTag(option) {
+            if (this.search_text_tags.indexOf(this.search_text) < 0) {
+                this.search_text_tags.push(this.search_text);
             }
-            else {
-                this.isCovid = false
+            this.search_text = "";
+        },
+        removeSearchTextTag(tag) {
+            idx = this.search_text_tags.indexOf(tag);
+            if (idx > -1) {
+                this.search_text_tags.splice(idx, 1);
             }
         },
-        hoverHandlerParenting(state) {
-            if (state) {
-                this.isParenting = true;
-            } else {
-                this.isParenting = false;
-            }
-        },
-        hoverHandlerHome(state) {
-            if (state) {
-                this.isHome = true;
-            } else {
-                this.isHome = false;
-            }
-        },
-        hoverHandlerDigital(state) {
-            if (state) {
-                this.isDigital = true;
-            } else {
-                this.isDigital = false;
-            }
-        },
-        hoverHandlerEEG(state) {
-            if (state) {
-                this.isEEG = true;
-            } else {
-                this.isEEG = false;
-            }
-        },
-        hoverHandlerMRI(state) {
-            if (state) {
-                this.isMRI = true;
-            } else {
-                this.isMRI = false;
-            }
+        exportTable(format) {
+            downloadArrayAsFormat(this.included_measures, format, "guts_metadata")
         },
     },
-
     beforeMount() {
         // Load text for headings/paragraphs
         measure_data_file = 'data/measure_data.json'
