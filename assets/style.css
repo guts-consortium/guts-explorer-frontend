@@ -423,6 +423,75 @@ table td:first-child {
   gap: 2em;
 }
 
+.samples-div {
+  color: black;
+  font-weight: 500;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: white;
+  border: 2px solid #960393;
+  border-radius: 10px;
+  font-size: x-large;
+  line-height: normal;
+  display: flex;
+}
+.samples-count {
+  font-size: 50px;
+  margin-bottom: 0;
+  text-align: right;
+  width: 50%;
+  padding-right: 20px;
+}
+
+.samples-count-text {
+  text-align: left;
+  align-self: center;
+}
+
+.menu-container {
+  display: flex;
+}
+
+.menu {
+  list-style-type: none;
+}
+
+.menu li {
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  border-radius: 5px;
+  display:inline-block;
+  vertical-align: top;
+  text-align: center;
+  padding-top: 5px;
+  margin-right: 0.3em;
+}
+
+.menu li:hover {
+  border: 1px solid black;
+  background-color: var(--guts-lightgreen)
+}
+
+.active {
+  background-color: var(--guts-green);
+}
+
+.hasitems {
+  color: var(--guts-pink);
+}
+
+.home-figure {
+  width:80%;
+}
+
+.page-heading {
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: var(--guts-yellow);
+  margin-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 
 
 @media (max-width: 1200px) {

@@ -25,62 +25,275 @@
                 JavaScript to be enabled.</strong></p>
     </noscript>
 
-    <div class="header">
-        <a href=""><img src="img/logo_guts.svg" alt="" height="90"></a>
-        &nbsp;&nbsp;
-        <h1 class="push"><strong>GUTS Metadata Explorer</strong></h1>
-    </div>
+    <!-- This is the vue app element -->
+    <div id="guts">
 
-    <div id="measures">
 
-        <div id="search-options" class="search-options">
-            <!-- SEARCH TEXT -->
-            <b-row>
-                <b-col cols="6">
-                    <b-form-group v-slot="{ ariaDescribedby }">
-                        <label for="search_text_input" class="filter-label"><i class="fas fa-magnifying-glass"></i>&nbsp;Find measures by code, name or description</label>
-                        <b-form-input
-                        id="search_text_input"
-                        class="mb-2 mr-sm-2 mb-sm-0"
-                        placeholder="Enter text (hit enter to add search tag)"
-                        v-model="search_text"
-                        v-on:keyup.enter="addSearchTextTag()"
-                        >ddd</b-form-input>
-                    </b-form-group>
-                </b-col>
-                <b-col cols="1"></b-col>
-                <b-col>
-                    <div class="d-inline-block" style="font-size: 1.5rem;">
-                        <span v-for="tag in search_text_tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-dark" @click="removeSearchTextTag(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
-                    </div>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col style="text-align: left;">
-                    <b-button size="sm" variant="outline-dark" @click="resetTable()"><i class="fas fa-rotate-left"></i> Reset Table</b-button>
-                    <b-dropdown size="sm" text="Export Table" variant="outline-dark" class="m-2">
-                        <b-dropdown-item @click="exportTable('csv')"><i class="fas fa-file-csv"></i> CSV</b-dropdown-item>
-                        <b-dropdown-item @click="exportTable('json')"><i class="fas fa-file-code"></i> JSON</b-dropdown-item>
-                    </b-dropdown>
-                </b-col>
-            </b-row>
-            
-    
+        <!-- ****** -->
+        <!-- ****** -->
+        <!-- HEADER -->
+        <!-- ****** -->
+        <!-- ****** -->
+        <div class="header">
+            <a href="/"><img src="img/logo_guts.svg" alt="" height="90"></a>
+            &nbsp;&nbsp;
+            <div class="push">
+                <h1><strong>GUTS Metadata Explorer</strong></h1>
+                <div class="menu-container">
+                    <ul class="menu push">
+                        <li @click="selected_component = 'home'" :class="{active: selected_component == 'home'}"><i class="fas fa-home"></i></li>
+                        <li @click="selected_component = 'table'" :class="{active: selected_component == 'table'}"><i class="fas fa-bars"></i></li>
+                        <li @click="selected_component = 'checkboxes'" :class="{active: selected_component == 'checkboxes'}"><i class="fas fa-list-check"></i></li>
+                        <li @click="selected_component = 'basket'" :class="{active: selected_component == 'basket', hasitems: basket.length > 0 }">
+                            <i class="fas fa-cart-shopping"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-
-        <b-card no-body>
-            <b-table responsive small v-bind:items="included_measures" v-bind:fields="measure_headings" class="lcid-info-table">
-                <template #table-colgroup="scope">
-                    <col
-                      v-for="field in scope.fields"
-                      :key="field.key"
-                      :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long-name' ? '20%' : '15%') }"
-                    >
-                  </template>
-            </b-table>
-        </b-card>
         
+        <span v-if="all_options_loaded">
+
+            <!-- ***** -->
+            <!-- ***** -->
+            <!-- HOME -->
+            <!-- ***** -->
+            <!-- ***** -->
+
+            <div v-if="selected_component=='home'">
+                <h3 class="page-heading"> &nbsp;&nbsp; How do young people successfully grow up in an increasingly complex society?</h3>
+                <img class="home-figure" src="assets/pics/guts_cohorts.png" alt="">
+            </div>
+
+            <!-- ***** -->
+            <!-- ***** -->
+            <!-- TABLE -->
+            <!-- ***** -->
+            <!-- ***** -->
+
+            <div v-if="selected_component=='table'">
+                <h3 class="page-heading"> &nbsp;&nbsp; <i class="fas fa-magnifying-glass"></i>&nbsp;Find samples by measure code, name or description</h3>
+                <div id="search-options" class="search-options">
+                    <!-- SEARCH TEXT -->
+                    <b-row>
+                        <b-col cols="6">
+                            <b-form-group v-slot="{ ariaDescribedby }">
+                                <b-form-input
+                                id="search_text_input"
+                                class="mb-2 mr-sm-2 mb-sm-0"
+                                placeholder="Enter text (hit enter to add search tag)"
+                                v-model="search_text"
+                                v-on:keyup.enter="addSearchTextTag()"
+                                ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                        <b-col cols="1"></b-col>
+                        <b-col>
+                            <div class="d-inline-block" style="font-size: 1.5rem;">
+                                <span v-for="tag in search_text_tags" :key="tag"><b-button pill size="sm" class="p-1" variant="outline-dark" @click="removeSearchTextTag(tag)">{{tag}} <i class="fas fa-times-circle"></i></b-button>&nbsp;</span>
+                            </div>
+                        </b-col>
+                    </b-row>
+                    <b-row><br></b-row>
+                    <b-row>
+                        <b-col style="text-align: left;">
+                            <b-button size="sm" variant="outline-dark" @click="resetTable()"><i class="fas fa-rotate-left"></i> Reset Table</b-button>
+                            <!-- <b-dropdown size="sm" text="Export Table" variant="outline-dark" class="m-2">
+                                <b-dropdown-item @click="exportTable('csv')"><i class="fas fa-file-csv"></i> CSV</b-dropdown-item>
+                                <b-dropdown-item @click="exportTable('json')"><i class="fas fa-file-code"></i> JSON</b-dropdown-item>
+                            </b-dropdown> -->
+                            <b-button size="sm" variant="outline-dark" @click="addToBasket('table')"><i class="fas fa-cart-plus"></i> Add Table to Basket</b-button>
+                        </b-col>
+                    </b-row>
+                </div>
+        
+                <b-card no-body>
+                    <b-table responsive small v-bind:items="included_measures" v-bind:fields="measure_headings" class="lcid-info-table">
+                        <template #table-colgroup="scope">
+                            <col
+                              v-for="field in scope.fields"
+                              :key="field.key"
+                              :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long-name' ? '20%' : '15%') }"
+                            >
+                          </template>
+                    </b-table>
+                </b-card>
+            </div>
+        
+
+
+            <!-- ********** -->
+            <!-- ********** -->
+            <!-- CHECKBOXES -->
+            <!-- ********** -->
+            <!-- ********** -->
+
+            <div v-if="selected_component=='checkboxes'">
+                <h3 class="page-heading"> &nbsp;&nbsp; <i class="fas fa-magnifying-glass"></i>&nbsp;Find samples by specific keys</h3>
+            
+                <b-card style="background-color: var(--guts-pink); color: white">
+                    <b-row>
+                        <b-col cols="2">
+                            <!-- SESSIONS -->
+                            <b-form-group v-slot="{ ariaDescribedbySes }">
+                            <label for="session_checkbox" class="filter-label"><i class="fas fa-list"></i>&nbsp;Sessions</label>
+                            <br>
+                            <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('session')"><i :class="session_check_icon"></i></b-button> <em>All</em></span>
+                                <b-form-checkbox-group
+                                    id="session_checkbox"
+                                    v-model="filter_arrays['session']"
+                                    :options="all_arrays['session']"
+                                    :aria-describedby="ariaDescribedbySes"
+                                    name="flavour-2"
+                                ></b-form-checkbox-group>
+                            </b-form-group>
+                        </b-col>
+                        <b-col cols="2">
+                            <!-- CATEGORY -->
+                            <b-form-group v-slot="{ ariaDescribedbyCat }">
+                            <label for="category_checkbox" class="filter-label"><i class="fas fa-pie-chart"></i>&nbsp;Categories</label>
+                            <br>
+                            <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('data-category')"><i :class="category_check_icon"></i></b-button> <em>All</em></span>
+                                <b-form-checkbox-group
+                                    id="category_checkbox"
+                                    v-model="filter_arrays['data-category']"
+                                    :options="all_arrays['data-category']"
+                                    :aria-describedby="ariaDescribedbyCat"
+                                    name="flavour-1"
+                                ></b-form-checkbox-group>
+                            </b-form-group>
+                        </b-col>
+                        <!-- <b-col cols="1"></b-col> -->
+                        <b-col cols="2">
+                            <!-- TYPE -->
+                            <b-form-group v-slot="{ ariaDescribedbyType }">
+                            <label for="type_checkbox" class="filter-label"><i class="fas fa-ruler"></i>&nbsp;Types</label>
+                            <br>
+                            <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('data-type')"><i :class="type_check_icon"></i></b-button> <em>All</em></span>
+                                <b-form-checkbox-group
+                                    id="type_checkbox"
+                                    v-model="filter_arrays['data-type']"
+                                    :options="all_arrays['data-type']"
+                                    :aria-describedby="ariaDescribedbyType"
+                                    name="flavour-2"
+                                ></b-form-checkbox-group>
+                            </b-form-group>
+                        </b-col>
+                        <b-col>
+                            <!-- TYPE -->
+                            <b-form-group v-slot="{ ariaDescribedbyAge }">
+                                <label for="age_checkbox" class="filter-label"><i class="fas fa-ruler"></i>&nbsp;Ages</label>
+                                <br>
+                                <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('age')"><i :class="age_check_icon"></i></b-button> <em>All</em></span>
+                                    <b-form-checkbox-group
+                                        id="age_checkbox"
+                                        v-model="filter_arrays['age']"
+                                        :options="all_arrays['age']"
+                                        :aria-describedby="ariaDescribedbyAge"
+                                        name="flavour-2"
+                                    ></b-form-checkbox-group>
+                                </b-form-group>
+                        </b-col>
+                        <b-col cols="4">
+                            <b-row>
+                                <b-form-group v-slot="{ ariaDescribedbyCohort }">
+                                    <label for="cohorts_checkbox" class="filter-label"><i class="fas fa-table-columns"></i>&nbsp;Cohorts</label>
+                                    <br>
+                                    <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('cohort')"><i :class="cohort_check_icon"></i></b-button> <em>All</em></span>
+                                    <b-form-checkbox-group
+                                        id="cohorts_checkbox"
+                                        v-model="filter_arrays['cohort']"
+                                        :options="all_arrays['cohort']"
+                                        :aria-describedby="ariaDescribedbyCohort"
+                                        name="flavour-0"
+                                    ></b-form-checkbox-group>
+                                </b-form-group>
+                            </b-row>
+                            <br><br>
+                            <h3>Current selection:</h3>
+                            <b-row>
+                                <div class="samples-div">
+                                    <div class="samples-count">{{filtered_samples_count}}</div>
+                                    <div class="samples-count-text">samples</div>
+                                </div>
+                            </b-row>
+                            <br>
+                            <b-row>
+                                <div class="samples-div">
+                                    <div class="samples-count">{{filtered_participants_count}}</div>
+                                    <div class="samples-count-text">participants</div>
+                                </div>
+                            </b-row>
+                        </b-col>
+                    </b-row>
+                    <br><br>
+                    <b-row>
+                        <b-col style="text-align: left;">
+                            <b-button size="sm" variant="outline-light" class="option-button" @click="resetTable()"><i class="fas fa-rotate-left"></i> Reset Selection</b-button>
+                            <b-button size="sm" variant="outline-light" @click="addToBasket('checkboxes')"><i class="fas fa-cart-plus"></i> Add Selection to Basket</b-button>
+                        </b-col>
+                    </b-row>
+                </b-card>
+            </div>
+
+
+            <!-- ****** -->
+            <!-- ****** -->
+            <!-- BASKET -->
+            <!-- ****** -->
+            <!-- ****** -->
+
+            <div v-if="selected_component=='basket'">
+                <h3 class="page-heading"> &nbsp;&nbsp; Basket Items</h3>
+                <b-card v-for="(item, index) in basket" border-variant="dark" header-bg-variant="transparent" no-body class="mb-2 pt-1">
+                    <template v-slot:header>
+                      <b-row no-gutters>
+                        <b-col align-h="center" align-v="center" md="1">
+                          <span class="xxlfont"><i :class="'fas fa-' + String(index+1)"></i></span>
+                        </b-col>
+                        <b-col class="text-muted" md="10">
+                            <h6 v-for="(value, key, idx) in item">
+                                {{text_keys_multiple[key]}}:
+                                <em>
+                                    <span v-if="value.length == 0 || value === all_arrays[key]">
+                                        all
+                                    </span>
+                                    <span v-else>
+                                        <span v-for="val in value">{{val}}, </span>
+                                    </span>
+                                </em>
+                            </h6>
+                        </b-col>
+                        <b-col md="1">
+                            <b-button size="sm" variant="dark" @click="deleteBasketItem(index)"><i class="fas fa-trash-can"></i></b-button>
+                        </b-col>
+                      </b-row>
+                    </template>
+                </b-card>
+            </div>
+
+
+            <!-- ****** -->
+            <!-- ****** -->
+            <!-- MODALS -->
+            <!-- ****** -->
+            <!-- ****** -->
+
+            <b-modal ref="added-item-modal" hide-footer title="Added to basket!">
+                <div class="d-block text-center">
+                  <h3>You now have {{basket.length}} {{basket.length > 1 ? 'items' : 'item'}} in your basket</h3>
+                </div>
+                <b-button class="mt-3" variant="primary" block @click="hideModal">Continue Browsing</b-button>
+                <b-button class="mt-3" variant="warning" block @click="viewBasket">View Basket</b-button>
+            </b-modal>
+
+
+        </span> 
     </div>
+
+    
+
+
 
     <div class="footer">
         <div class="footer-funding">

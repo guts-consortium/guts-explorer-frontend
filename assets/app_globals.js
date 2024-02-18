@@ -126,6 +126,7 @@ function downloadArrayAsFormat(arr, format = 'json', filename){
 }
 
 function makeReadable(input) {
+  input = input.toString()
   // capitalize first letter
   var output = input.charAt(0).toUpperCase() + input.slice(1)
   // Replace underscores and dashes with space
