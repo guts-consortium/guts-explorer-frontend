@@ -34,6 +34,7 @@ var explorer = new Vue({
             "session": [],
             "data-type": [],
             "age": [],
+            "short-name": [],
         },
         filter_arrays: {
             "cohort": [],
@@ -41,6 +42,7 @@ var explorer = new Vue({
             "session": [],
             "data-type": [],
             "age": [],
+            "short-name": [],
         },
         filter_age_min: null,
         filter_age_max: null,
@@ -53,7 +55,7 @@ var explorer = new Vue({
             "session": [],
             "data-type": [],
             "age": [],
-            "short-code": [],
+            "short-name": [],
         },
         basket: [],
         basket_length: 0,
@@ -75,6 +77,14 @@ var explorer = new Vue({
         },
         item_index_to_delete: null,
         file_metadata: null,
+        file_key_map: {
+            "data-category": "data_category",
+            "session": "session",
+            "data-type": "data_type",
+            "short-name": "task",
+        },
+        name: '',
+        nameState: null,
     },
     computed: {
         included_measures_tags() {
@@ -168,62 +178,75 @@ var explorer = new Vue({
             var filtered_participants_list = [...new Set(filtered_participants)]
             return filtered_participants_list.length
         },
-        // basket_empty() {
-        //     var b = false
-        //     for (var key in this.basket_arrays) {
-        //         b = b || this.basket_arrays[key].length > 0
-        //     }
-        //     return !b
-        // },
-        // basket_samples_cohort() {
-        //     console.log("computing basket samples cohort")
-        //     filter_samples = this.included_samples;
-        //     return filter_samples.filter((sample) => {
-        //         if (this.filter_arrays["cohort"].length == this.all_arrays["cohort"].length) return true;
-        //         return this.filter_arrays["cohort"].indexOf(sample["cohort"] ) >= 0
-        //     });
-        // },
-        // basket_samples_session() {
-        //     filter_samples = this.basket_samples_cohort;
-        //     return filter_samples.filter((sample) => {
-        //         if (this.filter_arrays["session"].length == this.all_arrays["session"].length) return true;
-        //         return this.filter_arrays["session"].indexOf(sample["session"] ) >= 0
-        //     });
-        // },
-        // basket_samples_category() {
-        //     filter_samples = this.basket_samples_session;
-        //     return filter_samples.filter((sample) => {
-        //         if (this.filter_arrays["data-category"].length == this.all_arrays["data-category"].length) return true;
-        //         return this.filter_arrays["data-category"].indexOf(sample["data-category"] ) >= 0
-        //     });
-        // },
-        // basket_samples_type() {
-        //     filter_samples = this.basket_samples_category;
-        //     return filter_samples.filter((sample) => {
-        //         if (this.filter_arrays["data-type"].length == this.all_arrays["data-type"].length) return true;
-        //         return this.filter_arrays["data-type"].indexOf(sample["data-type"] ) >= 0
-        //     });
-        // },
-        // basket_samples_age() {
-        //     filter_samples = this.basket_samples_type;
-        //     return filter_samples.filter((sample) => {
-        //         if (this.filter_arrays["age"].length == this.all_arrays["age"].length) return true;
-        //         return this.filter_arrays["age"].indexOf(sample["age"] ) >= 0
-        //     });
-        // },
-        // basket_samples_count() {
-        //     return this.basket_samples_age.length
-        // },
-        // basket_participants_count() {
-        //     var basket_participants = this.basket_samples_age.map((m) => (m["ppn"]));
-        //     var basket_participants_list = [...new Set(basket_participants)]
-        //     return basket_participants_list.length
-        // },
+        basket_stats() {
+            file_list = []
+            item_samples = []
+            item_files = []
+            console.log("Stats on basket:")
+            file_keys_to_use = ["data-category", "session", "data-type", "short-name"]
 
+            for (var i=0; i<this.basket.length; i++){
+                console.log("Basket item - " + i)
+                var item = this.basket[i]
+                var samples = this.participant_measures
+                var files = this.file_metadata
+                for (var key in item) {
+                    console.log("key: "+ key)
+                    var value = item[key]
+                    samples = this.filterSamplesBasket(samples, key, value)
+                    if (file_keys_to_use.indexOf(key) >= 0) {
+                        files = this.filterFilesBasket(files, key, value)
+                    }
+                }
+                item_samples.push(samples)
+                item_files.push(files)
+            }
+            var item_files_names = []
+            var basket_samples = []
+            var basket_files = []
+            for (var i=0; i<this.basket.length; i++){
+                
+                basket_samples = basket_samples.concat(item_samples[i])
+                
+                item_files_names.push(
+                    item_files[i].map(function(file) {
+                        return file["file_path"];
+                    })
+                )
+                basket_files = basket_files.concat(item_files_names[i])
+            }
+
+            basket_samples = [...new Set(basket_samples)]
+
+            var filtered_participants = basket_samples.map((m) => (m["ppn"]));
+            var basket_participants = [...new Set(filtered_participants)]
+
+            basket_files = [...new Set(basket_files)]
+
+            return {
+                samples: basket_samples,
+                participants: basket_participants,
+                files: basket_files
+            }
+        }
     },
     methods: {
-        addToBasket() {
+        filterSamplesBasket(samples, key, value) {
+            return samples.filter((sample) => {
+                if (value.length == this.all_arrays[key].length) return true;
+                return value.indexOf(sample[key] ) >= 0
+            });
 
+        },
+        filterFilesBasket(files, key, value) {
+
+            return files.filter((file) => {
+                if (value.length == this.all_arrays[key].length) return true;
+                return value.indexOf(file[this.file_key_map[key]] ) >= 0
+            });
+
+        },
+        addToBasket() {
             // Add to basket from table view
             if (this.selected_component == 'table') {
                 var selected_shortnames = this.included_measures.map(function(measure) {
@@ -313,7 +336,42 @@ var explorer = new Vue({
         },
         filterSamples() {
             var starting_samples = this.included_samples;
+        },
+        checkoutFormValidity() {
+            const valid = this.$refs.form.checkValidity()
+            this.nameState = valid
+            return valid
+        },
+        resetCheckoutModal() {
+            this.name = ''
+            this.nameState = null
+        },
+        handleCheckoutOk(bvModalEvent) {
+            // Prevent modal from closing
+            bvModalEvent.preventDefault()
+            // Trigger submit handler
+            this.handleCheckoutSubmit()
+        },
+        handleCheckoutSubmit() {
+            // Exit when the form isn't valid
+            if (!this.checkoutFormValidity()) {
+                return
+            }
+            // Push the name to submitted names
+
+            var dl_object = {
+                name: this.name,
+                files: this.basket_stats.files
+            }
+
+            downloadArrayAsFormat(dl_object, "json", "my_guts_basket")
+            
+            // Hide the modal manually
+            this.$nextTick(() => {
+                this.$bvModal.hide('basket-checkout-modal')
+            })
         }
+
     },
     beforeMount() {
         // Load text for headings/paragraphs

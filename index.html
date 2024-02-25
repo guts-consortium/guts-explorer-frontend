@@ -282,7 +282,10 @@
                         <b-col>
                             <b-card style="border: 1px solid black; position: sticky; top: 20px;">
                                 <b-card-title>Summary</b-card-title>
-                                <b-button variant="outline-dark" class="option-button push" @click="checkoutBasket()"><i class="fas fa-cart-arrow-down"></i> Checkout Basket</b-button>
+                                <b-card-text>Number of samples: {{basket_stats.samples.length}}</b-card-text>
+                                <b-card-text>Number of participants: {{basket_stats.participants.length}}</b-card-text>
+                                <b-card-text>Number of files: {{basket_stats.files.length}}</b-card-text>
+                                <b-button variant="outline-dark" class="option-button push" v-b-modal.basket-checkout-modal><i class="fas fa-cart-arrow-down"></i> Checkout Basket</b-button>
                             </b-card>
 
                         </b-col>
@@ -311,6 +314,40 @@
                 </div>
                 <b-button class="mt-3" variant="primary" block @click="hideModal('delete-item-modal')"><i class="fas fa-x"></i> Cancel</b-button>
                 <b-button class="mt-3" variant="danger" block @click="deleteBasketItem(item_index_to_delete)"><i class="fas fa-trash-can"></i> Delete Item</b-button>
+            </b-modal>
+
+            <b-modal
+                id="basket-checkout-modal"
+                ref="basket-checkout-modal"
+                title="Backet Checkout"
+                @show="resetCheckoutModal"
+                @hidden="resetCheckoutModal"
+                @ok="handleCheckoutOk"
+                >
+
+                <em>
+                Please complete the following information and then click "OK".
+                <br><br>
+                Once the metadata file has been downloaded, please send it via
+                email to <a href="mailto:guts@example.com">guts@example.com</a>.
+                </em>
+                <br><br>
+                <form ref="form" @submit.stop.prevent="handleSubmit">
+                    <b-form-group
+                    label="Name"
+                    label-for="name-input"
+                    invalid-feedback="Name is required"
+                    :state="nameState"
+                    >
+                        <b-form-input
+                            id="name-input"
+                            v-model="name"
+                            :state="nameState"
+                            required
+                        ></b-form-input>
+                    </b-form-group>
+                    
+                </form>
             </b-modal>
 
 
