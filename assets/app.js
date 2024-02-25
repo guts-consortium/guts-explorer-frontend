@@ -73,6 +73,8 @@ var explorer = new Vue({
             "age": "Ages",
             "short-name": "Short names"
         },
+        item_index_to_delete: null,
+        file_metadata: null,
     },
     computed: {
         included_measures_tags() {
@@ -237,19 +239,36 @@ var explorer = new Vue({
                     "short-name": selected_shortnames,
                 }
                 this.basket_length = this.basket.push(new_basket_item)
-                this.showModal()
+                this.showModal('added-item-modal')
             }
 
-            // Add to basket from table view
+            // Add to basket from checkboxes view
             if (this.selected_component == 'checkboxes') {
 
-                this.filter_arrays
-                
+                var new_basket_item =  {
+                    "cohort": this.filter_arrays['cohort'],
+                    "data-category": this.filter_arrays['data-category'],
+                    "session": this.filter_arrays['session'],
+                    "data-type": this.filter_arrays['data-type'],
+                    "age": this.filter_arrays['age'],
+                    "short-name": [],
+                }
+                // new_basket_item["short-name"] = ; TODO: derive this from filtering other keys
+                this.basket_length = this.basket.push(new_basket_item)
+                this.showModal('added-item-modal') 
             }
 
             // for (var key in this.filter_arrays) {
             //     this.basket_arrays[key] = [...new Set(this.basket_arrays[key].concat(this.filter_arrays[key]))]
             // }
+        },
+        deleteBasketItemCheck(index) {
+            this.item_index_to_delete = index;
+            this.showModal('delete-item-modal')
+        },
+        deleteBasketItem(index) {
+            this.basket.splice(index, 1)
+            this.hideModal('delete-item-modal')
         },
         gotoPage(url) {
             window.location = url;
@@ -282,11 +301,11 @@ var explorer = new Vue({
                 this.filter_arrays[name] = []
             }
         },
-        showModal() {
-            this.$refs['added-item-modal'].show()
+        showModal(modal_ref) {
+            this.$refs[modal_ref].show()
         },
-        hideModal() {
-            this.$refs['added-item-modal'].hide()
+        hideModal(modal_ref) {
+            this.$refs[modal_ref].hide()
         },
         viewBasket() {
             this.$refs['added-item-modal'].hide()
@@ -411,9 +430,23 @@ var explorer = new Vue({
 
             this.filter_age_min = this.age_min
             this.filter_age_max = this.age_max
+
+            file_metadata_file = 'data/file_metadata.json'
+            return fetch(file_metadata_file)
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.log(
+                    "WARNING: file_metadata.json file could not be loaded"
+                );
+            }
+        })
+        .then((responseJson) => {
+            this.file_metadata = responseJson;
             console.log(this)
             this.all_options_loaded = true;
-
         })
     },
 });
