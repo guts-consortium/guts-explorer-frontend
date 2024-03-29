@@ -484,6 +484,43 @@ table td:first-child {
   width:80%;
 }
 
+
+.home-header {
+  background-image: url(pics/homepage.png);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  height: 50vh;
+  
+  display: flex;
+}
+
+.home-heading-1 {
+  width: 70%;
+  text-align: left;
+  font-weight: 700;
+  color: var(--guts-pink);
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+  text-shadow: 2px 2px 4px white;
+}
+
+.home-heading-2 {
+  text-align: right;
+  font-weight: 700;
+  color: var(--guts-pink);
+  text-decoration: none;
+  margin-left: auto;
+  margin-top: auto;
+  margin-right: 0.5em;
+  margin-bottom: 0.5em;
+  text-shadow: 2px 2px 4px white;
+}
+ 
+.home-heading-2 a {
+  color: var(--guts-pink) !important;
+  text-decoration: none !important;
+}
+
 .page-heading {
   border: 1px solid black;
   border-radius: 5px;
