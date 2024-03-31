@@ -1,0 +1,37 @@
+name: get_file_and_subject_metadata
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up environment
+        run: |
+          git config --global user.email "admin@gutsproject.org"
+          git config --global user.name "Gutsproject Github Admin"
+      - name: Checkout main
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Fetch metadata
+        env:
+          WEBDAV_USERNAME: ${{ secrets.webdav_username }}
+          WEBDAV_PASSWORD: ${{ secrets.webdav_password }}
+        run: |
+          echo "Downloading subject-level metadata"
+          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/participant_data.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/guts-subject-level-measure-overview.json
+          echo "Downloading file-level metadata"
+          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/file_metadata.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/metadata_02292024.json
+      - name: Commit if modified
+        run: |
+          if [[ `git status --porcelain` ]]; then
+            # Changes
+            git add --all
+            git commit -m "Update file- and subject-metadata from YODA"
+            git push origin main
+          else
+            # No changes
+            echo "No edits were made to metadata; therefore no changes were committed"
+          fi
