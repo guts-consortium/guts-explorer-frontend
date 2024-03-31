@@ -121,7 +121,7 @@
                             <col
                               v-for="field in scope.fields"
                               :key="field.key"
-                              :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long-name' ? '20%' : '15%') }"
+                              :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long_name' ? '20%' : '15%') }"
                             >
                           </template>
                     </b-table>
@@ -161,11 +161,11 @@
                             <b-form-group v-slot="{ ariaDescribedbyCat }">
                             <label for="category_checkbox" class="filter-label"><i class="fas fa-pie-chart"></i>&nbsp;Categories</label>
                             <br>
-                            <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('data-category')"><i :class="category_check_icon"></i></b-button> <em>All</em></span>
+                            <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('data_category')"><i :class="category_check_icon"></i></b-button> <em>All</em></span>
                                 <b-form-checkbox-group
                                     id="category_checkbox"
-                                    v-model="filter_arrays['data-category']"
-                                    :options="all_arrays['data-category']"
+                                    v-model="filter_arrays['data_category']"
+                                    :options="all_arrays['data_category']"
                                     :aria-describedby="ariaDescribedbyCat"
                                     name="flavour-1"
                                 ></b-form-checkbox-group>
@@ -177,11 +177,11 @@
                             <b-form-group v-slot="{ ariaDescribedbyType }">
                             <label for="type_checkbox" class="filter-label"><i class="fas fa-ruler"></i>&nbsp;Types</label>
                             <br>
-                            <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('data-type')"><i :class="type_check_icon"></i></b-button> <em>All</em></span>
+                            <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('data_type')"><i :class="type_check_icon"></i></b-button> <em>All</em></span>
                                 <b-form-checkbox-group
                                     id="type_checkbox"
-                                    v-model="filter_arrays['data-type']"
-                                    :options="all_arrays['data-type']"
+                                    v-model="filter_arrays['data_type']"
+                                    :options="all_arrays['data_type']"
                                     :aria-describedby="ariaDescribedbyType"
                                     name="flavour-2"
                                 ></b-form-checkbox-group>
@@ -327,7 +327,7 @@
             <b-modal
                 id="basket-checkout-modal"
                 ref="basket-checkout-modal"
-                title="Backet Checkout"
+                title="Basket Checkout"
                 @show="resetCheckoutModal"
                 @hidden="resetCheckoutModal"
                 @ok="handleCheckoutOk"

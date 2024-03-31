@@ -20,9 +20,9 @@ var explorer = new Vue({
         search_text_tags: [],
         filter_toggles: {
             "cohort": true,
-            "data-category": true,
+            "data_category": true,
             "session": true,
-            "data-type": true,
+            "data_type": true,
             "age": true,
         },
         // Note: the keys and initial values of the all_arrays and filter_arrays objects
@@ -30,19 +30,19 @@ var explorer = new Vue({
         // otherwise these arrays won't be reactive. This changes in Vue 3.
         all_arrays: {
             "cohort": [],
-            "data-category": [],
+            "data_category": [],
             "session": [],
-            "data-type": [],
+            "data_type": [],
             "age": [],
-            "short-name": [],
+            "short_name": [],
         },
         filter_arrays: {
             "cohort": [],
-            "data-category": [],
+            "data_category": [],
             "session": [],
-            "data-type": [],
+            "data_type": [],
             "age": [],
-            "short-name": [],
+            "short_name": [],
         },
         filter_age_min: null,
         filter_age_max: null,
@@ -51,38 +51,32 @@ var explorer = new Vue({
         all_options_loaded: false,
         basket_arrays: {
             "cohort": [],
-            "data-category": [],
+            "data_category": [],
             "session": [],
-            "data-type": [],
+            "data_type": [],
             "age": [],
-            "short-name": [],
+            "short_name": [],
         },
         basket: [],
         basket_length: 0,
         text_keys: {
             "cohort": "Cohort",
-            "data-category": "Data category",
+            "data_category": "Data category",
             "session": "Session",
-            "data-type": "Data type",
+            "data_type": "Data type",
             "age": "Age",
-            "short-name": "Short name"
+            "short_name": "Short name"
         },
         text_keys_multiple: {
             "cohort": "Cohorts",
-            "data-category": "Data categories",
+            "data_category": "Data categories",
             "session": "Sessions",
-            "data-type": "Data types",
+            "data_type": "Data types",
             "age": "Ages",
-            "short-name": "Short names"
+            "short_name": "Short names"
         },
         item_index_to_delete: null,
         file_metadata: null,
-        file_key_map: {
-            "data-category": "data_category",
-            "session": "session",
-            "data-type": "data_type",
-            "short-name": "task",
-        },
         name: '',
         nameState: null,
     },
@@ -92,8 +86,8 @@ var explorer = new Vue({
             return filter_measures.filter((c) => {
                 if (this.search_text_tags.length == 0) return true;
                 return this.search_text_tags.some((v) =>
-                    c["short-name"].toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                    c["long-name"].toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c["short_name"].toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                    c["long_name"].toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
                     c["description"].toLowerCase().indexOf(v.toLowerCase()) >= 0
                 );
             });
@@ -103,13 +97,13 @@ var explorer = new Vue({
         },
         // other
         category_check_icon() {
-            if (this.filter_toggles["data-category"]) {
+            if (this.filter_toggles["data_category"]) {
                 return "fas fa-check"
             }
             return "fas fa-minus"
         },
         type_check_icon() {
-            if (this.filter_toggles["data-type"]) {
+            if (this.filter_toggles["data_type"]) {
                 return "fas fa-check"
             }
             return "fas fa-minus"
@@ -152,15 +146,15 @@ var explorer = new Vue({
         filtered_samples_category() {
             filter_samples = this.filtered_samples_session;
             return filter_samples.filter((sample) => {
-                if (this.filter_arrays["data-category"].length == this.all_arrays["data-category"].length) return true;
-                return this.filter_arrays["data-category"].indexOf(sample["data-category"] ) >= 0
+                if (this.filter_arrays["data_category"].length == this.all_arrays["data_category"].length) return true;
+                return this.filter_arrays["data_category"].indexOf(sample["data_category"] ) >= 0
             });
         },
         filtered_samples_type() {
             filter_samples = this.filtered_samples_category;
             return filter_samples.filter((sample) => {
-                if (this.filter_arrays["data-type"].length == this.all_arrays["data-type"].length) return true;
-                return this.filter_arrays["data-type"].indexOf(sample["data-type"] ) >= 0
+                if (this.filter_arrays["data_type"].length == this.all_arrays["data_type"].length) return true;
+                return this.filter_arrays["data_type"].indexOf(sample["data_type"] ) >= 0
             });
         },
         filtered_samples_age() {
@@ -174,7 +168,7 @@ var explorer = new Vue({
             return this.filtered_samples_age.length
         },
         filtered_participants_count() {
-            var filtered_participants = this.filtered_samples_age.map((m) => (m["ppn"]));
+            var filtered_participants = this.filtered_samples_age.map((m) => (m["subject"]));
             var filtered_participants_list = [...new Set(filtered_participants)]
             return filtered_participants_list.length
         },
@@ -182,16 +176,13 @@ var explorer = new Vue({
             file_list = []
             item_samples = []
             item_files = []
-            console.log("Stats on basket:")
-            file_keys_to_use = ["data-category", "session", "data-type", "short-name"]
+            file_keys_to_use = ["data_category", "session", "data_type", "short_name"]
 
             for (var i=0; i<this.basket.length; i++){
-                console.log("Basket item - " + i)
                 var item = this.basket[i]
                 var samples = this.participant_measures
                 var files = this.file_metadata
                 for (var key in item) {
-                    console.log("key: "+ key)
                     var value = item[key]
                     samples = this.filterSamplesBasket(samples, key, value)
                     if (file_keys_to_use.indexOf(key) >= 0) {
@@ -218,7 +209,7 @@ var explorer = new Vue({
 
             basket_samples = [...new Set(basket_samples)]
 
-            var filtered_participants = basket_samples.map((m) => (m["ppn"]));
+            var filtered_participants = basket_samples.map((m) => (m["subject"]));
             var basket_participants = [...new Set(filtered_participants)]
 
             basket_files = [...new Set(basket_files)]
@@ -242,7 +233,7 @@ var explorer = new Vue({
 
             return files.filter((file) => {
                 if (value.length == this.all_arrays[key].length) return true;
-                return value.indexOf(file[this.file_key_map[key]] ) >= 0
+                return value.indexOf(file[key] ) >= 0
             });
 
         },
@@ -250,16 +241,16 @@ var explorer = new Vue({
             // Add to basket from table view
             if (this.selected_component == 'table') {
                 var selected_shortnames = this.included_measures.map(function(measure) {
-                    return measure["short-name"];
+                    return measure["short_name"];
                 });
 
                 var new_basket_item =  {
                     "cohort": [],
-                    "data-category": [],
+                    "data_category": [],
                     "session": [],
-                    "data-type": [],
+                    "data_type": [],
                     "age": [],
-                    "short-name": selected_shortnames,
+                    "short_name": selected_shortnames,
                 }
                 this.basket_length = this.basket.push(new_basket_item)
                 this.showModal('added-item-modal')
@@ -270,13 +261,13 @@ var explorer = new Vue({
 
                 var new_basket_item =  {
                     "cohort": this.filter_arrays['cohort'],
-                    "data-category": this.filter_arrays['data-category'],
+                    "data_category": this.filter_arrays['data_category'],
                     "session": this.filter_arrays['session'],
-                    "data-type": this.filter_arrays['data-type'],
+                    "data_type": this.filter_arrays['data_type'],
                     "age": this.filter_arrays['age'],
-                    "short-name": [],
+                    "short_name": [],
                 }
-                // new_basket_item["short-name"] = ; TODO: derive this from filtering other keys
+                // new_basket_item["short_name"] = ; TODO: derive this from filtering other keys
                 this.basket_length = this.basket.push(new_basket_item)
                 this.showModal('added-item-modal') 
             }
@@ -388,15 +379,15 @@ var explorer = new Vue({
         })
         .then((responseJson) => {
             this.measure_data = responseJson;
-            this.measure_shortnames = this.measure_data.map((m) => (m["short-name"]));
+            this.measure_shortnames = this.measure_data.map((m) => (m["short_name"]));
             this.measure_data_loaded = true;
             this.measure_headings = [
                 {
-                    key: "short-name",
+                    key: "short_name",
                     label: "Code",
                 },
                 {
-                    key: "long-name",
+                    key: "long_name",
                     label: "Name",
                 },
                 {
@@ -404,11 +395,11 @@ var explorer = new Vue({
                     label: "Description",
                 },
                 {
-                    key: "data-type",
+                    key: "data_type",
                     label: "Type",
                 },
                 {
-                    key: "data-category",
+                    key: "data_category",
                     label: "Category",
                 }
             ]
@@ -438,21 +429,21 @@ var explorer = new Vue({
                     }
                     // construct participant_measure object
                     var part_measure = {
-                        "ppn": part["ppn"],
+                        "subject": part["subject"],
                         "cohort": part["cohort"] ,
                         "session": part["session"] ,
                         "age": part["age"],
-                        "short-name": m_code,
+                        "short_name": m_code,
                     }
-                    // get corresponding measure from short-name
-                    var measure = this.measure_data.find(x => x["short-name"] === m_code);
-                    // complete short-name associated fields
+                    // get corresponding measure from short_name
+                    var measure = this.measure_data.find(x => x["short_name"] === m_code);
+                    // complete short_name associated fields
                     if (measure) {
-                        part_measure["data-type"] = measure["data-type"]
-                        part_measure["data-category"] = measure["data-category"]
+                        part_measure["data_type"] = measure["data_type"]
+                        part_measure["data_category"] = measure["data_category"]
                     } else {
-                        part_measure["data-type"] = null
-                        part_measure["data-category"] = null
+                        part_measure["data_type"] = null
+                        part_measure["data_category"] = null
                     }
                     this.participant_measures.push(part_measure)
                 }
@@ -460,7 +451,7 @@ var explorer = new Vue({
             this.participant_measures_loaded = true;
 
             // Now we need to load all user input options
-            var all_options = ["cohort", "session", "data-type", "data-category", "age"]
+            var all_options = ["cohort", "session", "data_type", "data_category", "age"]
             for (var x=0; x<all_options.length; x++) {
                 var option = all_options[x]
                 var all_opt = "all-" + option
@@ -503,7 +494,6 @@ var explorer = new Vue({
         })
         .then((responseJson) => {
             this.file_metadata = responseJson;
-            console.log(this)
             this.all_options_loaded = true;
         })
     },
