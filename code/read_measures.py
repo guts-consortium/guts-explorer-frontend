@@ -33,7 +33,7 @@ for x,q in enumerate(measures_sheet_list):
 
     # Replace NaN values with empty string
     measure_list[x] = { k: "" if np.isreal(q[k]) and np.isnan(q[k]) else q[k] for k in q.keys()}
-    all_measures.append(measure_list[x]["short-name"])
+    all_measures.append(measure_list[x]["short_name"])
 
 # ensure all measures are unique
 all_measures = list(set(all_measures))
@@ -45,19 +45,3 @@ out_dir.mkdir(parents=True, exist_ok=True)
 out_file = out_dir / 'measure_data.json'
 with open(out_file, 'w') as f:
     json.dump(measure_list, f)
-
-# 2. Read participant level csv file into Pandas dataframe
-participant_fn = Path(sys.argv[2])
-df_participants = pd.read_csv(participant_fn)
-participant_list = df_participants.to_dict('records')
-ppn_list = participant_list.copy()
-
-# for each ppn record:
-for x,q in enumerate(participant_list):  
-    # Replace NaN values with empty string
-    ppn_list[x] = { k: "" if np.isreal(q[k]) and np.isnan(q[k]) else q[k] for k in q.keys()}
-
-# write to file
-out_file = out_dir / 'participant_data.json'
-with open(out_file, 'w') as f:
-    json.dump(ppn_list, f)
