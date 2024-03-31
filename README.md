@@ -59,19 +59,18 @@ Then add the raw input data to the `inputs` directory. The raw input data includ
 
 The `inputs` directory and all its recursive content is not committed to `git` (it is included in `.gitignore`) for data privacy reasons. Whoever runs this code will therefore require separate access to the input data.
 
-#### Step 2 - Convert `.xlsx` sheet and `.csv` metadata to structured JSON
+#### Step 2 - Convert `.xlsx` sheet to structured JSON
 
 This converts the raw input metadata into a more structured and easily filterable JSON array, for use in the metadata exporer.
 
 Run the following from the repo's root directory:
 
 ```python
-python code/read_measures.py inputs/guts-measure-overview_v3.xlsx inputs/guts-ppn-level-measure-overview.csv
+python code/read_measures.py inputs/guts-measure-overview_v4.xlsx
 ```
 
-This will generate the files in the `data` directory:
+This will generate the file in the `data` directory:
 - `measure_data.json`
-- `participant_data.json`
 
 ## Changes, testing, and contributing
 
