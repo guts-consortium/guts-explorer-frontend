@@ -100,20 +100,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-003_participants.tsv",
-        "file_name": "sub-guts-eur-003_participants.tsv",
-        "file_size": 150,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-eur-003",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-003_task-participants.tsv",
         "file_name": "sub-guts-eur-003_task-participants.tsv",
         "file_size": 201,
@@ -156,20 +142,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-017_participants.tsv",
-        "file_name": "sub-guts-eur-017_participants.tsv",
-        "file_size": 150,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-eur-017",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-017_task-participants.tsv",
         "file_name": "sub-guts-eur-017_task-participants.tsv",
         "file_size": 201,
@@ -193,20 +165,6 @@
         "age": "all ages",
         "session": "all sessions",
         "short_name": "participants",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-025_participants.tsv",
-        "file_name": "sub-guts-eur-025_participants.tsv",
-        "file_size": 152,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-eur-025",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
         "file_extension": ".tsv"
     },
     {
@@ -240,20 +198,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-135_participants.tsv",
-        "file_name": "sub-guts-eur-135_participants.tsv",
-        "file_size": 153,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-eur-135",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-135_task-participants.tsv",
         "file_name": "sub-guts-eur-135_task-participants.tsv",
         "file_size": 204,
@@ -268,20 +212,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-212_participants.tsv",
-        "file_name": "sub-guts-eur-212_participants.tsv",
-        "file_size": 150,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-eur-212",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-212_task-participants.tsv",
         "file_name": "sub-guts-eur-212_task-participants.tsv",
         "file_size": 201,
@@ -291,20 +221,6 @@
         "age": "all ages",
         "session": "all sessions",
         "short_name": "participants",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-eur-444_participants.tsv",
-        "file_name": "sub-guts-eur-444_participants.tsv",
-        "file_size": 152,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-eur-444",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
         "file_extension": ".tsv"
     },
     {
@@ -338,20 +254,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-lei-003_participants.tsv",
-        "file_name": "sub-guts-lei-003_participants.tsv",
-        "file_size": 152,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-lei-003",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-lei-003_task-participants.tsv",
         "file_name": "sub-guts-lei-003_task-participants.tsv",
         "file_size": 203,
@@ -375,20 +277,6 @@
         "age": "all ages",
         "session": "all sessions",
         "short_name": "participants",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-lei-005_participants.tsv",
-        "file_name": "sub-guts-lei-005_participants.tsv",
-        "file_size": 152,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-lei-005",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
         "file_extension": ".tsv"
     },
     {
@@ -422,20 +310,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-lei-321_participants.tsv",
-        "file_name": "sub-guts-lei-321_participants.tsv",
-        "file_size": 152,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-lei-321",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-lei-321_task-participants.tsv",
         "file_name": "sub-guts-lei-321_task-participants.tsv",
         "file_size": 203,
@@ -450,20 +324,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-lei-745_participants.tsv",
-        "file_name": "sub-guts-lei-745_participants.tsv",
-        "file_size": 152,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-lei-745",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-lei-745_task-participants.tsv",
         "file_name": "sub-guts-lei-745_task-participants.tsv",
         "file_size": 200,
@@ -473,20 +333,6 @@
         "age": "all ages",
         "session": "all sessions",
         "short_name": "participants",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-lei-812_participants.tsv",
-        "file_name": "sub-guts-lei-812_participants.tsv",
-        "file_size": 151,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-lei-812",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
         "file_extension": ".tsv"
     },
     {
@@ -590,20 +436,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-028_participants.tsv",
-        "file_name": "sub-guts-uva-028_participants.tsv",
-        "file_size": 153,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-uva-028",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-028_task-participants.tsv",
         "file_name": "sub-guts-uva-028_task-participants.tsv",
         "file_size": 204,
@@ -613,20 +445,6 @@
         "age": "all ages",
         "session": "all sessions",
         "short_name": "participants",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-030_participants.tsv",
-        "file_name": "sub-guts-uva-030_participants.tsv",
-        "file_size": 152,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-uva-030",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
         "file_extension": ".tsv"
     },
     {
@@ -646,20 +464,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-052_participants.tsv",
-        "file_name": "sub-guts-uva-052_participants.tsv",
-        "file_size": 150,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-uva-052",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-052_task-participants.tsv",
         "file_name": "sub-guts-uva-052_task-participants.tsv",
         "file_size": 201,
@@ -669,20 +473,6 @@
         "age": "all ages",
         "session": "all sessions",
         "short_name": "participants",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-054_participants.tsv",
-        "file_name": "sub-guts-uva-054_participants.tsv",
-        "file_size": 152,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-uva-054",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
         "file_extension": ".tsv"
     },
     {
@@ -702,20 +492,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-067_participants.tsv",
-        "file_name": "sub-guts-uva-067_participants.tsv",
-        "file_size": 153,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-uva-067",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-067_task-participants.tsv",
         "file_name": "sub-guts-uva-067_task-participants.tsv",
         "file_size": 204,
@@ -725,20 +501,6 @@
         "age": "all ages",
         "session": "all sessions",
         "short_name": "participants",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-068_participants.tsv",
-        "file_name": "sub-guts-uva-068_participants.tsv",
-        "file_size": 153,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-uva-068",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
         "file_extension": ".tsv"
     },
     {
@@ -758,20 +520,6 @@
     {
         "project": "research-guts-dummy",
         "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-069_participants.tsv",
-        "file_name": "sub-guts-uva-069_participants.tsv",
-        "file_size": 153,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-uva-069",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
         "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-069_task-participants.tsv",
         "file_name": "sub-guts-uva-069_task-participants.tsv",
         "file_size": 204,
@@ -781,20 +529,6 @@
         "age": "all ages",
         "session": "all sessions",
         "short_name": "participants",
-        "file_extension": ".tsv"
-    },
-    {
-        "project": "research-guts-dummy",
-        "cohort": "eur",
-        "file_path": "/erasmus/home/research-guts-dummy/sub-guts-uva-070_participants.tsv",
-        "file_name": "sub-guts-uva-070_participants.tsv",
-        "file_size": 153,
-        "data_category": "background-info",
-        "data_type": "na",
-        "subject": "sub-guts-uva-070",
-        "age": "all ages",
-        "session": "all sessions",
-        "short_name": "not found",
         "file_extension": ".tsv"
     },
     {
