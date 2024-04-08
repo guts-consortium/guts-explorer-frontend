@@ -420,6 +420,9 @@ var explorer = new Vue({
             // Loop through all participants and create sample data
             for (var i=0; i<this.participant_data.length; i++) {
                 part = this.participant_data[i]
+                if (part["cohort"] == null) {
+                    continue;
+                }
                 // Loop through all measure shortnames
                 for (var m=0; m<this.measure_shortnames.length; m++) {
                     m_code = this.measure_shortnames[m]
