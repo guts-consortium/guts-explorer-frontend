@@ -21,9 +21,9 @@ jobs:
           WEBDAV_PASSWORD: ${{ secrets.webdav_password }}
         run: |
           echo "Downloading subject-level metadata"
-          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/participant_data.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/guts-subject-level-measure-overview.json
+          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/participant_data.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/guts-subject-level-metadata.json
           echo "Downloading file-level metadata"
-          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/file_metadata.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/metadata_02292024.json
+          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/file_metadata.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/guts-file-level-metadata.json
       - name: Commit if modified
         run: |
           if [[ `git status --porcelain` ]]; then
