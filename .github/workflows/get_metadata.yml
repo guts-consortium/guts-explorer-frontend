@@ -24,15 +24,17 @@ jobs:
           WEBDAV_PASSWORD: ${{ secrets.webdav_password }}
         run: |
           echo "Downloading subject-level metadata"
-          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/participant_data.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/guts-subject-level-metadata.json
+          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/guts-subject-level-metadata.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/guts-subject-level-metadata.json
           echo "Downloading file-level metadata"
-          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/file_metadata.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/guts-file-level-metadata.json
+          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/guts-file-level-metadata.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/guts-file-level-metadata.json
+          echo "Downloading measure-level metadata"
+          curl -u "$WEBDAV_USERNAME":"$WEBDAV_PASSWORD" -o data/guts-measure-overview.json https://erasmus-data.irods.surfsara.nl/research-guts-dummy/metadata/guts-measure-overview.json
       - name: Commit if modified
         run: |
           if [[ `git status --porcelain` ]]; then
             # Changes
             git add --all
-            git commit -m "Update file- and subject-metadata from YODA"
+            git commit -m "Update file-, subject-, and measure- level metadata from YODA"
             git push origin main
           else
             # No changes

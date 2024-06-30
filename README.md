@@ -14,9 +14,7 @@ This application is built using:
 
 The application requires the `JSON`-structured data in the `data` folder in order to render the explorer correctly.
 
-While not necessary for local rendering, the steps below detail how the data can be generated from inputs.
-
-#### Step 0 - development setup
+#### Step 1 - development setup
 
 In order to run the data preparation scripts or serve the application locally, you will first need to get the repository and its contents.
 
@@ -27,7 +25,7 @@ git clone https://github.com/guts-consortium/guts-explorer.git
 cd guts-explorer
 ```
 
-Then you will need to install Python and several packages. Ideally, you should work in a virtual
+Then you will need a recent installation of Python. Ideally, you should work in a virtual
 environment to keep this installation from interfering with other development projects on your system.
 First create and activate a virtual environment, for example with Python `venv` or `miniconda`
 
@@ -41,36 +39,33 @@ conda create -n my_explorer_env
 conda activate my_explorer_env
 ```
 
-Then install the requirements, from the the root directory of this repository
-```
-pip install -r requirements.txt
-```
+#### Step 2 - add directory structure and metadata
 
-#### Step 1 - add raw input data and directory structure
-
-If this subdirectory does not already exist, run the following from the root directory:
+If the `data` subdirectory does not already exist, run the following from the root directory:
 
 ```bash
-mkdir -p inputs
+mkdir -p data
 ```
 
-Then add the raw input data to the `inputs` directory. The raw input data includes:
-- the Excel sheet with all measure metadata, named along the lines of `guts-measure_overview*.xlsx`.
+Then add the necessary three metadata files to this directory:
 
-The `inputs` directory and all its recursive content is not committed to `git` (it is included in `.gitignore`) for data privacy reasons. Whoever runs this code will therefore require separate access to the input data.
+- `data/guts-subject-level-metadata.json`
+- `data/guts-file-level-metadata.json`
+- `data/guts-measure-overview.json`
 
-#### Step 2 - Convert `.xlsx` sheet to structured JSON
+These three files are shared privately via YODA, or in a specific session in the metadata board.
+Examples with dummy data are already available in this repository.
 
-This converts the raw input metadata into a more structured and easily filterable JSON array, for use in the metadata exporer.
+#### Step 3 - Render the application locally
 
-Run the following from the repo's root directory:
+From the root directory, run:
 
-```python
-python code/read_measures.py inputs/guts-measure-overview_v4.xlsx
+```
+python -m http.server
 ```
 
-This will generate the file in the `data` directory:
-- `measure_data.json`
+Then navigate to http://localhost:8000/ in your browser.
+
 
 ## Changes, testing, and contributing
 

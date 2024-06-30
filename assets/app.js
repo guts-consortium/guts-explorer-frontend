@@ -24,6 +24,7 @@ var explorer = new Vue({
             "session": true,
             "data_type": true,
             "age": true,
+            "state": true,
         },
         // Note: the keys and initial values of the all_arrays and filter_arrays objects
         // below have to be declared here (as opposed to just `all_arrays: {}`) because
@@ -35,6 +36,7 @@ var explorer = new Vue({
             "data_type": [],
             "age": [],
             "short_name": [],
+            "state": [],
         },
         filter_arrays: {
             "cohort": [],
@@ -43,6 +45,7 @@ var explorer = new Vue({
             "data_type": [],
             "age": [],
             "short_name": [],
+            "state": [],
         },
         filter_age_min: null,
         filter_age_max: null,
@@ -56,6 +59,7 @@ var explorer = new Vue({
             "data_type": [],
             "age": [],
             "short_name": [],
+            "state": [],
         },
         basket: [],
         basket_length: 0,
@@ -65,7 +69,9 @@ var explorer = new Vue({
             "session": "Session",
             "data_type": "Data type",
             "age": "Age",
-            "short_name": "Short name"
+            "short_name": "Short name",
+            "state": "Data state",
+
         },
         text_keys_multiple: {
             "cohort": "Cohorts",
@@ -73,12 +79,24 @@ var explorer = new Vue({
             "session": "Sessions",
             "data_type": "Data types",
             "age": "Ages",
-            "short_name": "Short names"
+            "short_name": "Short names",
+            "state": "Data states",
         },
         item_index_to_delete: null,
         file_metadata: null,
+        checkout_form_state: {},
+        checkout_form_data: {},
+        // basket checkout data
         name: '',
         nameState: null,
+        affiliation: '',
+        members: '',
+        email: '',
+        title: '',
+        description: '',
+        date: null,
+        comments: '',
+        status: '',    
     },
     computed: {
         included_measures_tags() {
@@ -126,6 +144,12 @@ var explorer = new Vue({
             }
             return "fas fa-minus"
         },
+        state_check_icon() {
+            if (this.filter_toggles["state"]) {
+                return "fas fa-check"
+            }
+            return "fas fa-minus"
+        },
         included_samples() {
             return this.participant_measures
         },
@@ -164,11 +188,19 @@ var explorer = new Vue({
                 return this.filter_arrays["age"].indexOf(sample["age"] ) >= 0
             });
         },
+        filtered_samples_state() {
+            // sample["state"] is an array with ["primary", "derivative"]
+            filter_samples = this.filtered_samples_age;
+            return filter_samples.filter((sample) => {
+                if (this.filter_arrays["state"].length == this.all_arrays["state"].length) return true;
+                return  this.filter_arrays["state"].filter(value => sample['state'].includes(value)).length > 0
+            });
+        },
         filtered_samples_count() {
-            return this.filtered_samples_age.length
+            return this.filtered_samples_state.length
         },
         filtered_participants_count() {
-            var filtered_participants = this.filtered_samples_age.map((m) => (m["subject"]));
+            var filtered_participants = this.filtered_samples_state.map((m) => (m["subject"]));
             var filtered_participants_list = [...new Set(filtered_participants)]
             return filtered_participants_list.length
         },
@@ -182,11 +214,23 @@ var explorer = new Vue({
                 var item = this.basket[i]
                 var samples = this.participant_measures
                 var files = this.file_metadata
+                // for all keys ["cohort","data_category","session","data_type","age","short_name","state"] in basket item:
+                // filter all samples by key, recursively
+                // filter all files by key, recursively, if key is in file metadata keys
+                // handle state separately
                 for (var key in item) {
                     var value = item[key]
-                    samples = this.filterSamplesBasket(samples, key, value)
+                    if (key == "state") {
+                        samples = this.filterSamplesBasketState(samples, key, value)
+                    } else {
+                        samples = this.filterSamplesBasket(samples, key, value)
+                    }
                     if (file_keys_to_use.indexOf(key) >= 0) {
                         files = this.filterFilesBasket(files, key, value)
+                    }
+                    if (key == "state") {
+                        // corresponding key in file metadata is "file_state"
+                        files = this.filterFilesBasket(files, "file_state", value)
                     }
                 }
                 item_samples.push(samples)
@@ -229,13 +273,19 @@ var explorer = new Vue({
             });
 
         },
-        filterFilesBasket(files, key, value) {
-
-            return files.filter((file) => {
+        filterSamplesBasketState(samples, key, value) {
+            return samples.filter((sample) => {
                 if (value.length == this.all_arrays[key].length) return true;
+                return  value.filter(val => sample[key].includes(val)).length > 0
+            });
+        },
+        filterFilesBasket(files, key, value) {
+            const k = key == "file_state" ? "state" : key
+            return files.filter((file) => {
+
+                if (value.length == this.all_arrays[k].length) return true;
                 return value.indexOf(file[key] ) >= 0
             });
-
         },
         addToBasket() {
             // Add to basket from table view
@@ -243,38 +293,32 @@ var explorer = new Vue({
                 var selected_shortnames = this.included_measures.map(function(measure) {
                     return measure["short_name"];
                 });
-
                 var new_basket_item =  {
-                    "cohort": [],
-                    "data_category": [],
-                    "session": [],
-                    "data_type": [],
-                    "age": [],
+                    "cohort": this.all_arrays['cohort'],
+                    "data_category": this.all_arrays["data_category"],
+                    "session": this.all_arrays["session"],
+                    "data_type": this.all_arrays["data_type"],
+                    "age": this.all_arrays["age"],
                     "short_name": selected_shortnames,
+                    "state": this.all_arrays["state"],
                 }
                 this.basket_length = this.basket.push(new_basket_item)
                 this.showModal('added-item-modal')
             }
-
             // Add to basket from checkboxes view
             if (this.selected_component == 'checkboxes') {
-
                 var new_basket_item =  {
                     "cohort": this.filter_arrays['cohort'],
                     "data_category": this.filter_arrays['data_category'],
                     "session": this.filter_arrays['session'],
                     "data_type": this.filter_arrays['data_type'],
                     "age": this.filter_arrays['age'],
-                    "short_name": [],
+                    "short_name": this.measure_shortnames,
+                    "state": this.filter_arrays['state'],
                 }
-                // new_basket_item["short_name"] = ; TODO: derive this from filtering other keys
                 this.basket_length = this.basket.push(new_basket_item)
                 this.showModal('added-item-modal') 
             }
-
-            // for (var key in this.filter_arrays) {
-            //     this.basket_arrays[key] = [...new Set(this.basket_arrays[key].concat(this.filter_arrays[key]))]
-            // }
         },
         deleteBasketItemCheck(index) {
             this.item_index_to_delete = index;
@@ -349,31 +393,28 @@ var explorer = new Vue({
                 return
             }
             // Push the name to submitted names
-
             var dl_object = {
                 name: this.name,
                 files: this.basket_stats.files
             }
-
             downloadArrayAsFormat(dl_object, "json", "my_guts_basket")
-            
             // Hide the modal manually
             this.$nextTick(() => {
                 this.$bvModal.hide('basket-checkout-modal')
             })
         }
-
     },
     beforeMount() {
         // Load text for headings/paragraphs
-        measure_data_file = 'data/measure_data.json'
+        // measure_data_file = 'data/measure_data.json'
+        measure_data_file = 'data/guts-measure-overview.json'
         fetch(measure_data_file)
         .then((response) => {
             if (response.ok) {
                 return response.json();
             } else {
-                console.log(
-                    "WARNING: measure_data.json file could not be loaded"
+                console.error(
+                    "ERROR: measure_data.json file could not be loaded"
                 );
             }
         })
@@ -403,40 +444,56 @@ var explorer = new Vue({
                     label: "Category",
                 }
             ]
-            participant_data_file = 'data/participant_data.json'
+            participant_data_file = 'data/guts-subject-level-metadata.json'
             return fetch(participant_data_file)
         })
         .then((response) => {
             if (response.ok) {
                 return response.json();
             } else {
-                console.log(
-                    "WARNING: participant_data.json file could not be loaded"
+                console.error(
+                    "ERROR: participant_data.json file could not be loaded"
                 );
             }
         })
         .then((responseJson) => {
             this.participant_data = responseJson;
+            console.log("NUMBER OF PARTICIPANTS:")
+            console.log(this.participant_data.length)
             // Loop through all participants and create sample data
+            var p = 0
             for (var i=0; i<this.participant_data.length; i++) {
                 part = this.participant_data[i]
                 if (part["cohort"] == null) {
+                    console.log(`Participant without cohort: ${part['subject']}`)
                     continue;
                 }
                 // Loop through all measure shortnames
                 for (var m=0; m<this.measure_shortnames.length; m++) {
                     m_code = this.measure_shortnames[m]
                     // skip measure if it is not collected for the participant
-                    if (!part.hasOwnProperty(m_code) || !part[m_code]) {
+                    // need to check for both primary and derivative state, only skip if both are 0
+                    if (!part.hasOwnProperty(m_code) || (!part[m_code]["primary"] && !part[m_code]["derivative"]) ) {
                         continue
+
                     }
                     // construct participant_measure object
+                    // get data states:
+                    var states = []
+                    if (part[m_code]["primary"]) {
+                        states.push("primary")
+                    }
+                    if (part[m_code]["derivative"]) {
+                        states.push("derivative")
+                    }
+                    
                     var part_measure = {
                         "subject": part["subject"],
                         "cohort": part["cohort"] ,
                         "session": part["session"] ,
                         "age": part["age"],
                         "short_name": m_code,
+                        "state": states,
                     }
                     // get corresponding measure from short_name
                     var measure = this.measure_data.find(x => x["short_name"] === m_code);
@@ -448,6 +505,7 @@ var explorer = new Vue({
                         part_measure["data_type"] = null
                         part_measure["data_category"] = null
                     }
+                    p+=1
                     this.participant_measures.push(part_measure)
                 }
             }
@@ -479,19 +537,28 @@ var explorer = new Vue({
             this.age_list = [...new Set(this.all_ages)].sort()
             this.age_min = Math.min.apply(null, this.age_list)
             this.age_max = Math.max.apply(null, this.age_list)
-
             this.filter_age_min = this.age_min
             this.filter_age_max = this.age_max
 
-            file_metadata_file = 'data/file_metadata.json'
+            // states
+            this.all_states = ["primary", "derivative"]
+            this.state_list = ["primary", "derivative"]
+            this.state_options = [
+                {value: 'all', text: 'All'},
+                {value: "primary", text: "Primary"},
+                {value: "derivative", text: "Derivative"}
+            ]
+            this.all_arrays["state"] = this.state_list
+            this.filter_arrays["state"] = this.all_arrays["state"]
+            file_metadata_file = 'data/guts-file-level-metadata.json'
             return fetch(file_metadata_file)
         })
         .then((response) => {
             if (response.ok) {
                 return response.json();
             } else {
-                console.log(
-                    "WARNING: file_metadata.json file could not be loaded"
+                console.error(
+                    "ERROR: file_metadata.json file could not be loaded"
                 );
             }
         })

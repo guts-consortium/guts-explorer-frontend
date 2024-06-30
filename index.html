@@ -188,7 +188,7 @@
                             </b-form-group>
                         </b-col>
                         <b-col>
-                            <!-- TYPE -->
+                            <!-- AGE -->
                             <b-form-group v-slot="{ ariaDescribedbyAge }">
                                 <label for="age_checkbox" class="filter-label"><i class="fas fa-ruler"></i>&nbsp;Ages</label>
                                 <br>
@@ -204,18 +204,37 @@
                         </b-col>
                         <b-col cols="4">
                             <b-row>
-                                <b-form-group v-slot="{ ariaDescribedbyCohort }">
-                                    <label for="cohorts_checkbox" class="filter-label"><i class="fas fa-table-columns"></i>&nbsp;Cohorts</label>
-                                    <br>
-                                    <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('cohort')"><i :class="cohort_check_icon"></i></b-button> <em>All</em></span>
-                                    <b-form-checkbox-group
-                                        id="cohorts_checkbox"
-                                        v-model="filter_arrays['cohort']"
-                                        :options="all_arrays['cohort']"
-                                        :aria-describedby="ariaDescribedbyCohort"
-                                        name="flavour-0"
-                                    ></b-form-checkbox-group>
-                                </b-form-group>
+                                <b-col>
+                                    <b-form-group v-slot="{ ariaDescribedbyCohort }">
+                                        <label for="cohorts_checkbox" class="filter-label"><i class="fas fa-table-columns"></i>&nbsp;Cohorts</label>
+                                        <br>
+                                        <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('cohort')"><i :class="cohort_check_icon"></i></b-button> <em>All</em></span>
+                                        <b-form-checkbox-group
+                                            id="cohorts_checkbox"
+                                            v-model="filter_arrays['cohort']"
+                                            :options="all_arrays['cohort']"
+                                            :aria-describedby="ariaDescribedbyCohort"
+                                            name="flavour-0"
+                                        ></b-form-checkbox-group>
+                                    </b-form-group>
+                                    
+                                </b-col>
+                                <b-col>
+                                    <b-form-group v-slot="{ ariaDescribedbyState }">
+                                        <label for="state_checkbox" class="filter-label"><i class="fas fa-diagram-project"></i>&nbsp;States</label>
+                                        <br>
+                                        <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('state')"><i :class="state_check_icon"></i></b-button> <em>All</em></span>
+                                        <b-form-checkbox-group
+                                            id="state_checkbox"
+                                            v-model="filter_arrays['state']"
+                                            :options="all_arrays['state']"
+                                            :aria-describedby="ariaDescribedbyState"
+                                            name="flavour-0"
+                                        ></b-form-checkbox-group>
+                                    </b-form-group>
+
+                                </b-col>
+                                
                             </b-row>
                             <br><br>
                             <h3>Current selection:</h3>
@@ -260,14 +279,15 @@
                 <b-container v-if="basket.length > 0">
                     <b-row>
                         <b-col cols="9">
-                            <b-card v-for="(item, index) in basket" border-variant="dark" header-bg-variant="transparent" no-body class="mb-2 pt-1">
+                            <b-card v-for="(item, index) in basket" :key="index" border-variant="dark" header-bg-variant="transparent" no-body class="mb-2 pt-1">
                                 <template v-slot:header>
                                 <b-row no-gutters>
                                     <b-col align-h="center" align-v="center" md="1">
                                     <span class="xxlfont"><i :class="'fas fa-' + String(index+1)"></i></span>
                                     </b-col>
-                                    <b-col class="text-muted" md="10">
+                                    <b-col class="text-muted" md="6">
                                         <h6 v-for="(value, key, idx) in item">
+                                            <span v-if="key != 'include_data_state'">
                                             {{text_keys_multiple[key]}}:
                                             <em>
                                                 <span v-if="value.length == 0 || value === all_arrays[key]">
@@ -277,7 +297,12 @@
                                                     <span v-for="val in value">{{val}}, </span>
                                                 </span>
                                             </em>
+                                            </span>
                                         </h6>
+                                    </b-col>
+                                    <b-col md="4">
+                                        
+
                                     </b-col>
                                     <b-col md="1">
                                         <b-button size="sm" variant="dark" @click="deleteBasketItemCheck(index)"><i class="fas fa-trash-can"></i></b-button>
@@ -334,10 +359,15 @@
                 >
 
                 <em>
-                Please complete the following information and then click "OK".
-                <br><br>
-                Once the metadata file has been downloaded, please send it via
-                email to <a href="mailto:guts@example.com">guts@example.com</a>.
+                    Please complete the following information to create a data request
+                    (currently only GUTS researchers can request data). This information
+                    will be attached to the metadata file. Once you have downloaded the file,
+                    please send it via email to <a href="mailto:guts@example.com">guts@example.com</a>.
+                    The GUTS Steering Committee will evaluate your request. Once approved,
+                    the data manager will make the data available to you via YODA.
+                    <br><br>
+                    Note that in future, we plan to include functionality to directly request
+                    data via this form.
                 </em>
                 <br><br>
                 <form ref="form" @submit.stop.prevent="handleSubmit">
@@ -354,7 +384,85 @@
                             required
                         ></b-form-input>
                     </b-form-group>
+                    <b-form-group
+                        label="Affiliation"
+                        label-for="affiliation-input">
+                        <b-form-input
+                            id="affiliation-input"
+                            v-model="affiliation"
+                            required
+                        ></b-form-input>
+                    </b-form-group>
                     
+                    <b-form-group
+                        label="Email address"
+                        label-for="email-input">
+                        <b-form-input
+                            id="email-input"
+                            v-model="email"
+                            required
+                            type="email"
+                        ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                        label="Project members"
+                        label-for="members-input">
+                        <b-form-input
+                            id="members-input"
+                            v-model="members"
+                            required
+                        ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                        label="Project title"
+                        label-for="title-input">
+                        <b-form-input
+                            id="title-input"
+                            v-model="title"
+                            required
+                        ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                        label="Project description"
+                        label-for="description-input">
+                        <b-form-input
+                            id="description-input"
+                            v-model="description"
+                            required
+                        ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                        label="Access data until"
+                        label-for="date-input">
+                        <b-form-input
+                            id="date-input"
+                            v-model="date"
+                            required
+                            type="date"
+                        ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                        label="Additional comments"
+                        label-for="comments-input">
+                        <b-form-textarea
+                            id="comments-input"
+                            v-model="comments"
+                            placeholder=""
+                            rows="3"
+                            max-rows="6"
+                            required
+                        ></b-form-textarea>
+                    </b-form-group>
+                    <br>
+                    <b-form-checkbox
+                        id="checkbox-1"
+                        v-model="status"
+                        name="checkbox-1"
+                        value="accepted"
+                        unchecked-value="not_accepted"
+                    >
+                        I am aware of and accept the data use policy
+                    </b-form-checkbox>
                 </form>
             </b-modal>
 
