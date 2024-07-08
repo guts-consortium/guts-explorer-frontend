@@ -45,7 +45,6 @@ export function useBasket(all_arrays, filter_arrays) {
                 "state": all_arrays["state"],
             }
             basket_length = basket.push(new_basket_item)
-            this.showModal('added-item-modal')
         }
         // Add to basket from checkboxes view
         if (addFrom == 'checkboxes') {
@@ -59,7 +58,6 @@ export function useBasket(all_arrays, filter_arrays) {
                 "state": filter_arrays['state'],
             }
             basket_length = basket.push(new_basket_item)
-            this.showModal('added-item-modal') 
         }
     }
 

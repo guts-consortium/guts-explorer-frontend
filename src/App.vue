@@ -121,6 +121,7 @@
   provide('measure_data', measure_data)
   provide('all_arrays', all_arrays)
   provide('filter_arrays', filter_arrays)
+  provide('participant_measures', participant_measures)
   provide('basket', basket)
   provide('addToBasket', addToBasket)
   provide('selected_component', selected_component)

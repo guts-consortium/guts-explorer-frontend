@@ -45,7 +45,7 @@
           <v-btn small outlined color="dark" @click="resetTable">
             <v-icon left>mdi-rotate-left</v-icon> Reset Table
           </v-btn>
-          <v-btn small outlined color="dark" @click="addToBasket('table', included_measures)">
+          <v-btn small outlined color="dark" @click="addToBasket('table', included_measures); showModal('addedItemModal')">
             <v-icon left>mdi-cart-plus</v-icon> Add Table to Basket
           </v-btn>
         </v-col>
@@ -82,8 +82,8 @@
             <h3>You now have {{ basket.length }} {{ basket.length > 1 ? 'items' : 'item' }} in your basket</h3>
         </v-card-text>
         <v-card-actions>
-            <v-btn color="primary" block @click="hideModal('addedItemModal')">Continue Browsing</v-btn>
-            <v-btn color="warning" block @click="viewBasket">View Basket</v-btn>
+            <v-btn text="Continue Browsing" @click="hideModal('addedItemModal')"></v-btn>
+            <v-btn text="View Basket" @click="viewBasket"></v-btn>
         </v-card-actions>
         </v-card>
     </v-dialog>

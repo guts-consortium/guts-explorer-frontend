@@ -1,133 +1,228 @@
 <template>
-    <h3 class="page-heading"> &nbsp;&nbsp; <i class="fas fa-magnifying-glass"></i>&nbsp;Find samples by specific keys</h3>
+    <v-container>
+      <h3 class="page-heading">
+        &nbsp;&nbsp; <v-icon>mdi-magnify</v-icon>&nbsp;Find samples by specific keys
+      </h3>
+      
+      <v-card class="pa-4" color="var(--guts-pink)" dark>
+        <v-row>
+          <!-- SESSIONS -->
+          <v-col cols="2">
+              <label class="filter-label"><v-icon>mdi-view-list</v-icon>&nbsp;Sessions</label>
+              <br>
+              <v-checkbox v-model="session_all" label="All" @update:modelValue="toggleChecks('session')" class="my-0" density="compact" hide-details></v-checkbox>
+              <span v-for="opt in all_arrays['session']" class="my-0">
+                <v-checkbox v-model="filter_arrays['session']" :label="String(opt)" :value="opt" class="my-0" density="compact" hide-details></v-checkbox>
+              </span>
+          </v-col>
+          
+          <!-- CATEGORY -->
+          <v-col cols="2">
+              <label class="filter-label"><v-icon>mdi-chart-pie</v-icon>&nbsp;Categories</label>
+              <br>
+              <v-checkbox v-model="category_all" label="All" @update:modelValue="toggleChecks('data_category')" class="my-0" density="compact" hide-details></v-checkbox>
+              <span v-for="opt in all_arrays['data_category']">
+                <v-checkbox v-model="filter_arrays['data_category']" :label="String(opt)" :value="opt" class="my-0" density="compact" hide-details></v-checkbox>
+              </span>
+              
+          </v-col>
+          
+          <!-- TYPE -->
+          <v-col cols="2">
+              <label class="filter-label"><v-icon>mdi-ruler</v-icon>&nbsp;Types</label>
+              <br>
+              <v-checkbox v-model="type_all" label="All" @update:modelValue="toggleChecks('data_type')" class="my-0" density="compact" hide-details></v-checkbox>
+              <span v-for="opt in all_arrays['data_type']">
+                <v-checkbox v-model="filter_arrays['data_type']" :label="String(opt)" :value="opt" class="my-0" density="compact" hide-details></v-checkbox>
+              </span>
+              
+          </v-col>
+          
+          <!-- AGE -->
+          <v-col>
+              <label class="filter-label"><v-icon>mdi-numeric-9-plus-box-multiple-outline</v-icon>&nbsp;Ages</label>
+              <br>
+              <v-checkbox v-model="age_all" label="All" @update:modelValue="toggleChecks('age')" class="my-0" density="compact" hide-details></v-checkbox>
+              <span v-for="opt in all_arrays['age']">
+                <v-checkbox v-model="filter_arrays['age']" :label="String(opt)" :value="opt" class="my-0" density="compact" hide-details></v-checkbox>
+              </span>
+              
+          </v-col>
+          
+          <!-- COHORTS & STATES -->
+          <v-col cols="4">
+            <v-row>
+              <!-- COHORTS -->
+              <v-col>
+                  <label class="filter-label"><v-icon>mdi-table</v-icon>&nbsp;Cohorts</label>
+                  <br>
+                  <v-checkbox v-model="cohort_all" label="All" @update:modelValue="toggleChecks('cohort')" class="my-0" density="compact" hide-details></v-checkbox>
+                  <span v-for="opt in all_arrays['cohort']">
+                    <v-checkbox v-model="filter_arrays['cohort']" :label="String(opt)" :value="opt" class="my-0" density="compact" hide-details></v-checkbox>
+                  </span>
+                  
+              </v-col>
+              
+              <!-- STATES -->
+              <v-col>
+                  <label class="filter-label"><v-icon>mdi-state-machine</v-icon>&nbsp;States</label>
+                  <br>
+                  <v-checkbox v-model="state_all" label="All" @update:modelValue="toggleChecks('state')" class="my-0" density="compact" hide-details></v-checkbox>
+                  <span v-for="opt in all_arrays['state']">
+                    <v-checkbox v-model="filter_arrays['state']" :label="String(opt)" :value="opt" class="my-0" density="compact" hide-details></v-checkbox>
+                  </span>
+                  
+              </v-col>
+            </v-row>
             
-    <b-card style="background-color: var(--guts-pink); color: white">
-        <b-row>
-            <b-col cols="2">
-                <!-- SESSIONS -->
-                <b-form-group v-slot="{ ariaDescribedbySes }">
-                <label for="session_checkbox" class="filter-label"><i class="fas fa-list"></i>&nbsp;Sessions</label>
-                <br>
-                <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('session')"><i :class="session_check_icon"></i></b-button> <em>All</em></span>
-                    <b-form-checkbox-group
-                        id="session_checkbox"
-                        v-model="filter_arrays['session']"
-                        :options="all_arrays['session']"
-                        :aria-describedby="ariaDescribedbySes"
-                        name="flavour-2"
-                    ></b-form-checkbox-group>
-                </b-form-group>
-            </b-col>
-            <b-col cols="2">
-                <!-- CATEGORY -->
-                <b-form-group v-slot="{ ariaDescribedbyCat }">
-                <label for="category_checkbox" class="filter-label"><i class="fas fa-pie-chart"></i>&nbsp;Categories</label>
-                <br>
-                <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('data_category')"><i :class="category_check_icon"></i></b-button> <em>All</em></span>
-                    <b-form-checkbox-group
-                        id="category_checkbox"
-                        v-model="filter_arrays['data_category']"
-                        :options="all_arrays['data_category']"
-                        :aria-describedby="ariaDescribedbyCat"
-                        name="flavour-1"
-                    ></b-form-checkbox-group>
-                </b-form-group>
-            </b-col>
-            <!-- <b-col cols="1"></b-col> -->
-            <b-col cols="2">
-                <!-- TYPE -->
-                <b-form-group v-slot="{ ariaDescribedbyType }">
-                <label for="type_checkbox" class="filter-label"><i class="fas fa-ruler"></i>&nbsp;Types</label>
-                <br>
-                <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('data_type')"><i :class="type_check_icon"></i></b-button> <em>All</em></span>
-                    <b-form-checkbox-group
-                        id="type_checkbox"
-                        v-model="filter_arrays['data_type']"
-                        :options="all_arrays['data_type']"
-                        :aria-describedby="ariaDescribedbyType"
-                        name="flavour-2"
-                    ></b-form-checkbox-group>
-                </b-form-group>
-            </b-col>
-            <b-col>
-                <!-- AGE -->
-                <b-form-group v-slot="{ ariaDescribedbyAge }">
-                    <label for="age_checkbox" class="filter-label"><i class="fas fa-ruler"></i>&nbsp;Ages</label>
-                    <br>
-                    <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('age')"><i :class="age_check_icon"></i></b-button> <em>All</em></span>
-                        <b-form-checkbox-group
-                            id="age_checkbox"
-                            v-model="filter_arrays['age']"
-                            :options="all_arrays['age']"
-                            :aria-describedby="ariaDescribedbyAge"
-                            name="flavour-2"
-                        ></b-form-checkbox-group>
-                    </b-form-group>
-            </b-col>
-            <b-col cols="4">
-                <b-row>
-                    <b-col>
-                        <b-form-group v-slot="{ ariaDescribedbyCohort }">
-                            <label for="cohorts_checkbox" class="filter-label"><i class="fas fa-table-columns"></i>&nbsp;Cohorts</label>
-                            <br>
-                            <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('cohort')"><i :class="cohort_check_icon"></i></b-button> <em>All</em></span>
-                            <b-form-checkbox-group
-                                id="cohorts_checkbox"
-                                v-model="filter_arrays['cohort']"
-                                :options="all_arrays['cohort']"
-                                :aria-describedby="ariaDescribedbyCohort"
-                                name="flavour-0"
-                            ></b-form-checkbox-group>
-                        </b-form-group>
-                        
-                    </b-col>
-                    <b-col>
-                        <b-form-group v-slot="{ ariaDescribedbyState }">
-                            <label for="state_checkbox" class="filter-label"><i class="fas fa-diagram-project"></i>&nbsp;States</label>
-                            <br>
-                            <span><b-button variant="outline-light" size="sm" style="padding: 1px;" @click="toggleChecks('state')"><i :class="state_check_icon"></i></b-button> <em>All</em></span>
-                            <b-form-checkbox-group
-                                id="state_checkbox"
-                                v-model="filter_arrays['state']"
-                                :options="all_arrays['state']"
-                                :aria-describedby="ariaDescribedbyState"
-                                name="flavour-0"
-                            ></b-form-checkbox-group>
-                        </b-form-group>
-
-                    </b-col>
-                    
-                </b-row>
-                <br><br>
-                <h3>Current selection:</h3>
-                <b-row>
-                    <div class="samples-div">
-                        <div class="samples-count">{{filtered_samples_count}}</div>
-                        <div class="samples-count-text">samples</div>
-                    </div>
-                </b-row>
-                <br>
-                <b-row>
-                    <div class="samples-div">
-                        <div class="samples-count">{{filtered_participants_count}}</div>
-                        <div class="samples-count-text">participants</div>
-                    </div>
-                </b-row>
-            </b-col>
-        </b-row>
+            <br><br>
+            <h3>Current selection:</h3>
+            <v-row>
+              <v-col>
+                <div class="samples-div">
+                  <div class="samples-count">{{filtered_samples_count}}</div>
+                  <div class="samples-count-text">samples</div>
+                </div>
+              </v-col>
+            </v-row>
+            <br>
+            <v-row>
+              <v-col>
+                <div class="samples-div">
+                  <div class="samples-count">{{filtered_participants_count}}</div>
+                  <div class="samples-count-text">participants</div>
+                </div>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+        
         <br><br>
-        <b-row>
-            <b-col style="text-align: left;">
-                <b-button size="sm" variant="outline-light" class="option-button" @click="resetTable()"><i class="fas fa-rotate-left"></i> Reset Selection</b-button>
-                <b-button size="sm" variant="outline-light" @click="addToBasket('checkboxes')"><i class="fas fa-cart-plus"></i> Add Selection to Basket</b-button>
-            </b-col>
-        </b-row>
-    </b-card>
+        <v-row>
+          <v-col class="text-left">
+            <v-btn small outlined class="option-button" @click="resetTable()">
+              <v-icon>mdi-rotate-left</v-icon> Reset Selection
+            </v-btn>
+            <v-btn small outlined @click="addToBasket('checkboxes'); showModal('addedItemModal')">
+              <v-icon>mdi-cart-plus</v-icon> Add Selection to Basket
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-container>
 
-</template>
+    <v-dialog v-model="showAddedItemModal" max-width="500px">
+        <v-card>
+        <v-card-title>Added to basket!</v-card-title>
+        <v-card-text class="text-center">
+            <h3>You now have {{ basket.length }} {{ basket.length > 1 ? 'items' : 'item' }} in your basket</h3>
+        </v-card-text>
+        <v-card-actions>
+            <v-btn text="Continue Browsing" @click="hideModal('addedItemModal')"></v-btn>max-width="500px"
+            <v-btn text="View Basket" @click="viewBasket"></v-btn>
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+  </template>
+
+
 
 <script setup>
-    import { inject, computed } from 'vue'
+    import { inject, reactive, computed, ref } from 'vue'
+
+    const all_arrays = inject('all_arrays')
+    const filter_arrays = inject('filter_arrays')
+    const participant_measures = inject('participant_measures')
+    const basket = inject('basket')
+    const addToBasket = inject('addToBasket')
+
+    const session_all = ref(true)
+    const category_all = ref(true)
+    const type_all = ref(true)
+    const state_all = ref(true)
+    const age_all = ref(true)
+    const cohort_all = ref(true)
+
+    const filter_toggles = reactive({
+        "cohort": true,
+        "data_category": true,
+        "session": true,
+        "data_type": true,
+        "age": true,
+        "state": true,
+    })
+    const showAddedItemModal = ref(false);
+
+    function toggleChecks(name) {
+        filter_toggles[name] = !filter_toggles[name]
+        if (filter_toggles[name]) {
+            filter_arrays[name] = all_arrays[name]
+        }
+        else {
+            filter_arrays[name] = []
+        }
+    }
+
+    function viewBasket() {
+        showAddedItemModal.value = false;
+        selected_component.value = 'basket'
+    }
+
+    const showModal = (modalRef) => {
+      showAddedItemModal.value = true;
+    };
+
+    const hideModal = (modalRef) => {
+      showAddedItemModal.value = false;
+    };
+
+    const filtered_samples_cohort = computed(() => {
+        return participant_measures.value.filter((sample) => {
+            if (filter_arrays["cohort"].length == all_arrays["cohort"].length) return true;
+            return filter_arrays["cohort"].indexOf(sample["cohort"] ) >= 0
+        });
+    });
+    const filtered_samples_session = computed(() => {
+        return filtered_samples_cohort.value.filter((sample) => {
+            if (filter_arrays["session"].length == all_arrays["session"].length) return true;
+            return filter_arrays["session"].indexOf(sample["session"] ) >= 0
+        });
+    });
+    const filtered_samples_category = computed(() => {
+        return filtered_samples_session.value.filter((sample) => {
+            if (filter_arrays["data_category"].length == all_arrays["data_category"].length) return true;
+            return filter_arrays["data_category"].indexOf(sample["data_category"] ) >= 0
+        });
+    });
+    const filtered_samples_type = computed(() => {
+        return filtered_samples_category.value.filter((sample) => {
+            if (filter_arrays["data_type"].length == all_arrays["data_type"].length) return true;
+            return filter_arrays["data_type"].indexOf(sample["data_type"] ) >= 0
+        });
+    });
+    const filtered_samples_age = computed(() => {
+        return filtered_samples_type.value.filter((sample) => {
+            if (filter_arrays["age"].length == all_arrays["age"].length) return true;
+            return filter_arrays["age"].indexOf(sample["age"] ) >= 0
+        });
+    });
+    const filtered_samples_state = computed(() => {
+        // sample["state"] is an array with ["primary", "derivative"]
+        return filtered_samples_age.value.filter((sample) => {
+            if (filter_arrays["state"].length == all_arrays["state"].length) return true;
+            return  filter_arrays["state"].filter(value => sample['state'].includes(value)).length > 0
+        });
+    });
+    const filtered_samples_count = computed(() => {
+        return filtered_samples_state.value.length
+    });
+    const filtered_participants_count = computed(() => {
+        var filtered_participants = filtered_samples_state.value.map((m) => (m["subject"]));
+        var filtered_participants_list = [...new Set(filtered_participants)]
+        return filtered_participants_list.length
+    });
+
 </script>
 
 
