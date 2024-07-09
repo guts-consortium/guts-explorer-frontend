@@ -110,12 +110,8 @@
 
   const {
     basket,
-    filterSamplesBasket,
-    filterSamplesBasketState,
-    filterFilesBasket,
     addToBasket,
-    deleteBasketItem,
-    deleteBasketItemCheck
+    getBasketStats
   } = useBasket(all_arrays, filter_arrays)
 
   provide('measure_data', measure_data)
@@ -124,7 +120,9 @@
   provide('participant_measures', participant_measures)
   provide('basket', basket)
   provide('addToBasket', addToBasket)
+  provide('getBasketStats', getBasketStats)
   provide('selected_component', selected_component)
+  provide('file_metadata', file_metadata)
   
 
   onBeforeMount( () => {
@@ -210,7 +208,7 @@
           participant_measures_loaded.value = true;
 
           // Now we need to load all user input options
-          var all_options = ["cohort", "session", "data_type", "data_category", "age"]
+          var all_options = ["cohort", "session", "data_type", "data_category", "age", "short_name"]
           var all_options_obj = {}
           for (var x=0; x<all_options.length; x++) {
               var option = all_options[x]
@@ -249,6 +247,12 @@
           ]
           all_arrays["state"] = state_list.value
           filter_arrays["state"] = all_arrays["state"]
+          console.log(`All arrays from files:`)
+
+          for (const [key, value] of Object.entries(all_arrays)) {
+            console.log(key, value);
+            }
+
           return fetch(file_metadata_file)
       })
       .then((response) => {

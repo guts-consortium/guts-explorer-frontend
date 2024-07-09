@@ -118,7 +118,7 @@
             <h3>You now have {{ basket.length }} {{ basket.length > 1 ? 'items' : 'item' }} in your basket</h3>
         </v-card-text>
         <v-card-actions>
-            <v-btn text="Continue Browsing" @click="hideModal('addedItemModal')"></v-btn>max-width="500px"
+            <v-btn text="Continue Browsing" @click="hideModal('addedItemModal')"></v-btn>
             <v-btn text="View Basket" @click="viewBasket"></v-btn>
         </v-card-actions>
         </v-card>
@@ -136,6 +136,7 @@
     const participant_measures = inject('participant_measures')
     const basket = inject('basket')
     const addToBasket = inject('addToBasket')
+    const selected_component = inject('selected_component')
 
     const session_all = ref(true)
     const category_all = ref(true)
