@@ -5,10 +5,10 @@ This repo contains code to render the GUTS Metadata Explorer: https://guts-conso
 ## Application design
 
 This application is built using:
-- HTML
-- VueJS as the Javascript framework for reactive components
-- BootstrapVue for Vue-specific components with Bootstrap styling
-- Plotly's Javascript library for interactive graphs
+- VueJS 3 as the Javascript framework for reactive components
+- Vuetify for user interface components
+- Vite for building
+- Vitest for testing
 
 ## Local rendering and data prep
 
