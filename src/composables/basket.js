@@ -37,14 +37,8 @@ export function useBasket(all_arrays, filter_arrays) {
         }
     }
 
-    function deleteBasketItemCheck(index) {
-        this.item_index_to_delete = index;
-        this.showModal('delete-item-modal')
-    }
-
     function deleteBasketItem(index) {
         basket.splice(index, 1)
-        this.hideModal('delete-item-modal')
     }
 
     function getBasketStats(participant_measures, file_metadata) {
@@ -161,7 +155,6 @@ export function useBasket(all_arrays, filter_arrays) {
         basket,
         addToBasket,
         deleteBasketItem,
-        deleteBasketItemCheck,
         getBasketStats
     }
 

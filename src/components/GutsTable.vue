@@ -169,11 +169,6 @@
     const hideModal = (modalRef) => {
       showAddedItemModal.value = false;
     };
-
-    
-    // function exportTable(format) {
-    //     downloadArrayAsFormat(this.included_measures, format, "guts_metadata")
-    // }
 </script>
 
 

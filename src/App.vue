@@ -111,6 +111,7 @@
   const {
     basket,
     addToBasket,
+    deleteBasketItem,
     getBasketStats
   } = useBasket(all_arrays, filter_arrays)
 
@@ -123,6 +124,7 @@
   provide('getBasketStats', getBasketStats)
   provide('selected_component', selected_component)
   provide('file_metadata', file_metadata)
+  provide('deleteBasketItem', deleteBasketItem)
   
 
   onBeforeMount( () => {
