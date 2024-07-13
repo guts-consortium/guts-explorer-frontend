@@ -26,6 +26,7 @@ export default defineConfig({
       },
     }),
   ],
+  base: '/guts-explorer',
   define: { 'process.env': {} },
   resolve: {
     alias: {
