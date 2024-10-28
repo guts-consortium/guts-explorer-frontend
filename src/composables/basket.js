@@ -46,7 +46,7 @@ export function useBasket(all_arrays, filter_arrays) {
         var file_list = []
         var item_samples = []
         var item_files = []
-        var file_keys_to_use = ["data_category", "session", "data_type", "short_name"]
+        var file_keys_to_use = ["cohort", "data_category", "session", "data_type", "age", "short_name"]
 
         console.log(all_arrays)
         for (var i=0; i<basket.length; i++){
@@ -64,20 +64,23 @@ export function useBasket(all_arrays, filter_arrays) {
                 } else {
                     samples = filterSamplesBasket(samples, key, value)
                 }
-                if (file_keys_to_use.indexOf(key) >= 0) {
-                    files = filterFilesBasket(files, key, value)
-                }
+
                 if (key == "state") {
                     // corresponding key in file metadata is "file_state"
                     files = filterFilesBasket(files, "file_state", value)
+                } else {
+                    files = filterFilesBasket(files, key, value)
                 }
+                
             }
             item_samples.push(samples)
             item_files.push(files)
         }
         var item_files_names = []
         var basket_samples = []
+        var basket_filenames = []
         var basket_files = []
+        var basket_providers = []
         for (var i=0; i<basket.length; i++){
             
             basket_samples = basket_samples.concat(item_samples[i])
@@ -87,20 +90,32 @@ export function useBasket(all_arrays, filter_arrays) {
                     return file["file_path"];
                 })
             )
-            basket_files = basket_files.concat(item_files_names[i])
+            basket_filenames = basket_filenames.concat(item_files_names[i])
+            basket_files = basket_files.concat(item_files[i])
+            // this will contain many duplicates, but it's not a probem if it
+            // is only used for mapping of other fields, e.g. explorer_provider below
         }
+
+        const basket_files_unique = [...new Map(basket_files.map(item =>
+            [item["file_path"], item])).values()];
 
         basket_samples = [...new Set(basket_samples)]
 
         var filtered_participants = basket_samples.map((m) => (m["subject"]));
         var basket_participants = [...new Set(filtered_participants)]
 
-        basket_files = [...new Set(basket_files)]
+        basket_filenames = [...new Set(basket_filenames)]
+
+        var filtered_providers = basket_files.map((m) => (m["explorer_provider"]));
+        var basket_providers = [...new Set(filtered_providers)]
+
 
         return {
             samples: basket_samples,
             participants: basket_participants,
-            files: basket_files
+            files: basket_files_unique,
+            filenames: basket_filenames,
+            providers: basket_providers
         }
     }
 

@@ -18,6 +18,7 @@
                           <i class="fas fa-cart-shopping"></i>
                       </li>
                   </ul>
+                  <auth-menu></auth-menu>
               </div>
           </div>
       </div>
@@ -81,10 +82,13 @@
   import { ref, onBeforeMount, reactive } from 'vue'
   import { useBasket } from '@/composables/basket.js'
   import { makeReadable } from '@/modules/utils.js'
+  import AuthMenu from '@/components/AuthMenu';
 
-  const measure_data_file = new URL("@/data/guts-measure-overview.json", import.meta.url).href
-  const participant_data_file = new URL("@/data/guts-subject-level-metadata.json", import.meta.url).href
-  const file_metadata_file = new URL("@/data/guts-file-level-metadata.json", import.meta.url).href
+  const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
+  console.log(backendUrl)
+  const measure_data_file = `${backendUrl}/api/measures`
+  const participant_data_file = `${backendUrl}/api/subjects`
+  const file_metadata_file = `${backendUrl}/api/files`
 
   // Data
   var selected_component = ref("home"); // must be one of: home, table, checkboxes, basket
@@ -107,6 +111,8 @@
   var state_options = ref(null)
   var file_metadata = ref([])
   var all_options_loaded = ref(false)
+  const userInfo = ref(null)
+  const isAuthenticated = ref(false)
 
   const {
     basket,
@@ -125,7 +131,8 @@
   provide('selected_component', selected_component)
   provide('file_metadata', file_metadata)
   provide('deleteBasketItem', deleteBasketItem)
-  
+  provide('userInfo', userInfo)
+  provide('isAuthenticated', isAuthenticated)
 
   onBeforeMount( () => {
     fetch(measure_data_file)
@@ -142,6 +149,7 @@
           measure_data.value = responseJson;
           measure_shortnames.value = measure_data.value.map((m) => (m["short_name"]));
           measure_data_loaded.value = true;
+          console.log(`Measures:\n${measure_shortnames.value}`)
           return fetch(participant_data_file)
       })
       .then((response) => {
@@ -268,6 +276,8 @@
       })
       .then((responseJson) => {
           file_metadata.value = responseJson;
+          console.log("NUMBER OF FILES:")
+          console.log(file_metadata.value.length)
           all_options_loaded.value = true;
       })
   })

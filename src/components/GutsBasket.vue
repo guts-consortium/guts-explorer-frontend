@@ -57,6 +57,8 @@
                 Number of participants: {{ basketStats.participants.length }}
                 </v-card-text>
                 <v-card-text>Number of files: {{ basketStats.files.length }}</v-card-text>
+                <v-card-text>Total size: {{ formatBytes(basketSize) }}</v-card-text>
+                
                 <v-btn outlined color="dark" class="option-button push" @click="checkoutBasket">
                 <v-icon class="fas fa-cart-arrow-down"></v-icon>
                 Checkout Basket
@@ -165,7 +167,10 @@
 
 <script setup>
     import { inject, computed, ref } from 'vue'
-    import { downloadArrayAsFormat } from '@/modules/utils.js'
+    import { downloadArrayAsFormat, formatBytes} from '@/modules/utils.js'
+    const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
+    const submit_endpoint = `${backendUrl}/api/submit`
+    const userInfo = inject('userInfo')
 
     const textKeysMultiple =  {
         "cohort": "Cohorts",
@@ -187,15 +192,15 @@
     const file_metadata = inject('file_metadata')
     const basket = inject('basket')
 
-    const name = ref(null)
-    const affiliation = ref(null)
-    const email = ref(null)
-    const members = ref(null)
-    const title = ref(null)
-    const description = ref(null)
+    const name = ref("Stephan Heunis")
+    const affiliation = ref("Some place")
+    const email = ref("s@h.com")
+    const members = ref("Me, you, everyone")
+    const title = ref("Joyful jester")
+    const description = ref("Some analysis")
     const date = ref(null)
-    const comments = ref(null)
-    const status = ref(false)
+    const comments = ref("fml")
+    const status = ref(true)
 
     const item_index_to_delete = ref(null)
 
@@ -203,6 +208,12 @@
 
     const basketStats = computed(() => {
         return getBasketStats(participant_measures.value, file_metadata.value)
+    });
+
+
+    const basketSize = computed(() => {
+        var sizes = basketStats.value.files.map((m) => (m["file_size"]));
+        return sizes.reduce((partialSum, a) => partialSum + a, 0);
     });
 
     function cancelCheckout() {
@@ -223,9 +234,25 @@
     }
     
     function handleCheckoutSubmit() {
-        // Push the name to submitted names
-        var dl_object = {
-            person: {
+        createDataRequests()
+
+        
+        // Hide the modal manually
+        // this.$nextTick(() => {
+        //     this.$bvModal.hide('basket-checkout-modal')
+        // })
+
+        showCheckout.value = false
+
+    }
+
+    function createDataRequests() {
+
+        var payload = {
+            provider_friendly: "",
+            file_paths: [],
+            user_data: userInfo.value,
+            form_data: {
                 name: name.value,
                 affiliation: affiliation.value,
                 email: email.value,
@@ -236,17 +263,40 @@
                 comments: comments.value,
                 status: status.value
             },
-            files: basketStats.value.files
         }
-        downloadArrayAsFormat(dl_object, "json", "my_guts_basket")
-        // Hide the modal manually
-        // this.$nextTick(() => {
-        //     this.$bvModal.hide('basket-checkout-modal')
-        // })
-
-        showCheckout.value = false
+        for (var i=0; i<basketStats.value.providers.length; i++) {
+            var provider = basketStats.value.providers[i]
+            var provider_file_names = basketStats.value.files.filter((f) => {
+                return f["explorer_provider"] == provider
+            }).map((m) => (m["file_path"]));
+            payload.provider_friendly = provider;
+            payload.file_paths = provider_file_names;
+            fetch(submit_endpoint, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload),
+                credentials: 'include'
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    console.error(
+                        "ERROR: data request POST to Neptune server failed"
+                    );
+                }
+            })
+            .then((responseJson) => {
+                console.log(responseJson)
+            })
+        }
 
     }
+
+    
 
     function checkoutBasket() {
         showCheckout.value = true

@@ -8,8 +8,12 @@
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
+    "md5": "^2.3.0",
+    "oauth4webapi": "^2.11.1",
     "roboto-fontface": "*",
     "vue": "^3.4.0",
+    "vue-cookies": "^1.8.4",
+    "vue-router": "^4.4.3",
     "vuetify": "^3.5.0"
   },
   "devDependencies": {
