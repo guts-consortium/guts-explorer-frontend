@@ -1,5 +1,6 @@
 import { reactive, ref, inject} from 'vue'
 
+
 export function useBasket(all_arrays, filter_arrays) {
 
     const basket =  reactive([])
@@ -120,7 +121,7 @@ export function useBasket(all_arrays, filter_arrays) {
     }
 
     function filterSamplesBasket(samples, key, value) {
-        console.log(`Filtering samples with key: ${key} and value:`, value);
+        // console.log(`Filtering samples with key: ${key} and value:`, value);
 
         if (!Array.isArray(samples)) {
             console.error('samples is not an array:', samples);
@@ -149,7 +150,7 @@ export function useBasket(all_arrays, filter_arrays) {
     function filterFilesBasket(files, key, value) {
         const k = key == "file_state" ? "state" : key
 
-        console.log(`Filtering files with key: ${k} and value:`, value);
+        // console.log(`Filtering files with key: ${k} and value:`, value);
 
         if (!Array.isArray(files)) {
             console.error('files is not an array:', files);

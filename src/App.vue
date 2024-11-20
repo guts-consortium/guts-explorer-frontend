@@ -113,6 +113,7 @@
   var all_options_loaded = ref(false)
   const userInfo = ref(null)
   const isAuthenticated = ref(false)
+  provide('isAuthenticated', isAuthenticated)
 
   const {
     basket,
@@ -132,7 +133,6 @@
   provide('file_metadata', file_metadata)
   provide('deleteBasketItem', deleteBasketItem)
   provide('userInfo', userInfo)
-  provide('isAuthenticated', isAuthenticated)
 
   onBeforeMount( () => {
     fetch(measure_data_file)

@@ -1,4 +1,4 @@
-// src/composables/useAuth.js
+// src/composables/auth.js
 import {ref, inject} from 'vue'
 const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
 

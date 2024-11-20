@@ -163,11 +163,70 @@
         </v-card-actions>
         </v-card>
     </v-dialog>
+
+    <v-dialog v-model="showLoginModal" max-width="500px" @click:outside="resetLoginModal">
+        <v-card>
+            <v-card-title>Log in / Register</v-card-title>
+            <v-card-text class="text-left">
+                <v-skeleton-loader
+                :loading="awaitingResponse"
+                type="paragraph"
+                >
+                <span v-if="!showResponseRegistered && !showResponseInvited">
+                    <h3>Please log in before checking out</h3>
+                    <p>
+                        If you are not yet registered as part of the GUTS collaboration,
+                        <a @click="showRegister = true" class="register-link">register now</a>
+                        with your institutional email address.
+                    </p>
+                    <v-form ref="emailForm" >
+                        <v-text-field
+                            v-if="showRegister"
+                            v-model="registerEmail"
+                            label="Email"
+                            type="email"
+                            :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'E-mail must be valid']"
+                            required
+                            style="padding-top: 1em;"
+                        ></v-text-field>
+                    </v-form>
+                </span>
+                </v-skeleton-loader>
+                <span v-if="showResponseRegistered">
+                    <h3>Already registered</h3>
+                    <p>
+                        A user with the submitted email address is already registered.
+                        Please log in with this account to continue checking out your basket.
+                    </p>
+
+                </span>
+                <span v-if="showResponseInvited">
+                    <h3>Registration submitted</h3>
+                    <p>
+                        Please check your inbox for the confirmation email. After
+                        confirming your registration, you can log in with the same
+                        email address and continue checking out your basket.
+                    </p>
+
+                </span>
+
+            </v-card-text>
+            <v-card-actions>
+                <v-btn text="Cancel" @click="hideLoginModal"></v-btn>
+                <v-btn v-if="showRegister && !showResponseInvited" type="submit" text="Register" @click="registerUser"></v-btn>
+                <v-btn v-if="!showRegister" text="Log in" @click="loginSRAM"></v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+
 </template>
 
 <script setup>
     import { inject, computed, ref } from 'vue'
     import { downloadArrayAsFormat, formatBytes} from '@/modules/utils.js'
+    import { useAuth } from '@/composables/auth.js';
+    import { useBackend } from '@/composables/backend.js';
     const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
     const submit_endpoint = `${backendUrl}/api/submit`
     const userInfo = inject('userInfo')
@@ -183,7 +242,14 @@
     }
 
     const showCheckout = ref(false)
+    const showLoginModal = ref(false)
+    const showRegister = ref(false)
     const showDeleteItemModal = ref(false)
+    const registerEmail = ref(null)
+    const showResponseRegistered = ref(false)
+    const showResponseInvited = ref(false)
+    const emailForm = ref(null)
+    const awaitingResponse = ref(false)
 
     const all_arrays = inject('all_arrays')
     const participant_measures = inject('participant_measures')
@@ -191,6 +257,7 @@
     const deleteBasketItem = inject('deleteBasketItem')
     const file_metadata = inject('file_metadata')
     const basket = inject('basket')
+    const isAuthenticated = inject('isAuthenticated')
 
     const name = ref("Stephan Heunis")
     const affiliation = ref("Some place")
@@ -204,7 +271,8 @@
 
     const item_index_to_delete = ref(null)
 
-    
+    const { login, logout} = useAuth(userInfo, isAuthenticated);
+    const { checkInviteUser } = useBackend()
 
     const basketStats = computed(() => {
         return getBasketStats(participant_measures.value, file_metadata.value)
@@ -247,6 +315,8 @@
     }
 
     function createDataRequests() {
+        console.log(`All providers:`)
+        console.log(basketStats.value.providers)
 
         var payload = {
             provider_friendly: "",
@@ -266,6 +336,7 @@
         }
         for (var i=0; i<basketStats.value.providers.length; i++) {
             var provider = basketStats.value.providers[i]
+            console.log(`Making POST for provider: ${provider}`)
             var provider_file_names = basketStats.value.files.filter((f) => {
                 return f["explorer_provider"] == provider
             }).map((m) => (m["file_path"]));
@@ -296,10 +367,35 @@
 
     }
 
+    async function loginSRAM() {
+        try {
+            console.log("Calling the new login function now, should redirect to backend: api/login")
+            await login();
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
+    }
+
     
 
     function checkoutBasket() {
-        showCheckout.value = true
+        if (!isAuthenticated.value) {
+            showLoginModal.value = true
+        } else {
+            showCheckout.value = true
+        }
+    }
+
+    function hideLoginModal() {
+        showLoginModal.value = false
+        showRegister.value = false
+        registerEmail.value = null
+    }
+
+    function resetLoginModal() {
+        showRegister.value = false
+        registerEmail.value = null
+
     }
 
     function hideDeleteItemModal() {
@@ -317,7 +413,38 @@
         showDeleteItemModal.value = false
     }
 
+    async function registerUser() {
+        const form = emailForm.value;
+        if (!form) return;
+        const isValid = await form.validate();
+        if (!isValid) {
+            return;
+        }
+        awaitingResponse.value = true;
+        var inviteResponse = await checkInviteUser(registerEmail.value)
+        awaitingResponse.value = false;
+        console.log(`inviteResponse: ${inviteResponse}`)
+
+        if (inviteResponse == "registered") {
+            showResponseRegistered.value = true;
+        } else if (inviteResponse == "invited") {
+            showResponseInvited.value = true;
+        } else if (inviteResponse === "error") {
+            console.error("Error occurred during user check or invitation.");
+        }
+    }
+
 </script>
+
+<style scoped>
+
+ .register-link {
+    color: #ff00fb;
+    text-decoration: underline;
+    cursor: pointer;
+ }
+
+</style>
 
 
 
