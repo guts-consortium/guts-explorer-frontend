@@ -122,12 +122,6 @@
                         label="Project description"
                         required
                     ></v-text-field>
-                    <v-text-field
-                        v-model="date"
-                        label="Access data until"
-                        required
-                        type="date"
-                    ></v-text-field>
                     <v-textarea
                         v-model="comments"
                         label="Additional comments"
@@ -164,59 +158,11 @@
         </v-card>
     </v-dialog>
 
-    <v-dialog v-model="showLoginModal" max-width="500px" @click:outside="resetLoginModal">
-        <v-card>
-            <v-card-title>Log in / Register</v-card-title>
-            <v-card-text class="text-left">
-                <v-skeleton-loader
-                :loading="awaitingResponse"
-                type="paragraph"
-                >
-                <span v-if="!showResponseRegistered && !showResponseInvited">
-                    <h3>Please log in before checking out</h3>
-                    <p>
-                        If you are not yet registered as part of the GUTS collaboration,
-                        <a @click="showRegister = true" class="register-link">register now</a>
-                        with your institutional email address.
-                    </p>
-                    <v-form ref="emailForm" >
-                        <v-text-field
-                            v-if="showRegister"
-                            v-model="registerEmail"
-                            label="Email"
-                            type="email"
-                            :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'E-mail must be valid']"
-                            required
-                            style="padding-top: 1em;"
-                        ></v-text-field>
-                    </v-form>
-                </span>
-                </v-skeleton-loader>
-                <span v-if="showResponseRegistered">
-                    <h3>Already registered</h3>
-                    <p>
-                        A user with the submitted email address is already registered.
-                        Please log in with this account to continue checking out your basket.
-                    </p>
-
-                </span>
-                <span v-if="showResponseInvited">
-                    <h3>Registration submitted</h3>
-                    <p>
-                        Please check your inbox for the confirmation email. After
-                        confirming your registration, you can log in with the same
-                        email address and continue checking out your basket.
-                    </p>
-
-                </span>
-
-            </v-card-text>
-            <v-card-actions>
-                <v-btn text="Cancel" @click="hideLoginModal"></v-btn>
-                <v-btn v-if="showRegister && !showResponseInvited" type="submit" text="Register" @click="registerUser"></v-btn>
-                <v-btn v-if="!showRegister" text="Log in" @click="loginSRAM"></v-btn>
-            </v-card-actions>
-        </v-card>
+    <v-dialog
+        v-model="showLoginModal"
+        max-width="500px"
+        @click:outside="resetLoginModal">
+        <RegisterLogin @close-dialog="resetLoginModal" :key="`input-${Date.now()}`"</RegisterLogin>
     </v-dialog>
 
 
@@ -225,8 +171,6 @@
 <script setup>
     import { inject, computed, ref } from 'vue'
     import { downloadArrayAsFormat, formatBytes} from '@/modules/utils.js'
-    import { useAuth } from '@/composables/auth.js';
-    import { useBackend } from '@/composables/backend.js';
     const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
     const submit_endpoint = `${backendUrl}/api/submit`
     const userInfo = inject('userInfo')
@@ -243,13 +187,7 @@
 
     const showCheckout = ref(false)
     const showLoginModal = ref(false)
-    const showRegister = ref(false)
     const showDeleteItemModal = ref(false)
-    const registerEmail = ref(null)
-    const showResponseRegistered = ref(false)
-    const showResponseInvited = ref(false)
-    const emailForm = ref(null)
-    const awaitingResponse = ref(false)
 
     const all_arrays = inject('all_arrays')
     const participant_measures = inject('participant_measures')
@@ -265,19 +203,14 @@
     const members = ref("Me, you, everyone")
     const title = ref("Joyful jester")
     const description = ref("Some analysis")
-    const date = ref(null)
     const comments = ref("fml")
     const status = ref(true)
 
     const item_index_to_delete = ref(null)
 
-    const { login, logout} = useAuth(userInfo, isAuthenticated);
-    const { checkInviteUser } = useBackend()
-
     const basketStats = computed(() => {
         return getBasketStats(participant_measures.value, file_metadata.value)
     });
-
 
     const basketSize = computed(() => {
         var sizes = basketStats.value.files.map((m) => (m["file_size"]));
@@ -296,22 +229,13 @@
         members.value = null
         title.value = null
         description.value = null
-        date.value = null
         comments.value = null
         status.value = false
     }
     
     function handleCheckoutSubmit() {
         createDataRequests()
-
-        
-        // Hide the modal manually
-        // this.$nextTick(() => {
-        //     this.$bvModal.hide('basket-checkout-modal')
-        // })
-
         showCheckout.value = false
-
     }
 
     function createDataRequests() {
@@ -329,7 +253,6 @@
                 members: members.value,
                 title: title.value,
                 description: description.value,
-                date: date.value,
                 comments: comments.value,
                 status: status.value
             },
@@ -364,19 +287,7 @@
                 console.log(responseJson)
             })
         }
-
     }
-
-    async function loginSRAM() {
-        try {
-            console.log("Calling the new login function now, should redirect to backend: api/login")
-            await login();
-        } catch (error) {
-            console.error('Login failed:', error);
-        }
-    }
-
-    
 
     function checkoutBasket() {
         if (!isAuthenticated.value) {
@@ -386,16 +297,9 @@
         }
     }
 
-    function hideLoginModal() {
-        showLoginModal.value = false
-        showRegister.value = false
-        registerEmail.value = null
-    }
-
     function resetLoginModal() {
-        showRegister.value = false
-        registerEmail.value = null
-
+        console.log("resetLoginModal")
+        showLoginModal.value = false
     }
 
     function hideDeleteItemModal() {
@@ -411,27 +315,6 @@
     function deleteBasketItemLocal() {
         deleteBasketItem(item_index_to_delete.value)
         showDeleteItemModal.value = false
-    }
-
-    async function registerUser() {
-        const form = emailForm.value;
-        if (!form) return;
-        const isValid = await form.validate();
-        if (!isValid) {
-            return;
-        }
-        awaitingResponse.value = true;
-        var inviteResponse = await checkInviteUser(registerEmail.value)
-        awaitingResponse.value = false;
-        console.log(`inviteResponse: ${inviteResponse}`)
-
-        if (inviteResponse == "registered") {
-            showResponseRegistered.value = true;
-        } else if (inviteResponse == "invited") {
-            showResponseInvited.value = true;
-        } else if (inviteResponse === "error") {
-            console.error("Error occurred during user check or invitation.");
-        }
     }
 
 </script>

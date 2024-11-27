@@ -9,17 +9,24 @@
             </v-btn>
         </template>
         <v-list density="compact">
-            <v-list-item v-if="!isAuthenticated" @click="loginSRAM">
-                <v-list-item-title>Log in</v-list-item-title>
+            <v-list-item v-if="!isAuthenticated" @click="loginRegister">
+                <v-list-item-title><v-icon>mdi-login</v-icon> Log in / register</v-list-item-title>
             </v-list-item>
             <v-list-item v-if="isAuthenticated && userInfo">
                 <v-list-item-title>Welcome, {{ userInfo.name }}</v-list-item-title>
             </v-list-item>
             <v-list-item v-if="isAuthenticated" @click="logoutSRAM">
-                <v-list-item-title>Log out</v-list-item-title>
+                <v-list-item-title><v-icon>mdi-logout</v-icon> Log out</v-list-item-title>
             </v-list-item>
         </v-list>
     </v-menu>
+
+    <v-dialog
+        v-model="showLoginModal"
+        max-width="500px"
+        @click:outside="resetLoginModal">
+        <RegisterLogin @close-dialog="resetLoginModal" :key="`input-${Date.now()}`"</RegisterLogin>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -29,21 +36,21 @@
 
     const userInfo = inject('userInfo')
     const isAuthenticated = inject('isAuthenticated')
+    const showLoginModal = ref(false)
 
-    const { login, logout} = useAuth(userInfo, isAuthenticated);
+    const { logout} = useAuth(userInfo, isAuthenticated);
     
     const userAvatarUrl = computed(() => {
         const emailHash = md5(userInfo.value?.email.trim().toLowerCase() || Math.random().toString(36).substring(7));
         return `https://www.gravatar.com/avatar/${emailHash}?d=identicon`;
     });
 
-    async function loginSRAM() {
-        try {
-            console.log("Calling the new login function now, should redirect to backend: api/login")
-            await login();
-        } catch (error) {
-            console.error('Login failed:', error);
-        }
+    function resetLoginModal() {
+        showLoginModal.value = false
+    }
+
+    function loginRegister() {
+        showLoginModal.value = true
     }
 
     async function logoutSRAM() {
@@ -52,20 +59,6 @@
         } catch (error) {
             console.error('Logout failed:', error);
         }
-    }
-
-    async function getUser() {
-      try {
-        const accessToken = auth.getAccessToken();
-        if (accessToken) {
-          userInfo.value = await auth.fetchUserInfo(accessToken);
-          console.log(userInfo.value)
-        } else {
-          console.log('No access token found');
-        }
-      } catch (error) {
-        console.error('Failed to fetch user information:', error);
-      }
     }
 </script>
 

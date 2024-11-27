@@ -13,7 +13,8 @@ export function useAuth(userInfo, isAuthenticated) {
     // Set up a listener to capture the user info after login completes
     window.addEventListener('message', (event) => {
       if (event.origin !== backendUrl) {
-        console.error('Received message from unknown origin:', event.origin);
+        console.log('Received message from unknown origin:', event.origin);
+        console.log(event);
         return;
       }
 
@@ -39,9 +40,102 @@ export function useAuth(userInfo, isAuthenticated) {
           }
       })
   }
+  async function checkInviteUser(email) {
+    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    try {
+      const response = await fetch(user_endpoint);
+      if (response.ok) {
+        const responseJson = await response.json();
+        // If the user is registered, return "registered"
+        if (responseJson === true) {
+          return "registered";
+        } else {
+          // Otherwise, attempt to invite the user and return the result
+          return await inviteUser(email);
+        }
+      } else {
+        console.error("ERROR: user registration check GET to Neptune server failed");
+        return "error";
+      }
+    } catch (error) {
+      console.error("Error in checkInviteUser:", error);
+      return "error";
+    }
+  }
+
+  async function inviteUser(email) {
+    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    try {
+      const response = await fetch(user_endpoint, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+      if (response.ok) {
+        await response.json();
+        return "invited";
+      } else {
+        console.error("ERROR: user registration POST to Neptune server failed");
+        return "error";
+      }
+    } catch (error) {
+      console.error("Error in inviteUser:", error);
+      return "error";
+    }
+  }
+
+  async function checkUser(email) {
+    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    try {
+      const response = await fetch(user_endpoint);
+      if (response.ok) {
+        const responseJson = await response.json();
+        console.log(responseJson)
+      } else {
+        console.error("ERROR: user registration check GET to Neptune server failed");
+        return "error";
+      }
+    } catch (error) {
+      console.error("Error in checkUser:", error);
+      return "error";
+    }
+  }
+
+  async function deleteUser(email) {
+    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    try {
+      const response = await fetch(user_endpoint, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const rp = await response.json();
+        console.log(rp)
+        return "DELETED or didnt exist";
+      } else {
+        console.error("ERROR: user registration DELETE to Neptune server failed");
+        return "error";
+      }
+    } catch (error) {
+      console.error("Error in deleteUser:", error);
+      return "error";
+    }
+  }
 
   return {
     login,
     logout,
+    checkInviteUser,
+    inviteUser,
+    checkUser,
+    deleteUser
+    
   };
 }
