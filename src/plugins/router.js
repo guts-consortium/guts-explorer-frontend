@@ -10,17 +10,17 @@ const routes = [
     component: App,
     alias: '/guts-explorer',
   },
-  {
-    path: '/user',
-    name: 'User',
-    redirect: (to) => {
-      console.log("Redirecting from '/user' to '${backendUrl}/api/callback' ")
-      return {
-        path: `${backendUrl}/api/callback`,
-        query: {...to.query}
-      }
-    }
-  },
+  // {
+  //   path: '/user',
+  //   name: 'User',
+  //   redirect: (to) => {
+  //     console.log("Redirecting from '/user' to '${backendUrl}/api/callback' ")
+  //     return {
+  //       path: `${backendUrl}/api/callback`,
+  //       query: {...to.query}
+  //     }
+  //   }
+  // },
   {
     path: '/guts-explorer/user',
     name: 'User2',
