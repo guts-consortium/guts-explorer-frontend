@@ -109,6 +109,9 @@
   var all_states = ref(null)
   var state_list = ref(null)
   var state_options = ref(null)
+//   var all_data_category = ref(null)
+//   var data_category_list = ref(null)
+//   var data_category_options = ref(null)
   var file_metadata = ref([])
   var all_options_loaded = ref(false)
   const userInfo = ref(null)
@@ -149,6 +152,13 @@
           measure_data.value = responseJson;
           measure_shortnames.value = measure_data.value.map((m) => (m["short_name"]));
           measure_data_loaded.value = true;
+        //   data_catagory should be turned into an array, comma separated
+          for (var i=0; i<measure_data.value.length; i++) {
+            if (measure_data.value[i]["data_category"]) {
+                var new_cat = measure_data.value[i]["data_category"].split(",").map((c) => (c.trim()));
+                measure_data.value[i]["data_category"] = new_cat
+            }
+          }
           console.log(`Measures:\n${measure_shortnames.value}`)
           return fetch(participant_data_file)
       })
@@ -230,9 +240,23 @@
                   return pm[option];
               });
               all_options_obj[opt_list] = [...new Set(all_options_obj[all_opt])].sort()
-              all_options_obj[opt_options] = all_options_obj[opt_list].map((item, idx) => (
-                  {'value': item, 'text': makeReadable(item)}
-              ))
+              console.log(opt_list)
+
+
+              all_options_obj[opt_options] = []
+              for (var z=0; z<all_options_obj[opt_list].length; z++) {
+                var item  = all_options_obj[opt_list][z]
+                console.log(`item ${z}: ${item}`)
+                if (item) {
+                    all_options_obj[opt_options] = all_options_obj[opt_options].concat({'value': item, 'text': makeReadable(item)})
+                }
+              }
+            //   all_options_obj[opt_options] = all_options_obj[opt_list].map((item, idx) => (
+            //       {'value': item, 'text': makeReadable(item)}
+            //   ))
+            //   all_options_obj[opt_options] = all_options_obj[opt_list].map((item, idx) => (
+            //       {'value': item, 'text': makeReadable(item)}
+            //   ))
               all_options_obj[opt_options].unshift({value: 'all', text: 'All'})
               all_arrays[option] = all_options_obj[opt_list]
               filter_arrays[option] = all_arrays[option]
@@ -257,6 +281,35 @@
           ]
           all_arrays["state"] = state_list.value
           filter_arrays["state"] = all_arrays["state"]
+
+
+          // categories
+        //   all_data_category.value = []
+        //   for (var y=0; y<participant_measures.value.length; y++) {
+        //     var pm_y = participant_measures.value[y];
+        //     var pm_cat = pm_y["data_category"]
+        //     all_categories.value = all_categories.value.concat(pm_cat)
+        //     // state_list.value = ["primary", "derivative"]
+        //   }
+        //   data_category_list.value = [...new Set(all_data_category.value)].sort()
+        //   data_category_options.value = [
+        //     {value: 'all', text: 'All'},
+        //   ]
+        //   for (var l=0; l<data_category_list.value.length; l++) {
+        //     var item = data_category_list.value[l]
+        //     data_category_list.value.push(
+        //         {'value': item, 'text': makeReadable(item)}
+        //     )
+        //   }
+
+
+
+
+          
+
+
+
+          
           console.log(`All arrays from files:`)
 
           for (const [key, value] of Object.entries(all_arrays)) {
