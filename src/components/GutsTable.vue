@@ -132,9 +132,9 @@
                 return true;
             }
             return search_text_tags.value.some((v) =>
-                c["short_name"].toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                c["long_name"].toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                c["description"].toLowerCase().indexOf(v.toLowerCase()) >= 0
+                c["short_name"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                c["long_name"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                c["description"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0
             );
         });
     });
