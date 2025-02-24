@@ -12,6 +12,7 @@ export function useBasket(all_arrays, filter_arrays) {
             var selected_shortnames = included_measures.map(function(measure) {
                 return measure["short_name"];
             });
+
             var new_basket_item =  {
                 "cohort": all_arrays['cohort'],
                 "data_category": all_arrays["data_category"],
@@ -20,6 +21,7 @@ export function useBasket(all_arrays, filter_arrays) {
                 "age": all_arrays["age"],
                 "short_name": selected_shortnames,
                 "state": all_arrays["state"],
+                "added_from": addFrom,
             }
             basket_length = basket.push(new_basket_item)
         }
@@ -33,6 +35,7 @@ export function useBasket(all_arrays, filter_arrays) {
                 "age": filter_arrays['age'],
                 "short_name": all_arrays["short_name"],
                 "state": filter_arrays['state'],
+                "added_from": addFrom,
             }
             basket_length = basket.push(new_basket_item)
         }
@@ -43,13 +46,9 @@ export function useBasket(all_arrays, filter_arrays) {
     }
 
     function getBasketStats(participant_measures, file_metadata) {
-        console.log("getting basket stats")
-        var file_list = []
         var item_samples = []
         var item_files = []
-        var file_keys_to_use = ["cohort", "data_category", "session", "data_type", "age", "short_name"]
-
-        console.log(all_arrays)
+        // console.log(all_arrays)
         for (var i=0; i<basket.length; i++){
             var item = basket[i]
             var samples = participant_measures
@@ -57,22 +56,24 @@ export function useBasket(all_arrays, filter_arrays) {
             // for all keys ["cohort","data_category","session","data_type","age","short_name","state"] in basket item:
             // filter all samples by key, recursively
             // filter all files by key, recursively, if key is in file metadata keys
-            // handle state separately
-            for (var key in item) {
-                var value = item[key]
-                if (key == "state") {
-                    samples = filterSamplesBasketState(samples, key, value)
-                } else {
-                    samples = filterSamplesBasket(samples, key, value)
-                }
 
-                if (key == "state") {
-                    // corresponding key in file metadata is "file_state"
-                    files = filterFilesBasket(files, "file_state", value)
-                } else {
-                    files = filterFilesBasket(files, key, value)
+            // item is the basket item, which is an object with key-vals
+            // if item['added_from] == table:
+            //  - we only have to filter both samples and files by short name
+            // if item['added_from] == checkboxes:
+            //  - filter both samples and files by anything except short name
+            if (item["added_from"] == "table") {
+                samples = filterSamples(samples, "short_name", item["short_name"])
+                files = filterFiles(files, "short_name", item["short_name"])
+            } else {
+                for (var key in item) {
+                    if (key == "short_name" || key == "added_from") {
+                        continue;
+                    }
+                    var value = item[key]
+                    samples = filterSamples(samples, key, value)
+                    files = filterFiles(files, key, value)                
                 }
-                
             }
             item_samples.push(samples)
             item_files.push(files)
@@ -110,14 +111,17 @@ export function useBasket(all_arrays, filter_arrays) {
         var filtered_providers = basket_files.map((m) => (m["explorer_provider"]));
         var basket_providers = [...new Set(filtered_providers)]
 
-
-        return {
+        var basket_stats = {
             samples: basket_samples,
             participants: basket_participants,
             files: basket_files_unique,
             filenames: basket_filenames,
             providers: basket_providers
         }
+
+        console.log("Basket stats updated:")
+        console.log(basket_stats)
+        return basket_stats
     }
 
     function filterSamplesBasket(samples, key, value) {
@@ -147,9 +151,57 @@ export function useBasket(all_arrays, filter_arrays) {
         });
     }
 
+    function filterSamples(samples, key, value) {
+        if (!Array.isArray(samples)) {
+            console.error('samples is not an array:', samples);
+            return [];
+        }
+        if (!all_arrays[key]) {
+            console.error(`all_arrays[${key}] is undefined or null`);
+            console.error(all_arrays)
+            return samples; // or handle the error as needed
+        }
+        return samples.filter((sample) => {
+            if (value.length == all_arrays[key].length) return true;
+            if (Array.isArray(sample[key])) {
+                return  value.filter(val => sample[key].includes(val)).length > 0
+            } else {
+                return value.indexOf(sample[key] ) >= 0
+            }
+        });
+    }
+
+    function filterFiles(files, key, value) {
+        // console.log(`Filtering files with key: ${k} and value:`, value);
+
+        if (!Array.isArray(files)) {
+            console.error('files is not an array:', files);
+            return [];
+        }
+        if (!all_arrays[key]) {
+            console.error(`all_arrays[${key}] is undefined or null`);
+            console.error(all_arrays)
+            return files; // or handle the error as needed
+        }
+
+        const k = key == "state" ? "file_state" : key
+
+        return files.filter((file) => {
+            if (value.length == all_arrays[key].length) return true;
+            if (Array.isArray(file[k])) {
+                return  value.filter(val => file[k].includes(val)).length > 0
+            } else {
+                return value.indexOf(file[k] ) >= 0
+            }
+        });
+        // return files.filter((file) => {
+        //     if (value.length == all_arrays[k].length) return true;
+        //     return value.indexOf(file[k] ) >= 0
+        // });
+    }
+
     function filterFilesBasket(files, key, value) {
         const k = key == "file_state" ? "state" : key
-
         // console.log(`Filtering files with key: ${k} and value:`, value);
 
         if (!Array.isArray(files)) {

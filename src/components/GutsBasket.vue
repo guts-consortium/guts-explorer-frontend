@@ -20,7 +20,7 @@
                     </v-col>
                     <v-col class="text-muted" cols="6">
                     <h6 v-for="(val, key) in item" :key="key">
-                        <span v-if="key != 'include_data_state'">
+                        <span v-if="['include_data_state', 'added_from'].indexOf(key) < 0">
                         {{ textKeysMultiple[key] }}:
                         <em>
                             <span v-if="val.length == 0 || val === all_arrays[key]">
@@ -65,7 +65,12 @@
                 </v-btn>
             </v-card>
             </v-col>
+            
         </v-row>
+        <!-- <v-row>
+            <br>
+            <span v-for="f in basketStats.filenames">{{ f }} <br></span>
+        </v-row> -->
     </v-container>
 
     <v-dialog
@@ -165,6 +170,23 @@
         <RegisterLogin @close-dialog="resetLoginModal" :key="`input-${Date.now()}`"</RegisterLogin>
     </v-dialog>
 
+    <v-dialog
+        v-model="showCheckoutSuccess"
+        max-width="500px"
+        @click:outside="resetCheckoutSuccess">
+        <v-card>
+            <v-card-title>Data Access Requested!</v-card-title>
+            <v-card-text>
+                Your data access request has been submitted and will be
+                reviewed by GUTS Data Management Team. Please monitor your inbox
+                for further communication.
+            </v-card-text>
+            <v-card-actions>
+                <v-btn text="OK" @click="resetCheckoutSuccess"></v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
 
 </template>
 
@@ -188,6 +210,7 @@
     const showCheckout = ref(false)
     const showLoginModal = ref(false)
     const showDeleteItemModal = ref(false)
+    const showCheckoutSuccess = ref(false)
 
     const all_arrays = inject('all_arrays')
     const participant_measures = inject('participant_measures')
@@ -276,6 +299,7 @@
             })
             .then((response) => {
                 if (response.ok) {
+                    showCheckoutSuccess.value = true
                     return response.json();
                 } else {
                     console.error(
@@ -300,6 +324,11 @@
     function resetLoginModal() {
         console.log("resetLoginModal")
         showLoginModal.value = false
+    }
+
+
+    function resetCheckoutSuccess() {
+        showCheckoutSuccess.value = false
     }
 
     function hideDeleteItemModal() {

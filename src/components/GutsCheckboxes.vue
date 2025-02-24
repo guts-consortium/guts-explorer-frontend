@@ -129,7 +129,7 @@
 
 
 <script setup>
-    import { inject, reactive, computed, ref } from 'vue'
+    import { inject, reactive, computed, ref, onMounted, toRaw } from 'vue'
 
     const all_arrays = inject('all_arrays')
     const filter_arrays = inject('filter_arrays')
@@ -178,6 +178,14 @@
       showAddedItemModal.value = false;
     };
 
+    onMounted( () => {
+      // console.log("Checkbox view mounted")
+      // globalThis.myvar = toRaw(participant_measures.value)
+
+      // console.log(toRaw(participant_measures.value))
+
+    })
+
     const filtered_samples_cohort = computed(() => {
         return participant_measures.value.filter((sample) => {
             if (filter_arrays["cohort"].length == all_arrays["cohort"].length) return true;
@@ -191,9 +199,10 @@
         });
     });
     const filtered_samples_category = computed(() => {
+      // sample["data_category"] is an array
         return filtered_samples_session.value.filter((sample) => {
             if (filter_arrays["data_category"].length == all_arrays["data_category"].length) return true;
-            return filter_arrays["data_category"].indexOf(sample["data_category"] ) >= 0
+            return  filter_arrays["data_category"].filter(value => sample['data_category'].includes(value)).length > 0
         });
     });
     const filtered_samples_type = computed(() => {

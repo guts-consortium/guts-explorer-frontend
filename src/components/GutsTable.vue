@@ -59,7 +59,7 @@
                 <th
                   v-for="field in measure_headings"
                   :key="field.key"
-                  :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long_name' ? '20%' : '15%') }"
+                  :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long_name' ? '20%' : (field.key === 'data_category' ? '20%' : '15%')) }"
                 >
                   {{ field.label }}
                 </th>
@@ -67,7 +67,15 @@
             </thead>
             <tbody>
               <tr v-for="item in included_measures" >
-                <td v-for="field in measure_headings" >{{ item[field.key] }}</td>
+                <td v-for="field in measure_headings" >
+                  <span v-if="Array.isArray(item[field.key])" style="line-height: 1.5em;">
+                    <span v-for="el of item[field.key]" class="element-pill">{{el}} <br></span>
+                  </span>
+                  <span v-else>
+                    {{ item[field.key] }}
+                  </span>
+                  
+                </td>
               </tr>
             </tbody>
           </template>
@@ -170,6 +178,17 @@
       showAddedItemModal.value = false;
     };
 </script>
+
+<style scoped>
+
+  .element-pill {
+    padding: 0.1em 0.3em;
+    border-radius: 1em;
+    border: 1px solid black ;
+    margin-bottom:0.5em;
+  }
+
+</style>
 
 
 
