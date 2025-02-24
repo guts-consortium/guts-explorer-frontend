@@ -13,5 +13,14 @@ RUN npm install
 # Copy the rest of the app's code
 COPY . .
 
-# Development environment
-CMD ["npm", "run", "dev"]
+# Build
+CMD ["npm", "run", "build"]
+
+# Serve using Nginx
+FROM nginx:alpine
+
+# Copy build directory to location to be served
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Custom Nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
