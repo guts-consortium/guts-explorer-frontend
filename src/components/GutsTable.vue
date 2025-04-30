@@ -1,12 +1,8 @@
 <template>
-    <v-container>
-      <v-row>
-        <v-col cols="12">
-          <h3 class="page-heading">
+    <h3 class="page-heading">
             &nbsp;&nbsp; <v-icon>mdi-magnify</v-icon>&nbsp;Find samples by measure code, name or description
           </h3>
-        </v-col>
-      </v-row>
+    <v-container style="padding-left: 0; padding-right: 0;">
       
       <v-row id="search-options" class="search-options">
         <!-- SEARCH TEXT -->
@@ -59,9 +55,15 @@
                 <th
                   v-for="field in measure_headings"
                   :key="field.key"
-                  :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long_name' ? '20%' : (field.key === 'data_category' ? '20%' : '15%')) }"
+                  :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long_name' ? '20%' : (field.key === 'data_category' ? '20%' : (field.key === 'select' ? '6%' : '15%'))) }"
                 >
-                  {{ field.label }}
+                  <span v-if="field.key === 'select'">
+                    <v-checkbox v-model="select_all"  @update:modelValue="toggleCurrentMeasures()" class="my-0" density="compact" hide-details></v-checkbox>
+                  </span>
+                  <span v-else>
+                    <strong>{{ field.label }}</strong>
+                  </span>
+                  
                 </th>
               </tr>
             </thead>
@@ -70,6 +72,9 @@
                 <td v-for="field in measure_headings" >
                   <span v-if="Array.isArray(item[field.key])" style="line-height: 1.5em;">
                     <span v-for="el of item[field.key]" class="element-pill">{{el}} <br></span>
+                  </span>
+                  <span v-else-if="field.key === 'select'">
+                    <v-checkbox v-model="selected_measures" :value="item['short_name']" @update:modelValue="" class="my-0" density="compact" hide-details></v-checkbox>
                   </span>
                   <span v-else>
                     {{ item[field.key] }}
@@ -100,12 +105,18 @@
 </template>
 
 <script setup>
-    import { ref, inject, computed } from 'vue'
+    import { ref, inject, computed, watch } from 'vue'
 
     const addToBasket = inject('addToBasket')
     const basket = inject('basket')
     const showAddedItemModal = ref(false);
+    const select_all = ref(false)
+    const selected_measures = ref([])
     const measure_headings = [
+      {
+        key: "select",
+        label: "Select"
+      },
       {
           key: "short_name",
           label: "Code",
@@ -142,14 +153,38 @@
             return search_text_tags.value.some((v) =>
                 c["short_name"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
                 c["long_name"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                c["description"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0
+                c["description"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                c["data_type"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0
             );
         });
     });
 
+    // Synchronize selected_measures when included_measures changes
+    watch(included_measures, (newIncluded) => {
+      const currentShortNames = newIncluded.map(m => m.short_name);
+      selected_measures.value = selected_measures.value.filter(s => currentShortNames.includes(s));
+    });
+
+
+    function toggleCurrentMeasures() {
+
+      console.log(select_all.value)
+      if (select_all.value) {
+         var allSnames = included_measures.value.map((m) => {
+          return m["short_name"]
+        })
+        console.log(allSnames)
+        selected_measures.value = allSnames
+      } else {
+        selected_measures.value = []
+      }
+    }
+
     function resetTable() {
         search_text.value = ""
         search_text_tags.value = []
+        select_all.value = false
+        selected_measures.value = []
     }
 
     function addSearchTextTag(option) {

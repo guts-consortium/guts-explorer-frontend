@@ -1,5 +1,8 @@
 <template>
-    <h3 class="page-heading"> &nbsp;&nbsp; Metadata Basket</h3>
+    <h3 class="page-heading">
+            &nbsp;&nbsp; <v-icon>mdi-cart</v-icon>&nbsp;Metadata Basket
+          </h3>
+    <!-- <h3 class="page-heading"> &nbsp;&nbsp; Metadata Basket</h3> -->
 
     <span v-if="basket.length == 0">
         <em>There are no items in your basket</em>
@@ -7,6 +10,38 @@
     <v-container v-if="basket.length > 0">
         <v-row>
             <v-col cols="9">
+            <v-card
+                key="demographics"
+                class="mb-2 pt-1"
+                outlined
+            >
+                <v-card-title><small>Demographic variables to include:</small></v-card-title>
+
+                <v-col style="margin-left: 1em;">
+                    <v-row>
+                        <span v-for="d in Object.keys(data_descriptions['demographics'])">
+                            <v-checkbox v-model="selected_demographics" :value="d" class="my-0 mx-2" density="compact" hide-details>
+                                <template v-slot:label>
+                                    {{ data_descriptions['demographics'][d]['long_name'] }}
+                                    <sup>
+                                    <small>
+                                        <v-tooltip location="bottom" max-width="400px">
+                                        <template v-slot:activator="{ props }">
+                                            <v-icon v-bind="props">mdi-information-outline</v-icon>
+                                        </template>
+                                        {{ data_descriptions['demographics'][d]['description'] }}
+                                        </v-tooltip>
+                                    </small>
+                                    </sup>
+                                </template>
+                            </v-checkbox>
+                        </span>
+                    </v-row>
+                </v-col>
+
+            </v-card>
+            <br>
+            <h3>Basket Items</h3>
             <v-card
                 v-for="(item, index) in basket"
                 :key="index"
@@ -219,14 +254,17 @@
     const file_metadata = inject('file_metadata')
     const basket = inject('basket')
     const isAuthenticated = inject('isAuthenticated')
+    const data_descriptions = inject('data_descriptions')
+    const selected_demographics = ref([])
+    
 
     const name = ref("Stephan Heunis")
     const affiliation = ref("Some place")
     const email = ref("s@h.com")
     const members = ref("Me, you, everyone")
-    const title = ref("Joyful jester")
+    const title = ref("Dr")
     const description = ref("Some analysis")
-    const comments = ref("fml")
+    const comments = ref("lorum ipsum...")
     const status = ref(true)
 
     const item_index_to_delete = ref(null)
