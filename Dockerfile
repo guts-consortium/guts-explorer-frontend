@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Build
-CMD ["npm", "run", "build"]
+RUN npm run build
 
 # Serve using Nginx
 FROM nginx:alpine
@@ -24,3 +24,6 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Custom Nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose port 80
+EXPOSE 80
