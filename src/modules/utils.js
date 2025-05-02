@@ -101,4 +101,8 @@ export function arrayIncludesNone(arr, other) {
   return other.every(el => !arr.includes(el));
 }
 
+export function isObject(val) {
+  return typeof val === 'object' && !Array.isArray(val) && val !== null
+}
+
 

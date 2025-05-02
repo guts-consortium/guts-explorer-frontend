@@ -133,8 +133,9 @@
         basket,
         addToBasket,
         deleteBasketItem,
-        getBasketStats
-    } = useBasket(all_arrays, filter_arrays)
+        getBasketStats,
+        getDemographicsFiles
+    } = useBasket(all_arrays)
 
     provide('measure_data', measure_data)
     provide('all_arrays', all_arrays)
@@ -143,6 +144,7 @@
     provide('basket', basket)
     provide('addToBasket', addToBasket)
     provide('getBasketStats', getBasketStats)
+    provide('getDemographicsFiles', getDemographicsFiles)
     provide('selected_component', selected_component)
     provide('file_metadata', file_metadata)
     provide('deleteBasketItem', deleteBasketItem)
@@ -328,6 +330,7 @@
                         "cohort": part["cohort"] ,
                         "session": part["session"] ,
                         "age": part["age"],
+                        "sex": part["sex"],
                         "short_name": m_code,
                         "state": states,
                     }
@@ -361,7 +364,7 @@
 
             // Now we need to construct all user input options
             // 
-            var all_options = ["cohort", "session", "data_type", "data_type_sub", "age", "short_name"]
+            var all_options = ["cohort", "session", "data_type", "data_type_sub", "age", "short_name", "sex"]
             var all_options_obj = {}
             for (var x=0; x<all_options.length; x++) {
                 var option = all_options[x]

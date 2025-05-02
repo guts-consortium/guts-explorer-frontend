@@ -41,8 +41,13 @@
           <v-btn small outlined color="dark" @click="resetTable">
             <v-icon left>mdi-rotate-left</v-icon> Reset Table
           </v-btn>
-          <v-btn small outlined color="dark" @click="addToBasket('table', included_measures); showModal('addedItemModal')">
+          &nbsp;
+          <v-btn small outlined color="dark" @click="addToBasket(toRaw(filter_arrays), 'table', included_measures); showModal('addedItemModal')">
             <v-icon left>mdi-cart-plus</v-icon> Add Table to Basket
+          </v-btn>
+          &nbsp;
+          <v-btn small outlined color="dark" @click="addRowsToBasket();">
+            <v-icon left>mdi-cart-plus</v-icon> Add Selected Measures to Basket
           </v-btn>
         </v-col>
       </v-row>
@@ -74,12 +79,11 @@
                     <span v-for="el of item[field.key]" class="element-pill">{{el}} <br></span>
                   </span>
                   <span v-else-if="field.key === 'select'">
-                    <v-checkbox v-model="selected_measures" :value="item['short_name']" @update:modelValue="" class="my-0" density="compact" hide-details></v-checkbox>
+                    <v-checkbox v-model="selected_measures_boxes" :value="item['short_name']" @update:modelValue="" class="my-0" density="compact" hide-details></v-checkbox>
                   </span>
                   <span v-else>
                     {{ item[field.key] }}
                   </span>
-                  
                 </td>
               </tr>
             </tbody>
@@ -101,6 +105,18 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog v-model="noMeasuresSelectedModal" max-width="500px">
+        <v-card>
+        <v-card-title>No measures selected</v-card-title>
+        <v-card-text class="text-left">
+            Please select measures before adding them to your basket.
+        </v-card-text>
+        <v-card-actions>
+            <v-btn text="Ok" @click="noMeasuresSelectedModal = false"></v-btn>
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+
 
 </template>
 
@@ -110,8 +126,9 @@
     const addToBasket = inject('addToBasket')
     const basket = inject('basket')
     const showAddedItemModal = ref(false);
+    const noMeasuresSelectedModal = ref(false)
     const select_all = ref(false)
-    const selected_measures = ref([])
+    const selected_measures_boxes = ref([])
     const measure_headings = [
       {
         key: "select",
@@ -159,10 +176,16 @@
         });
     });
 
-    // Synchronize selected_measures when included_measures changes
+    const selected_measures = computed(() => {
+      return measure_data.value.filter((m) => {
+        return selected_measures_boxes.value.includes(m.short_name)
+      })        
+    });
+
+    // Synchronize selected_measures_boxes when included_measures changes
     watch(included_measures, (newIncluded) => {
       const currentShortNames = newIncluded.map(m => m.short_name);
-      selected_measures.value = selected_measures.value.filter(s => currentShortNames.includes(s));
+      selected_measures_boxes.value = selected_measures_boxes.value.filter(s => currentShortNames.includes(s));
     });
 
 
@@ -174,9 +197,9 @@
           return m["short_name"]
         })
         console.log(allSnames)
-        selected_measures.value = allSnames
+        selected_measures_boxes.value = allSnames
       } else {
-        selected_measures.value = []
+        selected_measures_boxes.value = []
       }
     }
 
@@ -184,7 +207,7 @@
         search_text.value = ""
         search_text_tags.value = []
         select_all.value = false
-        selected_measures.value = []
+        selected_measures_boxes.value = []
     }
 
     function addSearchTextTag(option) {
@@ -212,6 +235,15 @@
     const hideModal = (modalRef) => {
       showAddedItemModal.value = false;
     };
+
+    function addRowsToBasket() {
+      if (selected_measures.value.length == 0) {
+        noMeasuresSelectedModal.value = true
+      } else {
+        addToBasket(toRaw(filter_arrays), 'table', selected_measures.value)
+        showAddedItemModal.value = true
+      }
+    }
 </script>
 
 <style scoped>
