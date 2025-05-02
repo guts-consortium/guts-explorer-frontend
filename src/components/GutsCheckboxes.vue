@@ -188,7 +188,7 @@
             </v-btn>
             <br>
             <br>
-            <v-btn small outlined @click="addToBasket('checkboxes'); showModal('addedItemModal')">
+            <v-btn small outlined @click="addToBasket(toRaw(filter_arrays), 'checkboxes', included_measures); showModal('addedItemModal')">
               <v-icon>mdi-cart-plus</v-icon> Add Selection to Basket
             </v-btn>
           </v-col>
@@ -206,7 +206,7 @@
       <v-card-title class="d-flex justify-space-between align-center">
         
         <span>Measures:</span>
-          <v-btn small outlined @click="addToBasket('checkboxes'); showModal('addedItemModal')">
+          <v-btn small outlined @click="addSubselectionToBasket()">
               <v-icon>mdi-cart-plus</v-icon> Add Subselected Measures to Basket
           </v-btn>
 
@@ -237,7 +237,7 @@
                     <span v-for="el of item[field.key]" class="element-pill">{{el}} <br></span>
                   </span>
                   <span v-else-if="field.key === 'select'">
-                    <v-checkbox v-model="selected_measures" :value="item['short_name']" @update:modelValue="" class="my-0" density="compact" hide-details></v-checkbox>
+                    <v-checkbox v-model="selected_measures_boxes" :value="item['short_name']" @update:modelValue="" class="my-0" density="compact" hide-details></v-checkbox>
                   </span>
                   <span v-else>
                     {{ item[field.key] }}
@@ -264,6 +264,18 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog v-model="noMeasuresSelectedModal" max-width="500px">
+        <v-card>
+        <v-card-title>No measures selected</v-card-title>
+        <v-card-text class="text-left">
+            Please select measures before adding them to your basket.
+        </v-card-text>
+        <v-card-actions>
+            <v-btn text="Ok" @click="noMeasuresSelectedModal = false"></v-btn>
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+
   </template>
 
 
@@ -273,9 +285,7 @@
     import { makeReadable, removeElementFromArray, getArrayIntersection, arrayIncludesAny, arrayIncludesNone} from '@/modules/utils.js'
 
     const all_arrays = inject('all_arrays')
-    all_arrays['sex'] = ['male', 'female', 'other']
     const filter_arrays = inject('filter_arrays')
-    filter_arrays['sex'] = ['male', 'female', 'other']
     const participant_measures = inject('participant_measures')
     const basket = inject('basket')
     const addToBasket = inject('addToBasket')
@@ -311,9 +321,7 @@
       }
     ]
     const select_all = ref(false)
-    const selected_measures = ref([])
-
-
+    const selected_measures_boxes = ref([])
     const session_all = ref(true)
     const category_all = ref(true)
     const type_all = ref(true)
@@ -332,14 +340,13 @@
         "sex": true,
     })
     const showAddedItemModal = ref(false);
+    const noMeasuresSelectedModal = ref(false)
 
     function toggleChecks(name) {
         filter_toggles[name] = !filter_toggles[name]
         if (filter_toggles[name]) {
             filter_arrays[name].splice(0, filter_arrays[name].length, ...all_arrays[name])
-            // filter_arrays[name] = all_arrays[name]
             if (name == 'data_type') {
-              // filter_arrays['data_type_sub'] = all_arrays['data_type_sub']
               filter_arrays['data_type_sub'].splice(0, filter_arrays['data_type_sub'].length, ...all_arrays['data_type_sub'])
             }
         }
@@ -347,7 +354,6 @@
             filter_arrays[name] = []
             filter_arrays[name].splice(0)
             if (name == 'data_type') {
-              // filter_arrays['data_type_sub'] = []
               filter_arrays['data_type_sub'].splice(0)
 
             }
@@ -370,13 +376,26 @@
       sex_all.value = true
 
       select_all.value = false
-      selected_measures.value = []
+      selected_measures_boxes.value = []
 
     }
 
+    function addSubselectionToBasket() {
+      if (selected_measures.value.length == 0) {
+        noMeasuresSelectedModal.value = true
+      } else {
+        console.log("going to add basket item from checkboxes, with subselection:")
+        console.log(selected_measures.value)
+        addToBasket(toRaw(filter_arrays),'checkboxes', selected_measures.value)
+        showAddedItemModal.value = true
+      }
+    }
 
-
-    // 
+    const selected_measures = computed(() => {
+      return measure_data.value.filter((m) => {
+        return selected_measures_boxes.value.includes(m.short_name)
+      })        
+    });
 
     function viewBasket() {
         showAddedItemModal.value = false;
@@ -396,9 +415,9 @@
         var allSnames = included_measures.value.map((m) => {
           return m["short_name"]
         })
-        selected_measures.value = allSnames
+        selected_measures_boxes.value = allSnames
       } else {
-        selected_measures.value = []
+        selected_measures_boxes.value = []
       }
     }
 
@@ -445,10 +464,6 @@
     }
 
     onMounted( () => {
-      // console.log("Checkbox view mounted")
-      // globalThis.myvar = toRaw(participant_measures.value)
-
-      // console.log(toRaw(participant_measures.value))
 
     })
 
@@ -489,9 +504,15 @@
             return filter_arrays["age"].indexOf(sample["age"] ) >= 0
         });
     });
+    const filtered_samples_sex = computed(() => {
+        return filtered_samples_age.value.filter((sample) => {
+            if (filter_arrays["sex"].length == all_arrays["sex"].length) return true;
+            return filter_arrays["sex"].indexOf(sample["sex"] ) >= 0
+        });
+    });
     const filtered_samples_state = computed(() => {
         // sample["state"] is an array with ["primary", "derivative"]
-        return filtered_samples_age.value.filter((sample) => {
+        return filtered_samples_sex.value.filter((sample) => {
             if (filter_arrays["state"].length == all_arrays["state"].length) return true;
             return  filter_arrays["state"].filter(value => sample['state'].includes(value)).length > 0
         });
@@ -521,10 +542,10 @@
       })
     });
 
-    // Synchronize selected_measures when included_measures changes
+    // Synchronize selected_measures_boxes when included_measures changes
     watch(included_measures, (newIncluded) => {
       const currentShortNames = newIncluded.map(m => m.short_name);
-      selected_measures.value = selected_measures.value.filter(s => currentShortNames.includes(s));
+      selected_measures_boxes.value = selected_measures_boxes.value.filter(s => currentShortNames.includes(s));
     });
 
     

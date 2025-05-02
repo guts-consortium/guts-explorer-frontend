@@ -15,12 +15,15 @@
                 class="mb-2 pt-1"
                 outlined
             >
-                <v-card-title><small>Demographic variables to include:</small></v-card-title>
+                <v-card-title class="d-flex justify-space-between align-center">
+                    <small>Demographic variables to include:</small><v-checkbox v-model="select_all" label="All"  @update:modelValue="toggleDemographics()" class="my-0" density="compact" hide-details></v-checkbox>
+                </v-card-title>
 
                 <v-col style="margin-left: 1em;">
                     <v-row>
+                        
                         <span v-for="d in Object.keys(data_descriptions['demographics'])">
-                            <v-checkbox v-model="selected_demographics" :value="d" class="my-0 mx-2" density="compact" hide-details>
+                            <v-checkbox v-model="selected_demographics" :value="d" @update:modelValue="updateDemoFiles" class="my-0 mx-2" density="compact" hide-details>
                                 <template v-slot:label>
                                     {{ data_descriptions['demographics'][d]['long_name'] }}
                                     <sup>
@@ -58,11 +61,11 @@
                         <span v-if="['include_data_state', 'added_from'].indexOf(key) < 0">
                         {{ textKeysMultiple[key] }}:
                         <em>
-                            <span v-if="val.length == 0 || val === all_arrays[key]">
+                            <span v-if="val.length == 0 || val.sort().join(',') === [...new Set(all_arrays[key])].sort().join(',')">
                             all
                             </span>
                             <span v-else>
-                            <span v-for="(v, idx) in val" :key="idx">{{ v }}, </span>
+                                <span v-for="(v, idx) in val" :key="idx">{{ v }}<span v-if="idx + 1 != val.length">, </span> </span>
                             </span>
                         </em>
                         </span>
@@ -91,7 +94,7 @@
                 <v-card-text>
                 Number of participants: {{ basketStats.participants.length }}
                 </v-card-text>
-                <v-card-text>Number of files: {{ basketStats.files.length }}</v-card-text>
+                <v-card-text>Number of files: {{ basketStats.files.length + demographicFiles.length }}</v-card-text>
                 <v-card-text>Total size: {{ formatBytes(basketSize) }}</v-card-text>
                 
                 <v-btn outlined color="dark" class="option-button push" @click="checkoutBasket">
@@ -202,7 +205,7 @@
         v-model="showLoginModal"
         max-width="500px"
         @click:outside="resetLoginModal">
-        <RegisterLogin @close-dialog="resetLoginModal" :key="`input-${Date.now()}`"</RegisterLogin>
+        <RegisterLogin @close-dialog="resetLoginModal" :key="`input-${Date.now()}`"></RegisterLogin>
     </v-dialog>
 
     <v-dialog
@@ -226,7 +229,7 @@
 </template>
 
 <script setup>
-    import { inject, computed, ref } from 'vue'
+    import { inject, computed, ref, onMounted } from 'vue'
     import { downloadArrayAsFormat, formatBytes} from '@/modules/utils.js'
     const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
     const submit_endpoint = `${backendUrl}/api/submit`
@@ -240,22 +243,34 @@
         "age": "Ages",
         "short_name": "Short names",
         "state": "Data states",
+        "sex": "Sex",
+        "data_type_sub": "Data subtypes",
     }
 
     const showCheckout = ref(false)
     const showLoginModal = ref(false)
     const showDeleteItemModal = ref(false)
     const showCheckoutSuccess = ref(false)
+    const select_all = ref(false)
 
     const all_arrays = inject('all_arrays')
     const participant_measures = inject('participant_measures')
     const getBasketStats = inject('getBasketStats')
+    const getDemographicsFiles = inject('getDemographicsFiles')
     const deleteBasketItem = inject('deleteBasketItem')
     const file_metadata = inject('file_metadata')
     const basket = inject('basket')
     const isAuthenticated = inject('isAuthenticated')
     const data_descriptions = inject('data_descriptions')
     const selected_demographics = ref([])
+    const basketStats = ref({
+        samples: [],
+        participants: [],
+        files: [],
+        filenames: [],
+        providers: []
+    })
+    const demographicFiles = ref([])
     
 
     const name = ref("Stephan Heunis")
@@ -269,12 +284,40 @@
 
     const item_index_to_delete = ref(null)
 
-    const basketStats = computed(() => {
-        return getBasketStats(participant_measures.value, file_metadata.value)
+    onMounted(() => {
+        basketStats.value = getBasketStats(participant_measures.value, file_metadata.value)
+        updateDemoFiles()
     });
 
+    function toggleDemographics() {
+      if (select_all.value) {
+        selected_demographics.value = Object.keys(data_descriptions['demographics'])
+      } else {
+        selected_demographics.value = []
+      }
+      updateDemoFiles()
+    }
+
+    // const basketStats = computed(() => {
+    //     return getBasketStats(participant_measures.value, file_metadata.value)
+    // });
+
+    function updateDemoFiles() {
+        var demoFiles = getDemographicsFiles(
+            basketStats.value.participants,
+            selected_demographics.value,
+            file_metadata.value
+        )
+        demographicFiles.value = demoFiles.filter((file) => {
+            return !basketStats.value.filenames.includes(file["file_path"])
+        })
+    }
+
     const basketSize = computed(() => {
-        var sizes = basketStats.value.files.map((m) => (m["file_size"]));
+        var sizesBasketItems = basketStats.value.files.map((m) => (m["file_size"]));
+        var sizesDemographItems = demographicFiles.value.map((m) => (m["file_size"]));
+        var sizes = sizesBasketItems.concat(sizesDemographItems)
+
         return sizes.reduce((partialSum, a) => partialSum + a, 0);
     });
 
@@ -303,6 +346,8 @@
         console.log(`All providers:`)
         console.log(basketStats.value.providers)
 
+        const files_to_request = [].concat(basketStats.value.files).concat(demographicFiles.value)
+
         var payload = {
             provider_friendly: "",
             file_paths: [],
@@ -321,11 +366,15 @@
         for (var i=0; i<basketStats.value.providers.length; i++) {
             var provider = basketStats.value.providers[i]
             console.log(`Making POST for provider: ${provider}`)
-            var provider_file_names = basketStats.value.files.filter((f) => {
+            var provider_file_names = files_to_request.filter((f) => {
                 return f["explorer_provider"] == provider
             }).map((m) => (m["file_path"]));
+            
             payload.provider_friendly = provider;
             payload.file_paths = provider_file_names;
+            console.log(`Making a data request to endpoint: ${submit_endpoint}`)
+            console.log(`Payload:`)
+            console.log(payload)
             fetch(submit_endpoint, {
                 method: 'POST',
                 headers: {
@@ -381,6 +430,8 @@
 
     function deleteBasketItemLocal() {
         deleteBasketItem(item_index_to_delete.value)
+        basketStats.value = getBasketStats(participant_measures.value, file_metadata.value)
+        updateDemoFiles()
         showDeleteItemModal.value = false
     }
 
