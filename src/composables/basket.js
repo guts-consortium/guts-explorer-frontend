@@ -9,7 +9,8 @@ export function useBasket(all_arrays) {
 
     function addToBasket(filter_arrays, addFrom, included_measures) {
         // Add to basket from table view
-        console.log("included_measures beind added to basket from table subselection:")
+        // filter_arrays argument is not used here and can be set to anything
+        console.log("included_measures being added to basket from table subselection:")
         console.log(included_measures)
         if (addFrom == 'table') {
             var selected_shortnames = included_measures.map(function(measure) {
