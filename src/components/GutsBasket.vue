@@ -142,34 +142,37 @@
                     <v-text-field
                         v-model="affiliation"
                         label="Affiliation"
+                        :rules="[v => !!v || 'Affiliation is required']"
                         required
                     ></v-text-field>
                     <v-text-field
                         v-model="email"
                         label="Email address"
+                        :rules="[v => !!v || 'Email is required']"
                         required
                         type="email"
                     ></v-text-field>
                     <v-text-field
                         v-model="members"
                         label="Project members"
-                        required
                     ></v-text-field>
                     <v-text-field
                         v-model="title"
                         label="Project title"
+                        :rules="[v => !!v || 'Project title is required']"
                         required
                     ></v-text-field>
-                    <v-text-field
+                    <v-textarea
                         v-model="description"
                         label="Project description"
+                        :rules="[v => !!v || 'Project description is required']"
                         required
-                    ></v-text-field>
+                        rows="3"
+                    ></v-textarea>
                     <v-textarea
                         v-model="comments"
                         label="Additional comments"
                         rows="3"
-                        required
                     ></v-textarea>
                     <v-checkbox
                         v-model="status"
@@ -273,13 +276,13 @@
     const demographicFiles = ref([])
     
 
-    const name = ref("Stephan Heunis")
-    const affiliation = ref("Some place")
-    const email = ref("s@h.com")
-    const members = ref("Me, you, everyone")
-    const title = ref("Dr")
-    const description = ref("Some analysis")
-    const comments = ref("lorum ipsum...")
+    const name = ref(null)
+    const affiliation = ref(null)
+    const email = ref(null)
+    const members = ref(null)
+    const title = ref(null)
+    const description = ref(null)
+    const comments = ref(null)
     const status = ref(true)
 
     const item_index_to_delete = ref(null)
