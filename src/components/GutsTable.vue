@@ -42,7 +42,7 @@
             <v-icon left>mdi-rotate-left</v-icon> Reset Table
           </v-btn>
           &nbsp;
-          <v-btn small outlined color="dark" @click="addToBasket(toRaw(filter_arrays), 'table', included_measures); showModal('addedItemModal')">
+          <v-btn small outlined color="dark" @click="addToBasket(null, 'table', included_measures); showModal('addedItemModal')">
             <v-icon left>mdi-cart-plus</v-icon> Add Table to Basket
           </v-btn>
           &nbsp;
@@ -60,10 +60,16 @@
                 <th
                   v-for="field in measure_headings"
                   :key="field.key"
-                  :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long_name' ? '20%' : (field.key === 'data_category' ? '20%' : (field.key === 'select' ? '6%' : '15%'))) }"
+                  :style="{ width: field.key === 'description' ? '48%' : (field.key === 'long_name' ? '18%' : (field.key === 'data_category' ? '20%' : (field.key === 'select' ? '6%' : (field.key === 'cohort' ? '11%' : (field.key === 'all_sessions' ? '22%' : '15%'))))) }"
                 >
                   <span v-if="field.key === 'select'">
                     <v-checkbox v-model="select_all"  @update:modelValue="toggleCurrentMeasures()" class="my-0" density="compact" hide-details></v-checkbox>
+                  </span>
+                  <span v-else-if="field.key === 'cohort'">
+                    <strong>{{ field.label }}</strong>
+                  </span>
+                  <span v-else-if="field.key === 'session'">
+                    <strong>{{ field.label }}</strong>
                   </span>
                   <span v-else>
                     <strong>{{ field.label }}</strong>
@@ -75,7 +81,22 @@
             <tbody>
               <tr v-for="item in included_measures" >
                 <td v-for="field in measure_headings" >
-                  <span v-if="Array.isArray(item[field.key])" style="line-height: 1.5em;">
+                  <span v-if="field.key === 'all_sessions'">
+                    <span v-for="(opt, idx)  in all_arrays['session']" class="my-0" style="font-family: monospace;">
+                      <span v-if="item[field.key].includes(opt.substring(1))">
+                        {{opt.substring(1)}}
+                      </span>
+                      <span v-else style="color:#c8d1e0">
+                        {{ ((idx+1) % 2) == 0 ? 'Xa' : 'X' }}
+                      </span>&nbsp;
+                    </span>
+                  </span>
+                  <span v-else-if="field.key === 'cohort'" style="line-height: 1.5em;">
+                    <span v-for="el of item[field.key]">
+                      <span class="element-pill">{{el}}</span>&nbsp;
+                    </span>
+                  </span>
+                  <span v-else-if="field.key === 'data_category'" style="line-height: 1.5em;">
                     <span v-for="el of item[field.key]" class="element-pill">{{el}} <br></span>
                   </span>
                   <span v-else-if="field.key === 'select'">
@@ -121,7 +142,7 @@
 </template>
 
 <script setup>
-    import { ref, inject, computed, watch } from 'vue'
+    import { ref, inject, computed, watch, toRaw} from 'vue'
 
     const addToBasket = inject('addToBasket')
     const basket = inject('basket')
@@ -129,6 +150,7 @@
     const noMeasuresSelectedModal = ref(false)
     const select_all = ref(false)
     const selected_measures_boxes = ref([])
+    const all_arrays = inject('all_arrays')
     const measure_headings = [
       {
         key: "select",
@@ -153,6 +175,14 @@
       {
           key: "data_category",
           label: "Category",
+      },
+      {
+          key: "cohort",
+          label: "Cohort"
+      },
+      {
+          key: "all_sessions",
+          label: "Session"
       }
     ]
     var search_text = ref("");
@@ -240,7 +270,7 @@
       if (selected_measures.value.length == 0) {
         noMeasuresSelectedModal.value = true
       } else {
-        addToBasket(toRaw(filter_arrays), 'table', selected_measures.value)
+        addToBasket(null, 'table', selected_measures.value)
         showAddedItemModal.value = true
       }
     }

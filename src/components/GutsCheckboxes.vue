@@ -218,10 +218,16 @@
                 <th
                   v-for="field in measure_headings"
                   :key="field.key"
-                  :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long_name' ? '20%' : (field.key === 'data_category' ? '20%' : (field.key === 'select' ? '6%' : '15%'))) }"
+                  :style="{ width: field.key === 'description' ? '48%' : (field.key === 'long_name' ? '18%' : (field.key === 'data_category' ? '20%' : (field.key === 'select' ? '6%' : (field.key === 'cohort' ? '11%' : (field.key === 'all_sessions' ? '22%' : '15%'))))) }"
                 >
                   <span v-if="field.key === 'select'">
                     <v-checkbox v-model="select_all"  @update:modelValue="toggleCurrentMeasures()" class="my-0" density="compact" hide-details></v-checkbox>
+                  </span>
+                  <span v-else-if="field.key === 'cohort'">
+                    <strong>{{ field.label }}</strong>
+                  </span>
+                  <span v-else-if="field.key === 'session'">
+                    <strong>{{ field.label }}</strong>
                   </span>
                   <span v-else>
                     {{ field.label }}
@@ -233,7 +239,22 @@
             <tbody>
               <tr v-for="item in included_measures" >
                 <td v-for="field in measure_headings" >
-                  <span v-if="Array.isArray(item[field.key])" style="line-height: 1.5em;">
+                  <span v-if="field.key === 'all_sessions'">
+                    <span v-for="(opt, idx)  in all_arrays['session']" class="my-0" style="font-family: monospace;">
+                      <span v-if="item[field.key].includes(opt.substring(1))">
+                        {{opt.substring(1)}}
+                      </span>
+                      <span v-else style="color:#c8d1e0">
+                        {{ ((idx+1) % 2) == 0 ? 'Xa' : 'X' }}
+                      </span>&nbsp;
+                    </span>
+                  </span>
+                  <span v-else-if="field.key === 'cohort'" style="line-height: 1.5em;">
+                    <span v-for="el of item[field.key]">
+                      <span class="element-pill">{{el}}</span>&nbsp;
+                    </span>
+                  </span>
+                  <span v-else-if="field.key === 'data_category'" style="line-height: 1.5em;">
                     <span v-for="el of item[field.key]" class="element-pill">{{el}} <br></span>
                   </span>
                   <span v-else-if="field.key === 'select'">
@@ -318,6 +339,14 @@
       {
           key: "data_category",
           label: "Category",
+      },
+      {
+          key: "cohort",
+          label: "Cohort"
+      },
+      {
+          key: "all_sessions",
+          label: "Session"
       }
     ]
     const select_all = ref(false)
