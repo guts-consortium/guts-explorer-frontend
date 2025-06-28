@@ -12,6 +12,7 @@
                     <div class="menu-container">
                         <ul class="menu push">
                             <li @click="selected_component = 'home'" :class="{active: selected_component == 'home'}"><i class="fas fa-home"></i></li>
+                            <li @click="selected_component = 'info'" :class="{active: selected_component == 'info'}"><i class="fas fa-circle-info"></i></li>
                             <li @click="selected_component = 'table'" :class="{active: selected_component == 'table'}"><i class="fas fa-bars"></i></li>
                             <li @click="selected_component = 'checkboxes'" :class="{active: selected_component == 'checkboxes'}"><i class="fas fa-list-check"></i></li>
                             <li @click="selected_component = 'basket'" :class="{active: selected_component == 'basket', hasitems: basket.length > 0 }">
@@ -33,6 +34,9 @@
                     </div>
                     <br>
                     <div style="text-align:center"><h2><em> ... PAGE UNDER CONSTRUCTION ... </em></h2></div>
+                </div>
+                <div v-if="selected_component=='info'">
+                    <GutsInfo></GutsInfo>
                 </div>
                 <div v-if="selected_component=='table'">
                     <GutsTable></GutsTable>
@@ -94,7 +98,7 @@
     const cohorts_endpoint = `${backendUrl}/api/cohorts`
 
     // Data
-    var selected_component = ref("home"); // must be one of: home, table, checkboxes, basket
+    var selected_component = ref("home"); // must be one of: home, info, table, checkboxes, basket
     var measure_data = ref([])
     var measure_shortnames = ref([])
     var measure_data_loaded = ref(false)
@@ -134,7 +138,8 @@
         addToBasket,
         deleteBasketItem,
         getBasketStats,
-        getDemographicsFiles
+        getDemographicsFiles,
+        emptyBasket,
     } = useBasket(all_arrays)
 
     provide('measure_data', measure_data)
@@ -148,6 +153,7 @@
     provide('selected_component', selected_component)
     provide('file_metadata', file_metadata)
     provide('deleteBasketItem', deleteBasketItem)
+    provide('emptyBasket', emptyBasket)
     provide('userInfo', userInfo)
 
     onBeforeMount( () => {
