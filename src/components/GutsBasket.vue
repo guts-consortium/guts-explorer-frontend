@@ -120,66 +120,146 @@
         <v-card-title class="headline">Basket Checkout</v-card-title>
         <form @submit.prevent="handleCheckoutSubmit">
             <v-card-text>
-                <em>
-                Please complete the following information to create a data request
-                (currently only GUTS researchers can request data). This information
-                will be attached to the metadata file. Once you have downloaded the file,
-                please send it via email to <a href="mailto:guts@example.com">guts@example.com</a>.
-                The GUTS Steering Committee will evaluate your request. Once approved,
-                the data manager will make the data available to you via YODA.
+                <div style="text-align: justify;">
+                    <em>
+                        Please complete the following information to create a data request
+                        (currently only GUTS researchers can request data). After submission,
+                        the GUTS Steering Committee will evaluate the request, which should
+                        take no longer than three weeks. Once approved, the data manager will
+                        make the data available to you via Yoda.
+                    </em>
+                </div>
                 <br /><br />
-                Note that in future, we plan to include functionality to directly request
-                data via this form.
-                </em>
-                <br /><br />
-                
-                    <v-text-field
-                        v-model="name"
-                        label="Name"
-                        :rules="[v => !!v || 'Name is required']"
+                    <v-select
+                        v-model="requested_for"
+                        label="Data requested for"
+                        :items="['Myself (researcher)', 'A student']"
                         required
-                    ></v-text-field>
-                    <v-text-field
-                        v-model="affiliation"
-                        label="Affiliation"
-                        :rules="[v => !!v || 'Affiliation is required']"
+                        density="compact"
+                    ></v-select>
+                    <div v-if="requested_for" style="padding-left: 1em;">
+                        <v-text-field
+                            v-model="name"
+                            label="First and last name (researcher)"
+                            required
+                            density="compact"
+                        ></v-text-field>
+                        <v-text-field
+                            v-if="requested_for == 'A student'"
+                            v-model="name_student"
+                            label="First and last name (student)"
+                            required
+                            density="compact"
+                        ></v-text-field>
+                        <v-select
+                            v-model="work_package"
+                            label="Work package (researcher)"
+                            :items="['WP1-R', 'WP1-A', 'WP2', 'WP3', 'WP4', 'WP']"
+                            required
+                            density="compact"
+                        ></v-select>
+                        <v-text-field
+                            v-model="affiliation"
+                            label="Affiliation (researcher)"
+                            required
+                            density="compact"
+                        ></v-text-field>
+                        <v-text-field
+                            v-model="email"
+                            label="Email address (researcher)"
+                            required
+                            type="email"
+                            density="compact"
+                        ></v-text-field>
+
+                    </div>
+                    <v-select
+                        v-model="purpose"
+                        label="Purpose"
+                        :items="['Publication', 'Non-publication', 'Thesis writing']"
                         required
-                    ></v-text-field>
-                    <v-text-field
-                        v-model="email"
-                        label="Email address"
-                        :rules="[v => !!v || 'Email is required']"
-                        required
-                        type="email"
-                    ></v-text-field>
-                    <v-text-field
-                        v-model="members"
-                        label="Project members"
-                    ></v-text-field>
+                        density="compact"
+                    ></v-select>
+                    <div v-if="purpose" style="padding-left: 1em;">
+                        <span v-if="purpose == 'Publication'">
+                            <v-select
+                                v-model="publication_proposal"
+                                label="Publication proposal seen and approved by a work package lead?"
+                                :items="['Yes', 'No']"
+                                required
+                                density="compact"
+                            ></v-select>
+                            <v-select
+                                v-if="publication_proposal == 'Yes'"
+                                v-model="approved_by"
+                                label="Approved by"
+                                :items="['Eveline Crone, Erasmus University Rotterdam (WP1-R)',
+                                    'Lydia Krabbendam, VU-Amsterdam (WP1-A)',
+                                    'Anna van Duijvenvoorde, Leiden University (WP2)',
+                                    'René Veenstra, Groningen University (WP2)',
+                                    'Lucres Nauta-Jansen, AmsterdamUMC (WP3)',
+                                    'Hilleke Hulshoff Pol, Utrecht University (WP4)',
+                                ]"
+                                required
+                                density="compact"
+                            ></v-select>
+                        </span>
+                        <span v-else-if="purpose == 'Thesis writing'">
+                            <v-select
+                                v-model="research_proposal"
+                                label="Student research proposal seen and approved by supervisor?"
+                                :items="['Yes', 'No']"
+                                required
+                                density="compact"
+                            ></v-select>
+                        </span>
+                        <span v-else>
+                            <v-textarea
+                                v-model="purpose_description"
+                                label="Describe why access is needed"
+                                required
+                                rows="3"
+                                density="compact"
+                            ></v-textarea>
+                        </span>
+                    </div>
+
                     <v-text-field
                         v-model="title"
                         label="Project title"
-                        :rules="[v => !!v || 'Project title is required']"
                         required
+                        density="compact"
                     ></v-text-field>
+                    <div style="padding-left: 1em; padding-right: 1em; margin-bottom: 1em; text-align: justify;">
+                        <small><em>* The project title will be used to generate the workspace name on Yoda, where the data package will be placed once the data request is approved - please keep it short (e.g., the project title "Developmental Patterns of Delay Discounting" becomes the workspace name "developmental-patterns-dd").</em></small>
+                    </div>
+                    <v-textarea
+                        v-model="members"
+                        label="Project members / co-authors"
+                        required
+                        rows="3"
+                        density="compact"
+                    ></v-textarea>
                     <v-textarea
                         v-model="description"
                         label="Project description"
-                        :rules="[v => !!v || 'Project description is required']"
                         required
                         rows="3"
+                        density="compact"
                     ></v-textarea>
                     <v-textarea
                         v-model="comments"
                         label="Additional comments"
                         rows="3"
+                        density="compact"
                     ></v-textarea>
                     <v-checkbox
-                        v-model="status"
+                        v-model="data_use_policy"
                         label="I am aware of and accept the data use policy"
                         :true-value="'accepted'"
                         :false-value="'not_accepted'"
                         required
+                        density="compact"
                     ></v-checkbox>
             </v-card-text>
             <v-card-actions>
@@ -214,7 +294,8 @@
     <v-dialog
         v-model="showCheckoutSuccess"
         max-width="500px"
-        @click:outside="resetCheckoutSuccess">
+        :persistent="true"
+        >
         <v-card>
             <v-card-title>Data Access Requested!</v-card-title>
             <v-card-text>
@@ -261,6 +342,7 @@
     const getBasketStats = inject('getBasketStats')
     const getDemographicsFiles = inject('getDemographicsFiles')
     const deleteBasketItem = inject('deleteBasketItem')
+    const emptyBasket = inject('emptyBasket')
     const file_metadata = inject('file_metadata')
     const basket = inject('basket')
     const isAuthenticated = inject('isAuthenticated')
@@ -274,16 +356,23 @@
         providers: []
     })
     const demographicFiles = ref([])
-    
 
-    const name = ref(null)
     const affiliation = ref(null)
+    const approved_by = ref(null)
+    const comments = ref(null)
+    const data_use_policy = ref(false)
+    const description = ref(null)
     const email = ref(null)
     const members = ref(null)
+    const name = ref(null)
+    const name_student = ref(null)
+    const publication_proposal = ref(null)
+    const purpose = ref(null)
+    const purpose_description = ref(null)
+    const requested_for = ref(null)
+    const research_proposal = ref(null)
     const title = ref(null)
-    const description = ref(null)
-    const comments = ref(null)
-    const status = ref(true)
+    const work_package = ref(null)
 
     const item_index_to_delete = ref(null)
 
@@ -330,14 +419,22 @@
     }
 
     function resetCheckoutModal() {
-        name.value = null
         affiliation.value = null
+        approved_by.value = null
+        comments.value = null
+        data_use_policy.value = false
+        description.value = null
         email.value = null
         members.value = null
+        name.value = null
+        name_student.value = null
+        publication_proposal.value = null
+        purpose.value = null
+        purpose_description.value = null
+        requested_for.value = null
+        research_proposal.value = null
         title.value = null
-        description.value = null
-        comments.value = null
-        status.value = false
+        work_package.value = null
     }
     
     function handleCheckoutSubmit() {
@@ -356,14 +453,22 @@
             file_paths: [],
             user_data: userInfo.value,
             form_data: {
-                name: name.value,
                 affiliation: affiliation.value,
+                approved_by: approved_by.value,
+                comments: comments.value,
+                data_use_policy: data_use_policy.value ,
+                description: description.value,
                 email: email.value,
                 members: members.value,
+                name: name.value,
+                name_student: name_student.value,
+                publication_proposal: publication_proposal.value,
+                purpose: purpose.value,
+                purpose_description: purpose_description.value,
+                requested_for: requested_for.value,
+                research_proposal: research_proposal.value,
                 title: title.value,
-                description: description.value,
-                comments: comments.value,
-                status: status.value
+                work_package: work_package.value,
             },
         }
         for (var i=0; i<basketStats.value.providers.length; i++) {
@@ -419,6 +524,7 @@
 
     function resetCheckoutSuccess() {
         showCheckoutSuccess.value = false
+        emptyBasket()
     }
 
     function hideDeleteItemModal() {
