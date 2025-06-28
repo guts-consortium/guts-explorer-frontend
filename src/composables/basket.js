@@ -65,6 +65,10 @@ export function useBasket(all_arrays) {
     function deleteBasketItem(index) {
         basket.splice(index, 1)
     }
+    
+    function emptyBasket() {
+        basket.length = 0;
+    }
 
     function getBasketStats(participant_measures, file_metadata) {
         var item_samples = []
@@ -273,7 +277,8 @@ export function useBasket(all_arrays) {
         addToBasket,
         deleteBasketItem,
         getBasketStats,
-        getDemographicsFiles
+        getDemographicsFiles,
+        emptyBasket,
     }
 
 }
