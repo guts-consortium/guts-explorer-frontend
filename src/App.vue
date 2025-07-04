@@ -27,6 +27,7 @@
             <!-- SELECTED COMPONENT -->
             <!-- ****************** -->
             <span v-if="all_options_loaded">
+
                 <div v-if="selected_component=='home'" style="text-align: center;">
                     <div class="home-header">
                         <h1 class="home-heading-1"><em>How do young people successfully grow up in an increasingly complex society?</em></h1>
@@ -34,6 +35,16 @@
                     </div>
                     <br>
                     <div style="text-align:center"><h2><em> ... PAGE UNDER CONSTRUCTION ... </em></h2></div>
+
+                </div>
+                <div v-else>
+                    <KeepAlive>
+                        <component :is="selectedComponentName" />
+                    </KeepAlive>
+                </div>
+<!--                 
+                <div v-if="selected_component=='home'" style="text-align: center;">
+                    
                 </div>
                 <div v-if="selected_component=='info'">
                     <GutsInfo></GutsInfo>
@@ -42,11 +53,13 @@
                     <GutsTable></GutsTable>
                 </div>
                 <div v-if="selected_component=='checkboxes'">
-                    <GutsCheckboxes></GutsCheckboxes>
+                    <KeepAlive>
+                        <GutsCheckboxes></GutsCheckboxes>
+                    </KeepAlive>
                 </div>
                 <div v-if="selected_component=='basket'">
                     <GutsBasket></GutsBasket>
-                </div>
+                </div> -->
             </span>
             <!-- ****** -->
             <!-- FOOTER -->
@@ -83,10 +96,14 @@
 
 <script setup>
     import { provide, toRaw } from 'vue';
-    import { ref, onBeforeMount, reactive } from 'vue'
+    import { ref, onBeforeMount, reactive, computed } from 'vue'
     import { useBasket } from '@/composables/basket.js'
     import { makeReadable, removeElementFromArray } from '@/modules/utils.js'
     import AuthMenu from '@/components/AuthMenu';
+    import GutsInfo from '@/components/GutsInfo.vue'
+    import GutsTable from '@/components/GutsTable.vue'
+    import GutsCheckboxes from '@/components/GutsCheckboxes.vue'
+    import GutsBasket from '@/components/GutsBasket.vue'
 
     const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
     const measure_data_endpoint = `${backendUrl}/api/measures`
@@ -98,7 +115,7 @@
     const cohorts_endpoint = `${backendUrl}/api/cohorts`
 
     // Data
-    var selected_component = ref("home"); // must be one of: home, info, table, checkboxes, basket
+    var selected_component = ref("home"); // must be one of: home, info, table, checkboxes, basket    
     var measure_data = ref([])
     var measure_shortnames = ref([])
     var measure_data_loaded = ref(false)
@@ -155,6 +172,16 @@
     provide('deleteBasketItem', deleteBasketItem)
     provide('emptyBasket', emptyBasket)
     provide('userInfo', userInfo)
+
+    const selectedComponentName = computed(() => {
+        switch (selected_component.value) {
+            case 'info': return GutsInfo
+            case 'table': return GutsTable
+            case 'checkboxes': return GutsCheckboxes
+            case 'basket': return GutsBasket
+            default: return null
+        }
+    })
 
     onBeforeMount( () => {
     fetch(measure_data_endpoint)

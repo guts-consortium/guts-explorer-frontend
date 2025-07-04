@@ -313,7 +313,7 @@
 </template>
 
 <script setup>
-    import { inject, computed, ref, onMounted } from 'vue'
+    import { inject, computed, ref, onMounted, onUpdated } from 'vue'
     import { downloadArrayAsFormat, formatBytes} from '@/modules/utils.js'
     const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
     const submit_endpoint = `${backendUrl}/api/submit`
@@ -377,6 +377,11 @@
     const item_index_to_delete = ref(null)
 
     onMounted(() => {
+        basketStats.value = getBasketStats(participant_measures.value, file_metadata.value)
+        updateDemoFiles()
+    });
+    onUpdated(() => {
+        console.log("Updating basket stats...")
         basketStats.value = getBasketStats(participant_measures.value, file_metadata.value)
         updateDemoFiles()
     });

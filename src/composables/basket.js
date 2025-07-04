@@ -10,23 +10,23 @@ export function useBasket(all_arrays) {
     function addToBasket(filter_arrays, addFrom, included_measures) {
         // Add to basket from table view
         // filter_arrays argument is not used here and can be set to anything
-        console.log("included_measures being added to basket from table subselection:")
-        console.log(included_measures)
         if (addFrom == 'table') {
+            console.log("included_measures being added to basket from table subselection:")
+            console.log(included_measures)
             var selected_shortnames = included_measures.map(function(measure) {
                 return measure["short_name"];
             });
 
             var new_basket_item =  {
-                "cohort": all_arrays['cohort'],
-                "data_category": all_arrays["data_category"],
-                "session": all_arrays["session"],
-                "data_type": all_arrays["data_type"],
-                "data_type_sub": all_arrays["data_type_sub"],
-                "age": all_arrays["age"],
-                "short_name": selected_shortnames,
-                "state": all_arrays["state"],
-                "sex": all_arrays["sex"],
+                "cohort": [...all_arrays['cohort']],
+                "data_category": [...all_arrays["data_category"]],
+                "session": [...all_arrays["session"]],
+                "data_type": [...all_arrays["data_type"]],
+                "data_type_sub": [...all_arrays["data_type_sub"]],
+                "age": [...all_arrays["age"]],
+                "short_name": [...selected_shortnames],
+                "state": [...all_arrays["state"]],
+                "sex": [...all_arrays["sex"]],
                 "added_from": addFrom,
             }
             basket_length = basket.push(new_basket_item)
@@ -42,20 +42,20 @@ export function useBasket(all_arrays) {
                     return measure["short_name"];
                 });
             } else {
-                snames = all_arrays["short_name"]
+                snames = [...all_arrays["short_name"]]
             }
             
             // if not, shortnames = all
             var new_basket_item =  {
-                "cohort": filter_arrays['cohort'],
-                "data_category": filter_arrays['data_category'],
-                "session": filter_arrays['session'],
-                "data_type": filter_arrays['data_type'],
-                "data_type_sub": filter_arrays["data_type_sub"],
-                "age": filter_arrays['age'],
+                "cohort": [...filter_arrays['cohort']],
+                "data_category": [...filter_arrays['data_category']],
+                "session": [...filter_arrays['session']],
+                "data_type": [...filter_arrays['data_type']],
+                "data_type_sub": [...filter_arrays["data_type_sub"]],
+                "age": [...filter_arrays['age']],
                 "short_name": snames,
-                "state": filter_arrays['state'],
-                "sex": filter_arrays["sex"],
+                "state": [...filter_arrays['state']],
+                "sex": [...filter_arrays["sex"]],
                 "added_from": addFrom,
             }
             basket_length = basket.push(new_basket_item)
@@ -220,57 +220,7 @@ export function useBasket(all_arrays) {
                 return value.indexOf(file[k] ) >= 0
             }
         });
-        // return files.filter((file) => {
-        //     if (value.length == all_arrays[k].length) return true;
-        //     return value.indexOf(file[k] ) >= 0
-        // });
     }
-
-    // function filterSamplesBasket(samples, key, value) {
-    //     // console.log(`Filtering samples with key: ${key} and value:`, value);
-
-    //     if (!Array.isArray(samples)) {
-    //         console.error('samples is not an array:', samples);
-    //         return [];
-    //     }
-    
-    //     if (!all_arrays[key]) {
-    //         console.error(`all_arrays[${key}] is undefined or null`);
-    //         console.error(all_arrays)
-    //         return samples; // or handle the error as needed
-    //     }
-
-    //     return samples.filter((sample) => {
-    //         if (value.length == all_arrays[key].length) return true;
-    //         return value.indexOf(sample[key] ) >= 0
-    //     });
-    // }
-
-    // function filterSamplesBasketState(samples, key, value) {
-    //     return samples.filter((sample) => {
-    //         if (value.length == all_arrays[key].length) return true;
-    //         return  value.filter(val => sample[key].includes(val)).length > 0
-    //     });
-    // }
-
-    // function filterFilesBasket(files, key, value) {
-    //     const k = key == "file_state" ? "state" : key
-    //     // console.log(`Filtering files with key: ${k} and value:`, value);
-
-    //     if (!Array.isArray(files)) {
-    //         console.error('files is not an array:', files);
-    //         return [];
-    //     }
-    //     if (!all_arrays[k]) {
-    //         console.error(`all_arrays[${k}] is undefined or null`);
-    //         console.error(all_arrays)
-    //         return files; // or handle the error as needed
-    //     }
-    //     return files.filter((file) => {
-    //         if (value.length == all_arrays[k].length) return true;
-    //         return value.indexOf(file[k] ) >= 0
-    //     });
-    // }
 
     return {
         basket,
