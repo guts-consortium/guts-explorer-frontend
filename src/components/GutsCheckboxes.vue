@@ -158,7 +158,7 @@
               <v-col>
                 <div class="samples-div">
                   <div class="samples-count">{{filtered_samples_count}}</div>
-                  <div class="samples-count-text">samples</div>
+                  <div class="samples-count-text">sample{{ filtered_samples_count == 1 ? '' : 's' }}</div>
                 </div>
               </v-col>
             </v-row>
@@ -167,7 +167,7 @@
               <v-col>
                 <div class="samples-div">
                   <div class="samples-count">{{filtered_participants_count}}</div>
-                  <div class="samples-count-text">participants</div>
+                  <div class="samples-count-text">participant{{ filtered_participants_count == 1 ? '' : 's' }}</div>
                 </div>
               </v-col>
             </v-row>
@@ -176,7 +176,7 @@
               <v-col>
                 <div class="samples-div">
                   <div class="samples-count">{{filtered_measures_count}}</div>
-                  <div class="samples-count-text">measures</div>
+                  <div class="samples-count-text">measure{{ filtered_measures_count == 1 ? '' : 's' }}</div>
                 </div>
               </v-col>
             </v-row>
@@ -302,7 +302,7 @@
 
 
 <script setup>
-    import { inject, reactive, computed, ref, onMounted, toRaw, watch } from 'vue'
+    import { inject, reactive, computed, ref, onMounted, toRaw, watch, onUnmounted, onUpdated } from 'vue'
     import { makeReadable, removeElementFromArray, getArrayIntersection, arrayIncludesAny, arrayIncludesNone} from '@/modules/utils.js'
 
     const all_arrays = inject('all_arrays')
@@ -390,6 +390,7 @@
     }
 
     function resetCheckboxes() {
+
       var all_opts = ["cohort", "data_category", "session", "data_type", "data_type_sub", "age", "state", "sex"]
 
       for (var o of all_opts) {
@@ -452,6 +453,9 @@
 
     function selectType(datype) {
       toggleSubtypes(datype)
+
+      console.log(toRaw(filter_arrays['data_type']))
+      console.log(toRaw(filter_arrays['data_type_sub']))
     }
 
     function selectSubType(dtsub) {
@@ -491,10 +495,6 @@
         }
       }
     }
-
-    onMounted( () => {
-
-    })
 
     const filtered_samples_cohort = computed(() => {
         return participant_measures.value.filter((sample) => {
