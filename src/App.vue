@@ -12,6 +12,7 @@
                     <div class="menu-container">
                         <ul class="menu push">
                             <li @click="selected_component = 'home'" :class="{active: selected_component == 'home'}"><i class="fas fa-home"></i></li>
+                            <li @click="selected_component = 'info'" :class="{active: selected_component == 'info'}"><i class="fas fa-circle-info"></i></li>
                             <li @click="selected_component = 'table'" :class="{active: selected_component == 'table'}"><i class="fas fa-bars"></i></li>
                             <li @click="selected_component = 'checkboxes'" :class="{active: selected_component == 'checkboxes'}"><i class="fas fa-list-check"></i></li>
                             <li @click="selected_component = 'basket'" :class="{active: selected_component == 'basket', hasitems: basket.length > 0 }">
@@ -26,6 +27,7 @@
             <!-- SELECTED COMPONENT -->
             <!-- ****************** -->
             <span v-if="all_options_loaded">
+
                 <div v-if="selected_component=='home'" style="text-align: center;">
                     <div class="home-header">
                         <h1 class="home-heading-1"><em>How do young people successfully grow up in an increasingly complex society?</em></h1>
@@ -33,16 +35,31 @@
                     </div>
                     <br>
                     <div style="text-align:center"><h2><em> ... PAGE UNDER CONSTRUCTION ... </em></h2></div>
+
+                </div>
+                <div v-else>
+                    <KeepAlive>
+                        <component :is="selectedComponentName" />
+                    </KeepAlive>
+                </div>
+<!--                 
+                <div v-if="selected_component=='home'" style="text-align: center;">
+                    
+                </div>
+                <div v-if="selected_component=='info'">
+                    <GutsInfo></GutsInfo>
                 </div>
                 <div v-if="selected_component=='table'">
                     <GutsTable></GutsTable>
                 </div>
                 <div v-if="selected_component=='checkboxes'">
-                    <GutsCheckboxes></GutsCheckboxes>
+                    <KeepAlive>
+                        <GutsCheckboxes></GutsCheckboxes>
+                    </KeepAlive>
                 </div>
                 <div v-if="selected_component=='basket'">
                     <GutsBasket></GutsBasket>
-                </div>
+                </div> -->
             </span>
             <!-- ****** -->
             <!-- FOOTER -->
@@ -79,24 +96,35 @@
 
 <script setup>
     import { provide, toRaw } from 'vue';
-    import { ref, onBeforeMount, reactive } from 'vue'
+    import { ref, onBeforeMount, reactive, computed } from 'vue'
     import { useBasket } from '@/composables/basket.js'
-    import { makeReadable } from '@/modules/utils.js'
+    import { makeReadable, removeElementFromArray } from '@/modules/utils.js'
     import AuthMenu from '@/components/AuthMenu';
+    import GutsInfo from '@/components/GutsInfo.vue'
+    import GutsTable from '@/components/GutsTable.vue'
+    import GutsCheckboxes from '@/components/GutsCheckboxes.vue'
+    import GutsBasket from '@/components/GutsBasket.vue'
 
     const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
-    const measure_data_file = `${backendUrl}/api/measures`
-    const participant_data_file = `${backendUrl}/api/subjects`
-    const file_metadata_file = `${backendUrl}/api/files`
+    const measure_data_endpoint = `${backendUrl}/api/measures`
+    const participant_data_endpoint = `${backendUrl}/api/subjects`
+    const file_metadata_endpoint = `${backendUrl}/api/files`
+    const data_types_endpoint = `${backendUrl}/api/data_types`
+    const data_categories_endpoint = `${backendUrl}/api/data_categories`
+    const demographics_endpoint = `${backendUrl}/api/demographics`
+    const cohorts_endpoint = `${backendUrl}/api/cohorts`
 
     // Data
-    var selected_component = ref("home"); // must be one of: home, table, checkboxes, basket
+    var selected_component = ref("home"); // must be one of: home, info, table, checkboxes, basket    
     var measure_data = ref([])
     var measure_shortnames = ref([])
     var measure_data_loaded = ref(false)
     var participant_data = ref([])
     var participant_measures = ref([])
     var participant_measures_loaded = ref(false)
+    
+    var data_descriptions = reactive({})
+    provide('data_descriptions', data_descriptions)
     var all_arrays = reactive({})
     var filter_arrays = reactive({})
     var all_ages = ref(null)
@@ -115,14 +143,21 @@
     var all_options_loaded = ref(false)
     const userInfo = ref(null)
     const isAuthenticated = ref(false)
+    var all_types_and_subs = reactive({})
+    var all_subtypes = reactive({})
+    var used_types_and_subs = reactive({})
+    provide('all_types_and_subs', all_types_and_subs)
+    provide('all_subtypes', all_subtypes)
     provide('isAuthenticated', isAuthenticated)
 
     const {
         basket,
         addToBasket,
         deleteBasketItem,
-        getBasketStats
-    } = useBasket(all_arrays, filter_arrays)
+        getBasketStats,
+        getDemographicsFiles,
+        emptyBasket,
+    } = useBasket(all_arrays)
 
     provide('measure_data', measure_data)
     provide('all_arrays', all_arrays)
@@ -131,19 +166,31 @@
     provide('basket', basket)
     provide('addToBasket', addToBasket)
     provide('getBasketStats', getBasketStats)
+    provide('getDemographicsFiles', getDemographicsFiles)
     provide('selected_component', selected_component)
     provide('file_metadata', file_metadata)
     provide('deleteBasketItem', deleteBasketItem)
+    provide('emptyBasket', emptyBasket)
     provide('userInfo', userInfo)
 
+    const selectedComponentName = computed(() => {
+        switch (selected_component.value) {
+            case 'info': return GutsInfo
+            case 'table': return GutsTable
+            case 'checkboxes': return GutsCheckboxes
+            case 'basket': return GutsBasket
+            default: return null
+        }
+    })
+
     onBeforeMount( () => {
-    fetch(measure_data_file)
+    fetch(measure_data_endpoint)
         .then((response) => {
             if (response.ok) {
                 return response.json();
             } else {
                 console.error(
-                    "ERROR: measure_data.json file could not be loaded"
+                    "ERROR: measure_data_endpoint could not be loaded"
                 );
             }
         })
@@ -151,8 +198,9 @@
             measure_data.value = responseJson;
             measure_shortnames.value = measure_data.value.map((m) => (m["short_name"]?.trim()));
             measure_data_loaded.value = true;
-            // data_catagory should be turned into an array, comma separated
+            
             for (var i=0; i<measure_data.value.length; i++) {
+                // data_catagory should be turned into an array, comma separated
                 if (measure_data.value[i]["data_category"]) {
                     var new_cat = measure_data.value[i]["data_category"].trim().split(",").map((c) => (c.trim()));
                     measure_data.value[i]["data_category"] = new_cat
@@ -162,19 +210,67 @@
                         )   
                     }
                 }
+                // split sessions into array per cohort, and a single array of all sessions
+                // first turn cohort into an array, e.g.: "A,B,C" => ["A", "B", "C"]
+                if (measure_data.value[i]["cohort"]) {
+                    var new_cohort = measure_data.value[i]["cohort"].trim().split(",").map((c) => (c.trim()));
+                    measure_data.value[i]["cohort"] = new_cohort
+                }
+                // Then make array of sessions per cohort
+                measure_data.value[i]["cohort_session"] = {} 
+                if (measure_data.value[i]["session"]) {
+                    var cohort_sess = measure_data.value[i]["session"].trim().split(";").map((c) => (c.trim()));
+                    for (var j=0; j<measure_data.value[i]["cohort"].length; j++) {
+                        var coh = measure_data.value[i]["cohort"][j]
+                        measure_data.value[i]["cohort_session"][coh] = cohort_sess[j].trim().split(",").map((c) => (c.trim()));
+                    }
+                    measure_data.value[i]["all_sessions"] = [...new Set([].concat.apply([], Object.values(measure_data.value[i]["cohort_session"])))]
+                }
+
+                // Here we identify data types and their respective subtypes and their respective measures
+                // These are determined from the measure overview, meaning they represent all.
+                // The actual types and subtypes and measures that were used (i.e. in files / samples)
+                // will be a subset.
+                // Structure: { type: {subtype: [measure1, measure2]}}
+                var dtype = measure_data.value[i]["data_type"]
+                var dsubtype = measure_data.value[i]["data_type_sub"]
+                if (dtype) {
+                    var dtr = dtype.trim()
+                    if (!all_types_and_subs.hasOwnProperty(dtr)) {
+                        all_types_and_subs[dtr] = {}
+                    }
+                    if (dsubtype) {
+                        var dstr = dsubtype.trim()
+                        if (!all_types_and_subs[dtr].hasOwnProperty(dstr)) {
+                            all_types_and_subs[dtr][dstr] = [measure_data.value[i]["short_name"]]
+                        } else {
+                            all_types_and_subs[dtr][dstr].push(measure_data.value[i]["short_name"])
+                        }
+                        // object with subtypes as keys and their types as values
+                        if (!all_subtypes.hasOwnProperty(dstr)) {
+                            all_subtypes[dstr] = dtr
+                        }
+                    }
+                }
             }
             console.log(`OVERVIEW-LEVEL SUMMARY`)
             console.log("short_names:")
             console.log(`${measure_shortnames.value.length}`)
             console.log(`${measure_shortnames.value}`)
-            return fetch(participant_data_file)
+            console.log("alltypesandsubs:")
+            console.log(toRaw(all_types_and_subs))
+            console.log("allsubtypes:")
+            console.log(toRaw(all_subtypes))
+            console.log("All measures:")
+            console.log(measure_data.value)
+            return fetch(participant_data_endpoint)
         })
         .then((response) => {
             if (response.ok) {
                 return response.json();
             } else {
                 console.error(
-                    "ERROR: participant_data.json file could not be loaded"
+                    "ERROR: participant_data_endpoint could not be loaded"
                 );
             }
         })
@@ -267,6 +363,7 @@
                         "cohort": part["cohort"] ,
                         "session": part["session"] ,
                         "age": part["age"],
+                        "sex": part["sex"],
                         "short_name": m_code,
                         "state": states,
                     }
@@ -275,12 +372,17 @@
                     // complete short_name associated fields
                     if (measure) {
                         part_measure["data_type"] = measure["data_type"]
+                        part_measure["data_type_sub"] = measure["data_type_sub"]
                         part_measure["data_category"] = measure["data_category"]
                         if (!part_measure["data_category"]) {
                             part_measure["data_category"] = []
                         }
+                        if (!part_measure["data_type_sub"]) {
+                            part_measure["data_type_sub"] = null
+                        }
                     } else {
                         part_measure["data_type"] = null
+                        part_measure["data_type_sub"] = null
                         part_measure["data_category"] = []
                     }
                     p+=1
@@ -295,7 +397,7 @@
 
             // Now we need to construct all user input options
             // 
-            var all_options = ["cohort", "session", "data_type", "age", "short_name"]
+            var all_options = ["cohort", "session", "data_type", "data_type_sub", "age", "short_name", "sex"]
             var all_options_obj = {}
             for (var x=0; x<all_options.length; x++) {
                 var option = all_options[x]
@@ -323,8 +425,9 @@
                     }
                 }
                 all_options_obj[opt_options].unshift({value: 'all', text: 'All'})
-                all_arrays[option] = all_options_obj[opt_list]
-                filter_arrays[option] = all_arrays[option]
+                all_arrays[option] = structuredClone(all_options_obj[opt_list])
+                removeElementFromArray(all_arrays[option], null)
+                filter_arrays[option] = structuredClone(toRaw(all_arrays[option]))
             }
             // age min and max
             all_ages.value = participant_measures.value.map(function(pm) {
@@ -387,7 +490,7 @@
                 console.log(key, value);
             }
 
-            return fetch(file_metadata_file)
+            return fetch(file_metadata_endpoint)
         })
         .then((response) => {
             if (response.ok) {
@@ -422,7 +525,62 @@
             console.log(`${measure_shortnames_fromfiles}`)
             
             all_options_loaded.value = true;
-        })
-    })
 
+            return fetch(data_types_endpoint)
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error(
+                    "ERROR: data_types_endpoint could not be fetched"
+                );
+            }
+        })
+        .then((responseJson) => {
+            data_descriptions["data_types"] = responseJson
+            return fetch(data_categories_endpoint)
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error(
+                    "ERROR: data_categories_endpoint could not be fetched"
+                );
+            }
+        })
+        .then((responseJson) => {
+            data_descriptions["data_categories"] = responseJson
+            return fetch(demographics_endpoint)
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error(
+                    "ERROR: demographics_endpoint could not be fetched"
+                );
+            }
+        })
+        .then((responseJson) => {
+            data_descriptions["demographics"] = responseJson
+            return fetch(cohorts_endpoint)
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error(
+                    "ERROR: demographics_endpoint could not be fetched"
+                );
+            }
+        })
+        .then((responseJson) => {
+            data_descriptions["cohorts"] = responseJson
+            console.log("data_descriptions")
+            console.log(toRaw(data_descriptions))
+        })
+
+    })
 </script>

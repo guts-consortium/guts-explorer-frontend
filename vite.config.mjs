@@ -41,6 +41,9 @@ export default defineConfig({
       '.vue',
     ],
   },
+  build: {
+    sourcemap: true,
+  },
   server: {
     port: 3000,
   },

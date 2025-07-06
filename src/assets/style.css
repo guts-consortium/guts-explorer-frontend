@@ -29,7 +29,7 @@
   --guts-yellow: #FFFF00;
   --guts-green: #03FF33;
   --guts-pink: #ff00fb;
-  --guts-lightgreen: #d8fade;
+  --guts-lightgreen: #ecfdef;
 }
 
 
@@ -297,7 +297,7 @@ table td:first-child {
 }
 
 .lcid-info-table tr:nth-child(odd) {
-  background-color: var(--guts-green); 
+  background-color: white; 
 }
 .lcid-info-table tr:nth-child(even) {
   background-color: var(--guts-lightgreen); 
@@ -307,6 +307,9 @@ table td:first-child {
 }
 .lcid-info-table td {
   border: 1px solid white;
+}
+.lcid-info-table th {
+  background-color: var(--guts-lightgreen); 
 }
 
 .intro {
@@ -435,7 +438,7 @@ table td:first-child {
   display: flex;
 }
 .samples-count {
-  font-size: 50px;
+  font-size: 42px;
   margin-bottom: 0;
   text-align: right;
   width: 50%;
@@ -463,7 +466,7 @@ table td:first-child {
   display:inline-block;
   vertical-align: top;
   text-align: center;
-  padding-top: 5px;
+  padding-top: 4px;
   margin-right: 0.3em;
 }
 
@@ -523,8 +526,9 @@ table td:first-child {
 
 .page-heading {
   border: 1px solid black;
+  color: white;
   border-radius: 5px;
-  background-color: var(--guts-yellow);
+  background-color: var(--guts-pink);
   margin-bottom: 10px;
   padding-top: 5px;
   padding-bottom: 5px;

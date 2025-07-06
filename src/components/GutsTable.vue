@@ -1,12 +1,8 @@
 <template>
-    <v-container>
-      <v-row>
-        <v-col cols="12">
-          <h3 class="page-heading">
+    <h3 class="page-heading">
             &nbsp;&nbsp; <v-icon>mdi-magnify</v-icon>&nbsp;Find samples by measure code, name or description
           </h3>
-        </v-col>
-      </v-row>
+    <v-container style="padding-left: 0; padding-right: 0;">
       
       <v-row id="search-options" class="search-options">
         <!-- SEARCH TEXT -->
@@ -45,8 +41,13 @@
           <v-btn small outlined color="dark" @click="resetTable">
             <v-icon left>mdi-rotate-left</v-icon> Reset Table
           </v-btn>
-          <v-btn small outlined color="dark" @click="addToBasket('table', included_measures); showModal('addedItemModal')">
+          &nbsp;
+          <v-btn small outlined color="dark" @click="addToBasket(null, 'table', included_measures); showModal('addedItemModal')">
             <v-icon left>mdi-cart-plus</v-icon> Add Table to Basket
+          </v-btn>
+          &nbsp;
+          <v-btn small outlined color="dark" @click="addRowsToBasket();">
+            <v-icon left>mdi-cart-plus</v-icon> Add Selected Measures to Basket
           </v-btn>
         </v-col>
       </v-row>
@@ -59,22 +60,51 @@
                 <th
                   v-for="field in measure_headings"
                   :key="field.key"
-                  :style="{ width: field.key === 'description' ? '50%' : (field.key === 'long_name' ? '20%' : (field.key === 'data_category' ? '20%' : '15%')) }"
+                  :style="{ width: field.key === 'description' ? '48%' : (field.key === 'long_name' ? '18%' : (field.key === 'data_category' ? '20%' : (field.key === 'select' ? '6%' : (field.key === 'cohort' ? '11%' : (field.key === 'all_sessions' ? '22%' : '15%'))))) }"
                 >
-                  {{ field.label }}
+                  <span v-if="field.key === 'select'">
+                    <v-checkbox v-model="select_all"  @update:modelValue="toggleCurrentMeasures()" class="my-0" density="compact" hide-details></v-checkbox>
+                  </span>
+                  <span v-else-if="field.key === 'cohort'">
+                    <strong>{{ field.label }}</strong>
+                  </span>
+                  <span v-else-if="field.key === 'session'">
+                    <strong>{{ field.label }}</strong>
+                  </span>
+                  <span v-else>
+                    <strong>{{ field.label }}</strong>
+                  </span>
+                  
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in included_measures" >
                 <td v-for="field in measure_headings" >
-                  <span v-if="Array.isArray(item[field.key])" style="line-height: 1.5em;">
+                  <span v-if="field.key === 'all_sessions'">
+                    <span v-for="(opt, idx)  in all_arrays['session']" class="my-0" style="font-family: monospace;">
+                      <span v-if="item[field.key].includes(opt.substring(1))">
+                        {{opt.substring(1)}}
+                      </span>
+                      <span v-else style="color:#c8d1e0">
+                        {{ ((idx+1) % 2) == 0 ? 'Xa' : 'X' }}
+                      </span>&nbsp;
+                    </span>
+                  </span>
+                  <span v-else-if="field.key === 'cohort'" style="line-height: 1.5em;">
+                    <span v-for="el of item[field.key]">
+                      <span class="element-pill">{{el}}</span>&nbsp;
+                    </span>
+                  </span>
+                  <span v-else-if="field.key === 'data_category'" style="line-height: 1.5em;">
                     <span v-for="el of item[field.key]" class="element-pill">{{el}} <br></span>
+                  </span>
+                  <span v-else-if="field.key === 'select'">
+                    <v-checkbox v-model="selected_measures_boxes" :value="item['short_name']" @update:modelValue="" class="my-0" density="compact" hide-details></v-checkbox>
                   </span>
                   <span v-else>
                     {{ item[field.key] }}
                   </span>
-                  
                 </td>
               </tr>
             </tbody>
@@ -96,16 +126,36 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog v-model="noMeasuresSelectedModal" max-width="500px">
+        <v-card>
+        <v-card-title>No measures selected</v-card-title>
+        <v-card-text class="text-left">
+            Please select measures before adding them to your basket.
+        </v-card-text>
+        <v-card-actions>
+            <v-btn text="Ok" @click="noMeasuresSelectedModal = false"></v-btn>
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+
 
 </template>
 
 <script setup>
-    import { ref, inject, computed } from 'vue'
+    import { ref, inject, computed, watch, toRaw} from 'vue'
 
     const addToBasket = inject('addToBasket')
     const basket = inject('basket')
     const showAddedItemModal = ref(false);
+    const noMeasuresSelectedModal = ref(false)
+    const select_all = ref(false)
+    const selected_measures_boxes = ref([])
+    const all_arrays = inject('all_arrays')
     const measure_headings = [
+      {
+        key: "select",
+        label: "Select"
+      },
       {
           key: "short_name",
           label: "Code",
@@ -125,6 +175,14 @@
       {
           key: "data_category",
           label: "Category",
+      },
+      {
+          key: "cohort",
+          label: "Cohort"
+      },
+      {
+          key: "all_sessions",
+          label: "Session"
       }
     ]
     var search_text = ref("");
@@ -142,14 +200,44 @@
             return search_text_tags.value.some((v) =>
                 c["short_name"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
                 c["long_name"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
-                c["description"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0
+                c["description"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0 ||
+                c["data_type"]?.toLowerCase().indexOf(v.toLowerCase()) >= 0
             );
         });
     });
 
+    const selected_measures = computed(() => {
+      return measure_data.value.filter((m) => {
+        return selected_measures_boxes.value.includes(m.short_name)
+      })        
+    });
+
+    // Synchronize selected_measures_boxes when included_measures changes
+    watch(included_measures, (newIncluded) => {
+      const currentShortNames = newIncluded.map(m => m.short_name);
+      selected_measures_boxes.value = selected_measures_boxes.value.filter(s => currentShortNames.includes(s));
+    });
+
+
+    function toggleCurrentMeasures() {
+
+      console.log(select_all.value)
+      if (select_all.value) {
+         var allSnames = included_measures.value.map((m) => {
+          return m["short_name"]
+        })
+        console.log(allSnames)
+        selected_measures_boxes.value = allSnames
+      } else {
+        selected_measures_boxes.value = []
+      }
+    }
+
     function resetTable() {
         search_text.value = ""
         search_text_tags.value = []
+        select_all.value = false
+        selected_measures_boxes.value = []
     }
 
     function addSearchTextTag(option) {
@@ -177,6 +265,15 @@
     const hideModal = (modalRef) => {
       showAddedItemModal.value = false;
     };
+
+    function addRowsToBasket() {
+      if (selected_measures.value.length == 0) {
+        noMeasuresSelectedModal.value = true
+      } else {
+        addToBasket(null, 'table', selected_measures.value)
+        showAddedItemModal.value = true
+      }
+    }
 </script>
 
 <style scoped>

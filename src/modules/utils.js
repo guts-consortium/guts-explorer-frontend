@@ -72,3 +72,37 @@ export function formatBytes(bytes, decimals = 2) {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
+
+export function removeElementFromArray(arr, value) {
+  var idx = arr.indexOf(value);
+  if (idx > -1) {
+      arr.splice(idx, 1);
+  }
+}
+
+export function getArrayIntersection(arrays) {
+  return arrays.shift().reduce(function(res, v) {
+    if (res.indexOf(v) === -1 && arrays.every(function(a) {
+        return a.indexOf(v) !== -1;
+    })) res.push(v);
+    return res;
+  }, []);
+}
+
+export function arrayIncludesAll(arr, other) {
+  return other.every(el => arr.includes(el));
+}
+
+export function arrayIncludesAny(arr, other) {
+  return other.some(el => arr.includes(el));
+}
+
+export function arrayIncludesNone(arr, other) {
+  return other.every(el => !arr.includes(el));
+}
+
+export function isObject(val) {
+  return typeof val === 'object' && !Array.isArray(val) && val !== null
+}
+
+
