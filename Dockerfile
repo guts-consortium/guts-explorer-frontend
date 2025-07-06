@@ -10,27 +10,17 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Ensure node_modules/.bin is in PATH
-ENV PATH="/app/node_modules/.bin:$PATH"
-
 # Copy the rest of the app's code
 COPY . .
 
 # Build
-RUN npm run build
+CMD ["npm", "run", "build"]
 
-# Serve step
+# Serve using Nginx
 FROM nginx:alpine
 
-# Remove default nginx config and add our own
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Copy built frontend files
+# Copy build directory to location to be served
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Custom Nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
