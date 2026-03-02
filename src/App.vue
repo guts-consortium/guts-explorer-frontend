@@ -34,7 +34,7 @@
                         <h1 class="home-heading-2"><em><a href="https://www.gutsproject.com/"> <i class="fas fa-arrow-up-right-from-square"></i> gutsproject.com</a></em></h1>
                     </div>
                     <br>
-                    <div style="text-align:center"><h2><em> ... PAGE UNDER CONSTRUCTION ... </em></h2></div>
+                    <div style="text-align:center"><h2><em> ... Prototype GUTS Data Request System (Metadata Explorer) ... <br><br> NWO Midterm <br> </em></h2></div>
 
                 </div>
                 <div v-else>
