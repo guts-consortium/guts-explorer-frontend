@@ -14,6 +14,8 @@ export function useAuth(userInfo, isAuthenticated) {
     window.addEventListener('message', (event) => {
       if (event.origin !== backendUrl) {
         console.log('Received message from unknown origin:', event.origin);
+        console.log('Known origin:', backendUrl);
+        console.log('Event:')
         console.log(event);
         return;
       }

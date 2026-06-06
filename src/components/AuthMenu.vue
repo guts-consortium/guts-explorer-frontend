@@ -3,8 +3,10 @@
         <template v-slot:activator="{ props }">
             <v-btn variant="outlined" size="x-small" v-bind="props" class="userbutton">
                 <v-icon v-if="!isAuthenticated">mdi-account</v-icon>
-                <v-avatar v-if="isAuthenticated && userInfo">
-                    <img :src="userAvatarUrl" alt="User Avatar" />
+                <v-avatar v-if="isAuthenticated && userInfo" size="x-small">
+                    <img :src="userAvatarUrl" alt="User Avatar"
+                        style="padding: 0;"
+                     />
                 </v-avatar>
             </v-btn>
         </template>
