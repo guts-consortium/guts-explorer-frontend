@@ -90,6 +90,21 @@
                     </div>
                 </div>
             </div>
+            <div style="display: flex; justify-content: space-around; width: 100%; margin-bottom: 1em;">
+                <div
+                    class="text-caption text-disabled"
+                    style="text-align: center;"
+                >
+                    <span class="d-none d-sm-inline-block"><code>guts-explorer-frontend</code>:</span>
+                    <a
+                        :href="link"
+                        title="guts-explorer-frontend"
+                        class="d-inline-block mx-1 social-link"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                    >{{branch + '@' + commit_short}}</a>
+                </div>
+            </div>
         </v-main>
     </v-app>
 </template>
@@ -104,6 +119,11 @@
     import GutsTable from '@/components/GutsTable.vue'
     import GutsCheckboxes from '@/components/GutsCheckboxes.vue'
     import GutsBasket from '@/components/GutsBasket.vue'
+
+    const branch = __BRANCH__;
+    const commit_short = __COMMIT_HASH_SHORT__;
+    const commit = __COMMIT_HASH__;
+    const link = `https://github.com/guts-consortium/guts-explorer-frontend/commit/${commit}`;
 
     const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
     const measure_data_endpoint = `${backendUrl}/api/measures`
