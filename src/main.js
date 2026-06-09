@@ -4,6 +4,9 @@
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
 
+// Config
+import { loadConfig } from '@/modules/config';
+
 // Plugins
 import { registerPlugins } from '@/plugins'
 
@@ -14,7 +17,7 @@ import App from './App.vue'
 import { createApp } from 'vue'
 
 const app = createApp(App)
-
-registerPlugins(app)
-
+const config = await loadConfig();
+app.provide('config', config)
+registerPlugins(app, config)
 app.mount('#app')

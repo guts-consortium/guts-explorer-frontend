@@ -6,10 +6,11 @@
 
 // Plugins
 import vuetify from './vuetify'
-import router from './router'
+import { createAppRouter } from './router'
 import VueCookies from 'vue-cookies';
 
-export function registerPlugins (app) {
+export function registerPlugins (app, config) {
+  const router = createAppRouter(config)
   app.use(vuetify);
   app.use(router);
   app.use(VueCookies, {

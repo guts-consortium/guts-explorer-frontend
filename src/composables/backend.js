@@ -1,11 +1,11 @@
 // src/composables/backend.js
 import { ref, inject } from 'vue';
-const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
+const backendUrl = inject('VITE_BACKEND_API_URL')
 
 export function useBackend() {
 
   async function checkInviteUser(email) {
-    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    const user_endpoint = `${backendUrl.value}/api/user/${email}`;
     try {
       const response = await fetch(user_endpoint);
       if (response.ok) {
@@ -28,7 +28,7 @@ export function useBackend() {
   }
 
   async function inviteUser(email) {
-    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    const user_endpoint = `${backendUrl.value}/api/user/${email}`;
     try {
       const response = await fetch(user_endpoint, {
         method: 'POST',

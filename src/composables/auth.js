@@ -1,12 +1,13 @@
 // src/composables/auth.js
 import {ref, inject} from 'vue'
-const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
+const backendUrl = inject('VITE_BACKEND_API_URL')
+
 
 export function useAuth(userInfo, isAuthenticated) {
 
   async function login() {
     // Open a new window for the login process (the URL from the backend that starts the login process)
-    const loginUrl = `${backendUrl}/api/login`;  // This URL will redirect to OIDC provider
+    const loginUrl = `${backendUrl.value}/api/login`;  // This URL will redirect to OIDC provider
     // const loginWindow = window.open(loginUrl, 'Login', 'width=500,height=600');
     const loginWindow = window.open(loginUrl, '_blank');
 
@@ -29,7 +30,7 @@ export function useAuth(userInfo, isAuthenticated) {
   }
 
   async function logout() {
-    const logoutUrl = `${backendUrl}/api/logout`;
+    const logoutUrl = `${backendUrl.value}/api/logout`;
     fetch(logoutUrl)
       .then((response) => {
           if (response.ok) {
@@ -43,7 +44,7 @@ export function useAuth(userInfo, isAuthenticated) {
       })
   }
   async function checkInviteUser(email) {
-    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    const user_endpoint = `${backendUrl.value}/api/user/${email}`;
     try {
       const response = await fetch(user_endpoint);
       if (response.ok) {
@@ -66,7 +67,7 @@ export function useAuth(userInfo, isAuthenticated) {
   }
 
   async function inviteUser(email) {
-    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    const user_endpoint = `${backendUrl.value}/api/user/${email}`;
     try {
       const response = await fetch(user_endpoint, {
         method: 'POST',
@@ -90,7 +91,7 @@ export function useAuth(userInfo, isAuthenticated) {
   }
 
   async function checkUser(email) {
-    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    const user_endpoint = `${backendUrl.value}/api/user/${email}`;
     try {
       const response = await fetch(user_endpoint);
       if (response.ok) {
@@ -107,7 +108,7 @@ export function useAuth(userInfo, isAuthenticated) {
   }
 
   async function deleteUser(email) {
-    const user_endpoint = `${backendUrl}/api/user/${email}`;
+    const user_endpoint = `${backendUrl.value}/api/user/${email}`;
     try {
       const response = await fetch(user_endpoint, {
         method: 'DELETE',

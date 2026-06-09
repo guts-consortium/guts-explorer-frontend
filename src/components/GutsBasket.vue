@@ -315,8 +315,8 @@
 <script setup>
     import { inject, computed, ref, onMounted, onUpdated } from 'vue'
     import { downloadArrayAsFormat, formatBytes} from '@/modules/utils.js'
-    const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
-    const submit_endpoint = `${backendUrl}/api/submit`
+    const backendUrl = inject('VITE_BACKEND_API_URL')
+    const submit_endpoint = `${backendUrl.value}/api/submit`
     const userInfo = inject('userInfo')
 
     const textKeysMultiple =  {
