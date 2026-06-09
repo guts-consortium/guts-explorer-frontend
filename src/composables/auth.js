@@ -1,9 +1,5 @@
 // src/composables/auth.js
-import {ref, inject} from 'vue'
-const backendUrl = inject('VITE_BACKEND_API_URL')
-
-
-export function useAuth(userInfo, isAuthenticated) {
+export function useAuth(userInfo, isAuthenticated, backendUrl) {
 
   async function login() {
     // Open a new window for the login process (the URL from the backend that starts the login process)
@@ -13,9 +9,9 @@ export function useAuth(userInfo, isAuthenticated) {
 
     // Set up a listener to capture the user info after login completes
     window.addEventListener('message', (event) => {
-      if (event.origin !== backendUrl) {
+      if (event.origin !== backendUrl.value) {
         console.log('Received message from unknown origin:', event.origin);
-        console.log('Known origin:', backendUrl);
+        console.log('Known origin:', backendUrl.value);
         console.log('Event:')
         console.log(event);
         return;

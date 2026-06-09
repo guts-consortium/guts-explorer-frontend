@@ -68,8 +68,8 @@
     const showResponseInvited = ref(false)
     const emailForm = ref(null)
     const awaitingResponse = ref(false)
-
-    const { login, logout, checkInviteUser, inviteUser, checkUser, deleteUser} = useAuth(userInfo, isAuthenticated);
+    const backendUrl = inject('VITE_BACKEND_API_URL')
+    const { login, logout, checkInviteUser, inviteUser, checkUser, deleteUser} = useAuth(userInfo, isAuthenticated, backendUrl);
     const emit = defineEmits(['close-dialog']);
 
     const closeDialog = () => {

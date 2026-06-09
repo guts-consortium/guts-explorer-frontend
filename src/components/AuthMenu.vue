@@ -39,8 +39,8 @@
     const userInfo = inject('userInfo')
     const isAuthenticated = inject('isAuthenticated')
     const showLoginModal = ref(false)
-
-    const { logout} = useAuth(userInfo, isAuthenticated);
+    const backendUrl = inject('VITE_BACKEND_API_URL')
+    const { logout} = useAuth(userInfo, isAuthenticated, backendUrl);
     
     const userAvatarUrl = computed(() => {
         const emailHash = md5(userInfo.value?.email.trim().toLowerCase() || Math.random().toString(36).substring(7));

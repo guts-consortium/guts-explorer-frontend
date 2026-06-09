@@ -1,8 +1,5 @@
 // src/composables/backend.js
-import { ref, inject } from 'vue';
-const backendUrl = inject('VITE_BACKEND_API_URL')
-
-export function useBackend() {
+export function useBackend(backendUrl) {
 
   async function checkInviteUser(email) {
     const user_endpoint = `${backendUrl.value}/api/user/${email}`;
